@@ -46,7 +46,8 @@
 4. 将 src/main/resources/sql/05_init_system_config.sql 中的 `记得配置加密密钥`
    修改为 `com.hsuyeung.blog.constant.SystemConfigConstants.SystemConfigEnum.USER_TOKEN_SECRET` 的值；`记得配置邮箱地址`
    修改为 `com.hsuyeung.blog.constant.SystemConfigConstants.SystemConfigEnum.ADMIN_EMAIL_ADDRESS` 的值
-5. 创建数据库，名字为 `blog`，如果不叫这个名字就需要修改第 2、3 步中的 jdbc 连接配置。数据库字符集推荐 `utf8mb4`
+5. 创建数据库，名字为 `blog`，如果不叫这个名字就需要修改 `application-dev.yml` 和 `application-prod.yml` 中的 jdbc
+   连接配置。数据库字符集推荐 `utf8mb4`
 6. 按照**编号顺序**将 `src/main/resources/sql/` 文件夹下的 sql 全部在刚才新建的数据库中执行
 7. 开启 `redis-server` 服务，服务器上的话还需要配置 redis 的访问密码和 `application-prod.yml` 中配置的密码保持一致
 8. 启动项目，访问 `localhost:8083` 即可访问博客首页，`localhost:8083/admin/home` 即可访问博客后台管理页面
@@ -60,6 +61,6 @@
 
 ## 说明
 
-本博客项目一开始的初衷是为了简单，所以不考虑做成前后端分离以及支持 OSS 上传图片啥的，因为懒得维护多个项目以及第三方数据。
+本博客的初衷是为了简单，所以不考虑做成前后端分离以及支持 OSS 上传图片啥的，因为懒得维护多个项目以及第三方数据。
 
 欢迎各位体验该博客并提出宝贵的改进意见。
