@@ -1,0 +1,11 @@
+<div id='role-module' th:fragment='role_module'>
+  <div class='module-title'>
+    <h2>角色管理</h2>
+  </div>
+  <div th:replace='component/admin/role/role_data_table :: role_data_table'></div>
+  <div th:replace='component/admin/role/edit_role_panel :: edit_role_panel'></div>
+  <div th:replace='component/admin/role/add_role_panel :: add_role_panel'></div>
+  <div th:replace='component/admin/role/assign_permission_panel :: assign_permission_panel'></div>
+  <link rel='stylesheet' th:href='${ "/css/admin/role.min.css?v=" + v }'/>
+  <script th:src='${ "/js/admin/role.js?v=" + v }'></script>
+</div>

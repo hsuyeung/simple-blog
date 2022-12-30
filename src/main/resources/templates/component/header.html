@@ -1,0 +1,45 @@
+<header th:fragment='header'>
+  <h1>
+    <a href='/'>Hsu Yeung</a>
+  </h1>
+  <div class='nav'>
+    <span th:text='${ commonCustomConf.headerText }'></span>
+    <span class='nav-menu' th:if='${ currentPage eq "index" }'>
+      <a class='nav-item' href='/archive'>归档</a>
+      <span class='divider'>|</span>
+      <a class='nav-item' href='/friend/link'>友链</a>
+      <span class='divider'>|</span>
+      <a class='nav-item' href='/about'>关于</a>
+      <span class='divider'>|</span>
+      <a class='nav-item' target='_blank' rel='noopener noreferrer nofollow' href='https://travellings.link'>开往</a>
+    </span>
+    <span class='nav-menu' th:if='${ currentPage eq "about" }'>
+      <a class='nav-item' href='/archive'>归档</a>
+      <span class='divider'>|</span>
+      <a class='nav-item' href='/friend/link'>友链</a>
+      <span class='divider'>|</span>
+      <span class='nav-item gray'>关于</span>
+      <span class='divider'>|</span>
+      <a class='nav-item' target='_blank' rel='noopener noreferrer nofollow' href='https://travellings.link'>开往</a>
+    </span>
+    <span class='nav-menu' th:if='${ currentPage eq "archive" }'>
+      <span class='nav-item gray'>归档</span>
+      <span class='divider'>|</span>
+      <a class='nav-item' href='/friend/link'>友链</a>
+      <span class='divider'>|</span>
+      <a class='nav-item' href='/about'>关于</a>
+      <span class='divider'>|</span>
+      <a class='nav-item' target='_blank' rel='noopener noreferrer nofollow' href='https://travellings.link'>开往</a>
+    </span>
+    <span class='nav-menu' th:if='${ currentPage eq "friend_link" }'>
+      <a class='nav-item' href='/archive'>归档</a>
+      <span class='divider'>|</span>
+      <span class='nav-item gray'>友链</span>
+      <span class='divider'>|</span>
+      <a class='nav-item' href='/about'>关于</a>
+      <span class='divider'>|</span>
+      <a class='nav-item' target='_blank' rel='noopener noreferrer nofollow' href='https://travellings.link'>开往</a>
+    </span>
+  </div>
+  <div class='clear'></div>
+</header>

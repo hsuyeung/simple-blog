@@ -1,0 +1,49 @@
+<div id='system-config-data-table' th:fragment='system_config_data_table'>
+  <div id='system-config-data-search-form'>
+    <span>
+      <label for='search-system-config-key'>系统配置 key：</label>
+      <input type='text' id='search-system-config-key' placeholder='系统配置 key'>
+    </span>
+    <span>
+      <label for='search-system-config-desc'>系统配置描述：</label>
+      <input type='text' id='search-system-config-desc' placeholder='系统配置描述'>
+    </span>
+    <span>
+      <label for='search-system-config-group'>系统配置分组：</label>
+      <input type='text' id='search-system-config-group' placeholder='系统配置分组'>
+    </span>
+    <span>
+      <label for='search-system-config-enabled'>是否可用：</label>
+      <select name='search-system-config-enabled' id='search-system-config-enabled'>
+        <option value='' selected>全部</option>
+        <option value='0'>不可用</option>
+        <option value='1'>可用</option>
+      </select>
+    </span>
+    <button id='query-system-config-btn' onclick='resetPageNumAndLoadSystemConfigTableData()'>查询</button>
+    <button id='refresh-all-system-config-cache-btn' onclick='refreshAllSystemConfigAction()'>刷新所有缓存</button>
+    <button id='close-system-config-table' onclick='clearSystemConfigTable()'>关闭列表</button>
+  </div>
+  <div id='system-config-data-table-body'>
+    <!-- 动态插入数据 -->
+  </div>
+  <div id='system-config-data-table-footer'>
+      <span id='system-config-page-num-container'>
+        <span>当前第&nbsp;<span id='system-config-current-page'><!--x--></span>&nbsp;页</span>
+        <span id='system-config-total-page'><!--共 x 页--></span>
+        <span id='system-config-total-size'><!--共 x 条--></span>
+        <span id='system-config-prev-page'><!--上一页--></span>
+        <span id='system-config-page-jump'><!--跳转到第 x 页--></span>
+        <span id='system-config-next-page'><!--下一页--></span>
+      </span>
+    <span id='system-config-page-size-container'>
+        <label for='system-config-page-size'>每页数量：</label>
+        <select name='system-config-page-size-sel' id='system-config-page-size' onchange='loadSystemConfigTableData()'>
+          <option value='10' selected>10</option>
+          <option value='20'>20</option>
+          <option value='50'>50</option>
+          <option value='100'>100</option>
+        </select>
+      </span>
+  </div>
+</div>

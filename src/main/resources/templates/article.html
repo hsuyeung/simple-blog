@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang='zh' xmlns:th='http://www.thymeleaf.org'>
+<head>
+  <title th:text='${ article.title + " | Hsu Yeung 的博客" }'></title>
+  <meta http-equiv='content-type' content='text/html; charset=utf-8'/>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <meta name='description' th:content='${ article.description }'/>
+  <meta name='keywords' th:content='${ article.keywords }'/>
+  <link rel='icon' href='/favicon.ico' type='image/x-icon'>
+  <link rel='stylesheet' th:href='${ "/css/common.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/article.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/comment.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/about_footer.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/footer.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/iconmoon.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/plugin/highlight/monokai-sublime.min.css?v=" + v }'/>
+  <script th:src='${ "/plugin/medium-zoom/medium-zoom.min.js?v=" + v }'></script>
+  <script th:src='${ "/plugin/highlight/highlight.min.js?v=" + v }'></script>
+  <script th:src='${ "/plugin/lazyload/lazyload.js?v=" + v }'></script>
+</head>
+<body>
+<div class='container'>
+  <article>
+    <div class='hidden' id='article-id' th:text='${ article.id }'></div>
+    <a href='/' class='back-home'>⟵ Hsu Yeung 的博客</a>
+    <div class='article-title-container'>
+      <h1 th:text='${ article.title }'></h1>
+    </div>
+    <div class='article-meta'>
+      <span th:text='${ article.createTime }'></span>
+      <span class='divider'>·</span>
+      <a href='/' th:text='${ article.author }'></a>
+      <span class='divider'>·</span>
+      <span>未经允许，不可转载</span>
+    </div>
+    <div class='article-body' th:utext='${ article.content }'></div>
+  </article>
+  <div class='article-sign'>
+    <div>
+      <span th:text='${ article.author }'></span> · <span th:text='${ article.createTime }'></span>
+    </div>
+    <div>
+      <a href='/about#copyright'>未经允许，不可转载</a>
+    </div>
+  </div>
+  <div th:replace='component/comment_container :: comment_container'></div>
+  <div th:replace='component/about_footer :: about_footer'></div>
+</div>
+<div th:replace='component/footer :: footer'></div>
+<script>
+  cleanAllCommentTextAreaHeightRecord()
+  mediumZoom('img.zoom-img', {background: '#faf5e3'})
+  hljs.configure({
+    ignoreUnescapedHTML: true
+  })
+  hljs.highlightAll()
+  lazyLoad({
+    lazyAttr: 'data-src',
+    loadType: 'src',
+    errorPath: '/img/err_img.jpg'
+  }).observeLazyLoadNode()
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<div id='edit-user-panel' class='hidden' th:fragment='edit_user_panel'>
+  <div>
+    <span>用户 ID：</span>
+    <span id='edit-user-id'></span>
+  </div>
+  <div>
+    <label for='edit-username'>用户名：</label>
+    <input type='text' name='edit-username' id='edit-username'>
+  </div>
+  <div>
+    <label for='edit-nickname'>昵称：</label>
+    <input type='text' name='edit-nickname' id='edit-nickname'>
+  </div>
+  <div>
+    <label for='edit-user-enabled'>是否可用：</label>
+    <input type='checkbox' name='edit-user-enabled' id='edit-user-enabled'>
+  </div>
+  <div>
+    <button id='edit-user-password' onclick='toggleEditUserPasswordPanel()'>打开修改密码面板</button>
+  </div>
+  <div id='edit-user-password-panel' class='hidden'>
+    <div>
+      <label for='edit-user-old-password'>原密码：</label>
+      <input type='password' name='edit-user-old-password' id='edit-user-old-password'>
+    </div>
+    <div>
+      <label for='edit-user-new-password'>新密码：</label>
+      <input type='password' name='edit-user-new-password' id='edit-user-new-password'>
+    </div>
+    <div>
+      <label for='edit-user-reconfirm-password'>二次确认密码：</label>
+      <input type='password' name='edit-user-reconfirm-password' id='edit-user-reconfirm-password'>
+    </div>
+  </div>
+  <div>
+    <button id='edit-user-cancel' onclick='closeEditUserAction()'>取消</button>
+    <button id='edit-user-confirm' onclick='confirmEditUserAction()'>确认</button>
+  </div>
+</div>

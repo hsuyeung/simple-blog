@@ -1,0 +1,8 @@
+<div id='comment-module' th:fragment='comment_module'>
+  <div class='module-title'>
+    <h2>评论管理</h2>
+  </div>
+  <div th:replace='component/admin/comment/comment_data_table :: comment_data_table'></div>
+  <link rel='stylesheet' th:href='${ "/css/admin/comment.min.css?v=" + v }'/>
+  <script th:src='${ "/js/admin/comment.js?v=" + v }'></script>
+</div>

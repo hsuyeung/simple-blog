@@ -1,0 +1,145 @@
+/* message.css */
+
+#message-container {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+
+  /* 采用 flex 弹性布局，让容器内部的所有消息可以水平居中，还能任意的调整宽度 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#message-container .message {
+  background: #fff;
+  margin: 10px 0;
+  padding: 0 10px;
+  height: 40px;
+  box-shadow: 0 0 10px 0 #eee;
+  font-size: 14px;
+  border-radius: 3px;
+
+  /* 让消息内部的三个元素（图标、文本、关闭按钮）可以垂直水平居中 */
+  display: flex;
+  align-items: center;
+  /* 增加一个过渡属性，当 message 元素的高度和 margin 变化时候将会有一个过渡动画 */
+  transition: height 0.2s ease-in-out, margin 0.2s ease-in-out;
+
+
+}
+
+#message-container .message .text {
+  color: #333;
+  padding: 0 20px 0 5px;
+}
+
+#message-container .message .close {
+  cursor: pointer;
+  color: #999;
+}
+
+/* 给每个图标都加上不同的颜色，用来区分不同类型的消息 */
+#message-container .message .icon-info {
+  color: #0482f8;
+}
+
+#message-container .message .icon-error {
+  color: #f83504;
+}
+
+#message-container .message .icon-success {
+  color: #06a35a;
+}
+
+#message-container .message .icon-warning {
+  color: #ceca07;
+}
+
+#message-container .message .icon-loading {
+  color: #0482f8;
+}
+
+
+/* 这个动画规则我们就叫做 message-move-in 吧，随后我们会用 animation 属性在某个元素上应用这个动画规则。 */
+@keyframes message-move-in {
+  0% {
+    /* 前边分析过了，弹出动画是一个自上而下的淡入过程 */
+    /* 所以在动画初始状态要把元素的不透明度设置为0，在动画结束的时候再把不透明度设置1，这样就会实现一个淡入动画 */
+    opacity: 0;
+    /* 那么“自上而下”这个动画可以用 “transform” 变换属性结合他的 “translateY” 上下平移函数来完成 */
+    /* translateY(-100%) 表示动画初始状态，元素在实际位置上面“自身一个高度”的位置。 */
+    transform: translateY(-100%);
+  }
+  100% {
+    opacity: 1;
+    /* 平移到自身位置 */
+    transform: translateY(0);
+  }
+}
+
+
+#message-container .message.move-in {
+  /* animation 属性是用来加载某个动画规则 请参考 https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation */
+  animation: message-move-in 0.3s ease-in-out;
+}
+
+
+@keyframes message-move-out {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
+#message-container .message.move-out {
+  animation: message-move-out 0.3s ease-in-out;
+  /* 让动画结束后保持结束状态 */
+  animation-fill-mode: forwards;
+}
+
+/* 阿里图标库 */
+@font-face {
+  font-family: "icon";
+  src: url('//at.alicdn.com/t/font_1117508_wxidm5ry7od.eot?t=1554098097778'); /* IE9 */
+  src: url('//at.alicdn.com/t/font_1117508_wxidm5ry7od.eot?t=1554098097778#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAASwAAsAAAAACXAAAARhAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDXgqFdIUpATYCJAMcCxAABCAFhD0HXBtNCFGUL0qC7GuMwfUModQ5d89yCS2IguQlYTzox9H5PfHlpWFpEC0ubQKL/QJcYxBBtFZWz/RCiEgotIBChV2EASSXCBX5xofBiPtz7s0nnCJ450fACtP2peU0NJSTZudnZywngIyp2Q4m293vbjhIKItjihNIZS3s4mx2bTEk1jI8gciSLJCwesNvAaBfaMOve98XmEY5wnfz3a39QU5QZFVbdF5i+gcD/3G/4l/jK/C2ASA6KCowynZ8xxew8qJK+MQORO8xnOLqb1h0n09guNkGZLZsHVyQsoTLAnHcdykpB7QygxR6RZuwN8VNUNCXS/jGDev347+CKZoKj7Pj4KZDVn79eUjAP1zXN0C85syQD6JiJSKJ84nWk3JOYKWc4Z+/mbcHMVqvaH/98v5qf3X63Pk8/P8Eq3EwjKZ4qhS9/c/TEi0uHQnEAUm7kDyNSeXXO5Pkt51J8NuJSeH/DpOG/4cyi4p1i0djFD4DsZ8RG81VIUlYY9YzIfBOsZLGd25VXu8jbXf6O5mXeVhHN3GEsYVtgIyXm9AHradeL9uATxQOXxaLRydnjMJbK6L0zDFsY6Jt8bFHRO6RB/FTztgwMNYuFWkR8SNHnjiJz5JGGDLNn6gcgzdXhWUVo8vr46LysuGJDUxSWT6CbcHi0jX9JpvoOrSRi+KG10H6vQ0GY25JMkc36XmPmdEouyf9E33O07RhdBOWZPYHx3yQMC19ZCzZWkLAR35/5xmxDLYu9AqejrN5PTy2lgc0d06bS6k1uX9wWvJPVHBJZp7qnXWdMCJ3gR5WVL//cZmeBgxOanWDbCXDjsu4WzpKRUciLwh3CYkhh/Y3byXAmC7LvYr4Hs70do3p3dBqyD5xPqoJ9l+te2FzLY0T/svpCG1o9hqPZHJ33jEGNEMzFch0HfRQKdIox2/yaAiNEun5XePlysEZfBnivwZ9vTqLA8PGZXIbZLU687F4Dc46J/785DmxDLYu9IYAhKBE8yY+gOzpaGSIjSCNxyPLQad7CAZzBLGO9++/I0k9Awh1e/aHQUxK4TEZBN9kz/LCloUvZiR4c3V9wKqrB3uFwrz7bFSSASAVAeq6fPO1voHgXIHOGjnOkNpw6uHuco731Zx8UuFUQprkQdGZBlWaiySxEBojLIVW2gDDrTB98AgTWHIih2E5wyD0XkAx2iuoeq+RJIagMdkntHrvYbh9/o85wuJo9C6RanTAegbf5glTNbpqx5+hayIqFY7mvUKpfPDA6NCIP7yNCcoqG9SDO6Y1AyZ5DFulL4ZRxCGVPEBbD3lap3PDwyzpjYZsHpOqzSREacgBLM+Az8YlmOHUqpHVZ5DLiFAyQWCZryCIlcKBTDBqyEgGsi1NMut2Fas8cI0JJI0tYiQuBrY6N6OIAhxIk2cFkE0b4lXwpeYM80asqHSoW3m8P4dgODxBFyVqZDTRRhe9PDL/tykpY9uoVCni1PETt2BHXGHpkcokEI9SckkIAAAA') format('woff2'),
+  url('//at.alicdn.com/t/font_1117508_wxidm5ry7od.woff?t=1554098097778') format('woff'),
+  url('//at.alicdn.com/t/font_1117508_wxidm5ry7od.ttf?t=1554098097778') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */ url('//at.alicdn.com/t/font_1117508_wxidm5ry7od.svg?t=1554098097778#icon') format('svg'); /* iOS 4.1- */
+}
+
+.icon {
+  font-family: "icon", serif !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-info:before {
+  content: "\e72a";
+}
+
+.icon-success:before {
+  content: "\e730";
+}
+
+.icon-loading:before {
+  content: "\e6a6";
+}
+
+.icon-close:before {
+  content: "\e6e9";
+}
+
+.icon-warning:before {
+  content: "\ebad";
+}
+
+.icon-error:before {
+  content: "\ebb2";
+}

@@ -1,0 +1,19 @@
+<div id='login-form' th:fragment='login_module'>
+  <div>
+    <label for='login-username'>用户名：</label>
+    <input id='login-username' type='text' placeholder='请输入用户名'>
+  </div>
+  <div>
+    <label for='login-password'>密码：</label>
+    <input id='login-password' type='password' placeholder='请输入登录密码'>
+  </div>
+  <div>
+    <input type='checkbox' id='remember-me'>
+    <label for='remember-me'>记住我</label>
+  </div>
+  <div>
+    <button id='login-btn' onclick='loginAction()'>登录</button>
+  </div>
+  <link rel='stylesheet' th:href='${ "/css/admin/login.min.css?v=" + v }'/>
+  <script th:src='${ "/js/admin/login.js?v=" + v }'></script>
+</div>

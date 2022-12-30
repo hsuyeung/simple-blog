@@ -1,0 +1,35 @@
+<div id='edit-system-config-panel' class='hidden' th:fragment='edit_system_config_panel'>
+  <div>
+    <span>系统配置 ID：</span>
+    <span id='edit-system-config-id'></span>
+  </div>
+  <div>
+    <span>系统配置 key：</span>
+    <span id="edit-system-config-key"></span>
+  </div>
+  <div>
+    <label for='edit-system-config-value'>系统配置 value：</label>
+    <input type='text' name='edit-system-config-value' id='edit-system-config-value'>
+  </div>
+  <div>
+    <span>系统配置默认 value：</span>
+    <span id="edit-system-config-default-value"></span>
+  </div>
+  <div>
+    <span>系统配置分组：</span>
+    <span id="edit-system-config-group"></span>
+  </div>
+  <div>
+    <span>系统配置描述：</span>
+    <span id="edit-system-config-desc"></span>
+  </div>
+  <div>
+    <label for='edit-system-config-enabled'>是否可用：</label>
+    <input type='checkbox' name='edit-system-config-enabled' id='edit-system-config-enabled'>
+  </div>
+
+  <div>
+    <button id='edit-system-config-cancel' onclick='closeEditSystemConfigAction()'>取消</button>
+    <button id='edit-system-config-confirm' onclick='confirmEditSystemConfigAction()'>确认</button>
+  </div>
+</div>

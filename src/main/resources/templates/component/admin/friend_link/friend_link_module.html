@@ -1,0 +1,10 @@
+<div id='friend-link-module' th:fragment='friend_link_module'>
+  <div class='module-title'>
+    <h2>友链管理</h2>
+  </div>
+  <div th:replace='component/admin/friend_link/friend_link_data_table :: friend_link_data_table'></div>
+  <div th:replace='component/admin/friend_link/edit_friend_link_panel :: edit_friend_link_panel'></div>
+  <div th:replace='component/admin/friend_link/add_friend_link_panel :: add_friend_link_panel'></div>
+  <link rel='stylesheet' th:href='${ "/css/admin/friend_link.min.css?v=" + v }'/>
+  <script th:src='${ "/js/admin/friend_link.js?v=" + v }'></script>
+</div>

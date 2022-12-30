@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang='zh' xmlns:th='http://www.thymeleaf.org'>
+<head>
+  <title>归档 | Hsu Yeung 的博客</title>
+  <meta http-equiv='content-type' content='text/html; charset=utf-8'/>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <meta name='description' th:content='${ archiveCustomConf.blogArchiveDesc }'/>
+  <meta name='keywords' th:content='${ archiveCustomConf.blogArchiveKeywords }'/>
+  <link rel='icon' href='/favicon.ico' type='image/x-icon'>
+  <link rel='stylesheet' th:href='${ "/css/common.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/header.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/article_list.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/about_footer.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/footer.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/iconmoon.min.css?v=" + v }'/>
+</head>
+<body>
+<div class='container'>
+  <div th:replace='component/header :: header'></div>
+  <div>
+    <figure>
+      <img class='width-force-100' th:src='${ archiveCustomConf.blogArchiveBannerImg }' alt='banner'/>
+      <figcaption></figcaption>
+    </figure>
+    <div th:if='${ archive eq null }'>
+      <h2>这个博主很懒，暂时还没有发表文章( •́ω•̩̥̀ )</h2>
+    </div>
+    <div th:if='${ archive ne null }'>
+      <h4 th:text='${ "总计 " + archive.getTotalSize + " 篇文章。" }'></h4>
+      <div class='article-list'>
+        <div th:each='archiveNode : ${ archive.archiveNodeList }'>
+          <h5 class='quote' th:text='${ archiveNode.time + " (" + archiveNode.articleList.size() + ")" }'></h5>
+          <ul>
+            <li th:each='article: ${ archiveNode.articleList }'>
+              <a th:href='${ "/article/" + article.route}' th:text='${ article.title }'></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div th:replace='component/about_footer :: about_footer'></div>
+    </div>
+  </div>
+</div>
+<div th:replace='component/footer :: footer'></div>
+</body>
+</html>

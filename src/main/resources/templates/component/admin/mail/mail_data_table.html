@@ -1,0 +1,76 @@
+<div id='mail-data-table' th:fragment='mail_data_table'>
+  <div id='mail-data-search-form'>
+    <div>
+      <span>
+        <label for='search-mail-from'>发件人：</label>
+        <input type='text' id='search-mail-from' placeholder='发件人'>
+      </span>
+      <span>
+        <label for='search-mail-to'>收件人：</label>
+        <input type='text' id='search-mail-to' placeholder='收件人'>
+      </span>
+      <span>
+        <label for='search-mail-subject'>主题：</label>
+        <input type='text' id='search-mail-subject' placeholder='主题'>
+      </span>
+      <span>
+        <label for='search-mail-cc'>抄送：</label>
+        <input type='text' id='search-mail-cc' placeholder='抄送'>
+      </span>
+      <span>
+        <label for='search-mail-bcc'>密送：</label>
+        <input type='text' id='search-mail-bcc' placeholder='密送'>
+      </span>
+    </div>
+    <div>
+      <span>
+        <label for='search-mail-status'>状态：</label>
+        <select name='search-mail-status' id='search-mail-status'>
+          <option value='' selected>全部</option>
+          <option value='0'>发送失败</option>
+          <option value='1'>发送成功</option>
+        </select>
+      </span>
+      <span>
+        <label for='search-mail-type'>类型：</label>
+        <select name='search-mail-type' id='search-mail-type'>
+          <option value='' selected>全部</option>
+          <option value='0'>unknown</option>
+          <option value='1'>评论被回复</option>
+        </select>
+      </span>
+      <span>
+        <label for='search-mail-send-time-start'>开始时间：</label>
+        <input type='datetime-local' step='1' id='search-mail-send-time-start'>
+      </span>
+      <span>
+        <label for='search-mail-send-time-end'>结束时间：</label>
+        <input type='datetime-local' step='1' id='search-mail-send-time-end'>
+      </span>
+      <button id='query-mail-btn' onclick='resetPageNumAndLoadMailTableData()'>查询</button>
+      <button id='close-mail-table' onclick='clearMailTable()'>关闭列表</button>
+    </div>
+  </div>
+  <div id='mail-data-table-body'>
+    <!-- 动态插入数据 -->
+  </div>
+  <div id='mail-data-table-footer'>
+      <span id='mail-page-num-container'>
+        <span>当前第&nbsp;<span id='mail-current-page'><!--x--></span>&nbsp;页</span>
+        <span id='mail-total-page'><!--共 x 页--></span>
+        <span id='mail-total-size'><!--共 x 条--></span>
+        <span id='mail-prev-page'><!--上一页--></span>
+        <span id='mail-page-jump'><!--跳转到第 x 页--></span>
+        <span id='mail-next-page'><!--下一页--></span>
+      </span>
+    <span id='mail-page-size-container'>
+        <label for='mail-page-size'>每页数量：</label>
+        <select name='mail-page-size-sel' id='mail-page-size' onchange='loadMailTableData()'>
+          <option value='10' selected>10</option>
+          <option value='20'>20</option>
+          <option value='50'>50</option>
+          <option value='100'>100</option>
+        </select>
+      </span>
+  </div>
+</div>

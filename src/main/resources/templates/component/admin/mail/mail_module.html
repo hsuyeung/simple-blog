@@ -1,0 +1,8 @@
+<div id='mail-module' th:fragment='mail_module'>
+  <div class='module-title'>
+    <h2>邮件发送记录管理</h2>
+  </div>
+  <div th:replace='component/admin/mail/mail_data_table :: mail_data_table'></div>
+  <link rel='stylesheet' th:href='${ "/css/admin/mail.min.css?v=" + v }'/>
+  <script th:src='${ "/js/admin/mail.js?v=" + v }'></script>
+</div>

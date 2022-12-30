@@ -1,0 +1,26 @@
+<div id='add-user-panel' class='hidden' th:fragment='add_user_panel'>
+  <div>
+    <label for='add-username'>用户名：</label>
+    <input type='text' name='add-username' id='add-username'>
+  </div>
+  <div>
+    <label for='add-nickname'>昵称：</label>
+    <input type='text' name='add-nickname' id='add-nickname'>
+  </div>
+  <div>
+    <label for='add-password'>密码：</label>
+    <input type='password' name='add-password' id='add-password'>
+  </div>
+  <div>
+    <label for='add-reconfirm-password'>确认密码：</label>
+    <input type='password' name='add-reconfirm-password' id='add-reconfirm-password'>
+  </div>
+  <div>
+    <label for='add-user-enabled'>是否可用：</label>
+    <input type='checkbox' name='add-user-enabled' id='add-user-enabled'>
+  </div>
+  <div>
+    <button id='add-user-cancel' onclick='closeAddUserPanel()'>取消</button>
+    <button id='add-user-confirm' onclick='confirmAddUserAction()'>确认</button>
+  </div>
+</div>

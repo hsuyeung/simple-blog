@@ -1,0 +1,26 @@
+<div id='assign-permission-panel' class='hidden' th:fragment='assign_permission_panel'>
+  <div>
+    <span>角色 ID：</span>
+    <span id='assign-permission-role-id'><!--id--></span>
+  </div>
+  <div>
+    <span>角色编码：</span>
+    <span id='assign-permission-role-code'><!--roleCode--></span>
+  </div>
+  <div>
+    <span>角色描述：</span>
+    <span id='assign-permission-role-desc'><!--roleDesc--></span>
+  </div>
+  <div>
+    <span>是否可用：</span>
+    <span id='assign-permission-role-enabled'><!--可用 or 不可用--></span>
+  </div>
+  <div>
+    <span>权限：</span>
+    <span id='assign-permission-all-enabled-permissions'><!--权限列表--></span>
+  </div>
+  <div>
+    <button onclick='closeAssignPermissionPanel()'>关闭</button>
+    <button onclick='confirmAssignPermissionAction()'>确认</button>
+  </div>
+</div>

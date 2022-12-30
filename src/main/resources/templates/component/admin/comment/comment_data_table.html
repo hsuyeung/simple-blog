@@ -1,0 +1,76 @@
+<div id='comment-data-table' th:fragment='comment_data_table'>
+  <div id='comment-data-search-form'>
+    <div>
+      <span>
+        <label for='search-comment-nickname'>昵称：</label>
+        <input type='text' id='search-comment-nickname' placeholder='昵称'>
+      </span>
+      <span>
+        <label for='search-comment-email'>邮箱：</label>
+        <input type='text' id='search-comment-email' placeholder='邮箱'>
+      </span>
+      <span>
+        <label for='search-comment-website'>网站：</label>
+        <input type='text' id='search-comment-website' placeholder='网站'>
+      </span>
+      <span>
+        <label for='search-comment-parent-nickname'>父级评论人：</label>
+        <input type='text' id='search-comment-parent-nickname' placeholder='父级评论人'>
+      </span>
+      <span>
+        <label for='search-comment-reply-nickname'>回复评论人：</label>
+        <input type='text' id='search-comment-reply-nickname' placeholder='回复评论人'>
+      </span>
+    </div>
+    <div>
+      <span id='search-comment-article-span'>
+        <label for='search-comment-article'>文章：</label>
+        <!--动态生成-->
+      </span>
+      <span>
+        <label for='search-comment-ip'>ip：</label>
+        <input type='text' id='search-comment-ip' placeholder='ip'>
+      </span>
+      <span>
+        <label for='search-comment-notification'>是否接收邮件提醒：</label>
+        <select name='search-comment-notification' id='search-comment-notification'>
+          <option value='' selected>全部</option>
+          <option value='0'>不提醒</option>
+          <option value='1'>提醒</option>
+        </select>
+      </span>
+      <span>
+        <label for='search-comment-time-start'>开始时间：</label>
+        <input type='datetime-local' step='1' id='search-comment-time-start'>
+      </span>
+      <span>
+        <label for='search-comment-time-end'>结束时间：</label>
+        <input type='datetime-local' step='1' id='search-comment-time-end'>
+      </span>
+      <button id='query-comment-btn' onclick='resetPageNumAndLoadCommentTableData()'>查询</button>
+      <button id='close-comment-table' onclick='clearCommentTable()'>关闭列表</button>
+    </div>
+  </div>
+  <div id='comment-data-table-body'>
+    <!-- 动态插入数据 -->
+  </div>
+  <div id='comment-data-table-footer'>
+      <span id='comment-page-num-container'>
+        <span>当前第&nbsp;<span id='comment-current-page'><!--x--></span>&nbsp;页</span>
+        <span id='comment-total-page'><!--共 x 页--></span>
+        <span id='comment-total-size'><!--共 x 条--></span>
+        <span id='comment-prev-page'><!--上一页--></span>
+        <span id='comment-page-jump'><!--跳转到第 x 页--></span>
+        <span id='comment-next-page'><!--下一页--></span>
+      </span>
+    <span id='comment-page-size-container'>
+        <label for='comment-page-size'>每页数量：</label>
+        <select name='comment-page-size-sel' id='comment-page-size' onchange='loadCommentTableData()'>
+          <option value='10' selected>10</option>
+          <option value='20'>20</option>
+          <option value='50'>50</option>
+          <option value='100'>100</option>
+        </select>
+      </span>
+  </div>
+</div>

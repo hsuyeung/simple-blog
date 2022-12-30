@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>评论被回复提醒邮件</title>
+</head>
+<div
+  style="background:#fff;width:95%;max-width:800px;margin:auto auto;border-radius:5px;border:orange 1px solid;overflow:hidden;-webkit-box-shadow:0 0 20px 0 rgba(0,0,0,.12);box-shadow:0 0 20px 0 rgba(0,0,0,.18)">
+  <header style="overflow:hidden">
+    <img style="width:100%;z-index:666" src="{{emailHeaderImg}}" alt="email-header">
+  </header>
+  <div style="padding:5px 20px">
+    <p
+      style="position:relative;color:#fff;float:left;z-index:999;background:orange;padding:5px 30px;margin:-25px auto 0;box-shadow:5px 5px 5px rgba(0,0,0,.3)">
+      Dear {{replyCommentAuthor}}
+    </p>
+    <br>
+    <h3>您有一条来自 <a style="text-decoration:none;color:orange" target="_blank" href="{{blogHomeUrl}}" rel="noopener">Hsu
+      Yeung 的博客</a>&nbsp;的回复提醒邮件
+    </h3>
+    <br>
+    <p style="font-size:14px">您在《<a style="text-decoration:none;color:orange" target="_blank" rel="noopener"
+                                    href="{{articleUrl}}">{{articleTitle}}</a>》发表的评论：
+    </p>
+    <p
+      style="border-bottom:#ddd 1px solid;border-left:#ddd 1px solid;padding-bottom:20px;background-color:#eee;margin:15px 0;padding-left:20px;padding-right:20px;border-top:#ddd 1px solid;border-right:#ddd 1px solid;padding-top:20px">
+      {{replyCommentContent}}</p>
+    <p style="font-size:14px">{{commentAuthor}} 给您的回复如下：</p>
+    <p
+      style="border-bottom:#ddd 1px solid;border-left:#ddd 1px solid;padding-bottom:20px;background-color:#eee;margin:15px 0;padding-left:20px;padding-right:20px;border-top:#ddd 1px solid;border-right:#ddd 1px solid;padding-top:20px">
+      {{commentContent}}</p>
+    <div style="text-align:center">
+      <img src="{{emailFooterImg}}"
+           style="width:100%;margin:5px auto 5px auto;display:block" alt="email-footer">
+      <a
+        style="text-transform:uppercase;text-decoration:none;font-size:14px;border:2px solid #6c7575;color:#2f3333;padding:10px;display:inline-block;margin:10px auto 0"
+        target="_blank" href="{{commentUrl}}" rel="noopener">点击查看完整的回复內容</a>
+    </div>
+    <p style="font-size:12px;text-align:center;color:#999">本邮件为系统自动发出，请勿直接回复<br></p>
+  </div>
+</div>
+</html>

@@ -1,0 +1,9 @@
+<div id='system-config-module' th:fragment='system_config_module'>
+  <div class='module-title'>
+    <h2>系统配置管理</h2>
+  </div>
+  <div th:replace='component/admin/system_config/system_config_data_table :: system_config_data_table'></div>
+  <div th:replace='component/admin/system_config/edit_system_config_panel :: edit_system_config_panel'></div>
+  <link rel='stylesheet' th:href='${ "/css/admin/system_config.min.css?v=" + v }'/>
+  <script th:src='${ "/js/admin/system_config.js?v=" + v }'></script>
+</div>

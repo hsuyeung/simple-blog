@@ -1,0 +1,65 @@
+<div id='article-data-table' th:fragment='article_data_table'>
+  <div id='article-data-search-form'>
+    <div>
+      <span>
+        <label for='search-article-title'>文章标题：</label>
+        <input type='text' id='search-article-title' placeholder='文章标题'>
+      </span>
+      <span>
+        <label for='search-article-author'>文章作者：</label>
+        <input type='text' id='search-article-author' placeholder='文章作者'>
+      </span>
+      <span>
+        <label for='search-article-keywords'>文章关键词：</label>
+        <input type='text' id='search-article-keywords' placeholder='文章关键词'>
+      </span>
+      <span>
+        <label for='search-article-desc'>文章描述：</label>
+        <input type='text' id='search-article-desc' placeholder='文章描述'>
+      </span>
+      <span>
+        <label for='search-article-pin'>是否置顶：</label>
+        <select name='search-article-pin' id='search-article-pin'>
+          <option value='' selected>全部</option>
+          <option value='0'>未置顶</option>
+          <option value='1'>置顶</option>
+        </select>
+      </span>
+    </div>
+    <div>
+      <span>
+        <label for='search-article-time-start'>开始时间：</label>
+        <input type='datetime-local' step='1' id='search-article-time-start'>
+      </span>
+      <span>
+        <label for='search-article-time-end'>结束时间：</label>
+        <input type='datetime-local' step='1' id='search-article-time-end'>
+      </span>
+      <button id='query-article-btn' onclick='resetPageNumAndLoadArticleTableData()'>查询</button>
+      <button id='add-article-btn' onclick='addArticleAction()'>新增文章</button>
+      <button id='close-article-table' onclick='clearArticleTable()'>关闭列表</button>
+    </div>
+  </div>
+  <div id='article-data-table-body'>
+    <!-- 动态插入数据 -->
+  </div>
+  <div id='article-data-table-footer'>
+      <span id='article-page-num-container'>
+        <span>当前第&nbsp;<span id='article-current-page'><!--x--></span>&nbsp;页</span>
+        <span id='article-total-page'><!--共 x 页--></span>
+        <span id='article-total-size'><!--共 x 条--></span>
+        <span id='article-prev-page'><!--上一页--></span>
+        <span id='article-page-jump'><!--跳转到第 x 页--></span>
+        <span id='article-next-page'><!--下一页--></span>
+      </span>
+    <span id='article-page-size-container'>
+        <label for='article-page-size'>每页数量：</label>
+        <select name='article-page-size-sel' id='article-page-size' onchange='loadArticleTableData()'>
+          <option value='10' selected>10</option>
+          <option value='20'>20</option>
+          <option value='50'>50</option>
+          <option value='100'>100</option>
+        </select>
+      </span>
+  </div>
+</div>

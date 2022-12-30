@@ -1,0 +1,16 @@
+<div id='article-module' th:fragment='article_module'>
+  <div class='module-title'>
+    <h2>文章管理</h2>
+  </div>
+  <div th:replace='component/admin/article/article_data_table :: article_data_table'></div>
+  <link rel='stylesheet' th:href='${ "/css/admin/article.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/plugin/highlight/monokai-sublime.min.css?v=" + v }'/>
+  <script th:src='${ "/js/admin/article.js?v=" + v }'></script>
+  <script th:src='${ "/plugin/highlight/highlight.min.js?v=" + v }'></script>
+  <script th:src='${ "/plugin/marked/marked.min.js?v=" + v }'></script>
+  <script th:src='${ "/plugin/medium-zoom/medium-zoom.min.js?v=" + v }'></script>
+  <script th:src='${ "/plugin/dompurify/dist/purify.min.js?v=" + v }'></script>
+  <script th:src='${ "/plugin/lazyload/lazyload.js?v=" + v }'></script>
+  <script th:src='${ "/js/marked.renderer.js?v=" + v }'></script>
+  <script th:src='${ "/js/dompurify.config.js?v=" + v }'></script>
+</div>

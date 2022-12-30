@@ -1,0 +1,22 @@
+<div id='edit-role-panel' class='hidden' th:fragment='edit_role_panel'>
+  <div>
+    <span>角色 ID：</span>
+    <span id='edit-role-id'></span>
+  </div>
+  <div>
+    <label for='edit-role-code'>角色编码：</label>
+    <input type='text' name='edit-role-code' id='edit-role-code'>
+  </div>
+  <div>
+    <label for='edit-role-desc'>角色描述：</label>
+    <input type='text' name='edit-role-desc' id='edit-role-desc'>
+  </div>
+  <div>
+    <label for='edit-role-enabled'>是否可用：</label>
+    <input type='checkbox' name='edit-role-enabled' id='edit-role-enabled'>
+  </div>
+  <div>
+    <button id='edit-role-cancel' onclick='closeEditRoleAction()'>取消</button>
+    <button id='edit-role-confirm' onclick='confirmEditRoleAction()'>确认</button>
+  </div>
+</div>

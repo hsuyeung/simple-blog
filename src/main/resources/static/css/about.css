@@ -1,0 +1,8 @@
+.about-comment-bar {
+  margin-top: 4rem;
+  border-bottom: .1rem solid rgba(154, 128, 92, .7)
+}
+
+.about-comment-bar .comment-title {
+  display: inline
+}

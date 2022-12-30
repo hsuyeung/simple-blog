@@ -1,0 +1,19 @@
+.more-article {
+  font-weight: 700
+}
+
+.article-publish-date {
+  float: right;
+  font-size: 1.5rem;
+  color: #8c704f
+}
+
+.pin-icon {
+  margin-right: -0.6rem
+}
+
+@media (max-device-width: 700px) {
+  .article-publish-date {
+    display: none
+  }
+}

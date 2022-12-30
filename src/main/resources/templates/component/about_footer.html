@@ -1,0 +1,12 @@
+<div class='about' th:fragment='about_footer'>
+  <div class='about-avatar'>
+    <a href='/about'>
+      <img class='avatar' th:src='${ commonCustomConf.avatar }' alt='avatar'>
+    </a>
+    <span class='about-text' th:text='${ commonCustomConf.aboutFooterText }'></span>
+  </div>
+  <div class='about-nav'>
+    <a href='/about#contact'><span class='icon-mail'></span>联系我</a>
+  </div>
+  <div class='clear'></div>
+</div>

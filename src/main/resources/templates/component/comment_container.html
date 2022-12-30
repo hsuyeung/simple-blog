@@ -1,0 +1,130 @@
+<div id='comment-container' th:fragment='comment_container'>
+  <section id='comment-thread'>
+    <h4 th:text='${ commentData.totalSize + " 条评论" }'></h4>
+    <div id='comment-box-0'>
+      <div class='form-wrapper'>
+        <div class='textarea-wrapper'>
+          <div>
+            <label for="comment-textarea-0"></label>
+            <textarea id='comment-textarea-0' class='textarea placeholder'></textarea>
+          </div>
+          <div id='preview-textarea-0'>
+            <div>
+              <div class='text-wrapper'>
+                <div id='preview-text-0'></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <section class='comment-form-section'>
+          <div class='input-tips gray'>支持<a href='https://markdown.com.cn/basic-syntax/' target='_blank'
+                                            rel='noopener noreferrer nofollow'>
+            Markdown </a>语法
+          </div>
+          <p class='input-wrapper'>
+            <label for='nickname-0'></label>
+            <input id='nickname-0' type='text' name='nickname' placeholder='昵称（必填）' value='' maxlength='8'>
+          </p>
+          <p class='input-wrapper'>
+            <label for='email-0'></label>
+            <input id='email-0' type='email' name='email' placeholder='电子邮箱（必填，不公开）' value='' maxlength='64'>
+          </p>
+          <p class='input-wrapper'>
+            <label for='website-0'></label>
+            <input id='website-0' type='text' name='website' placeholder='网站（可选）' value='' maxlength='64'>
+          </p>
+          <p class='comment-action'>
+            <input type='submit' id='submit-0' value='提交' onclick='submitCommentAction(0, 0)'>
+          </p>
+          <p class='comment-action'>
+            <input type='button' id='preview-0' name='preview' value='预览' onclick='previewAction(0)'>
+          </p>
+          <p class='comment-action'><input type='button' id='edit-0' name='edit' value='编辑' onclick='editAction(0)'></p>
+        </section>
+        <section class='notification-section'>
+          <input id='notification-0' type='checkbox' name='notification'>
+          <label for='notification-0'>有新回复时发送邮件通知</label>
+        </section>
+      </div>
+    </div>
+    <div id='comment-root'>
+      <div th:id='${ "comment-" + comment.id }' class='comment-item'
+           th:each='comment:${ commentData.commentItemList }'>
+        <div class='avatar'>
+          <img th:src='${ comment.user.avatar }' alt='avatar'>
+        </div>
+        <div class='text-wrapper'>
+          <div role='meta' class='comment-item-header'>
+            <a th:if='${ comment.user.website ne null and comment.user.website ne "" }'
+               th:href='${ comment.user.website }'
+               th:text='${ comment.user.nickname }'
+               target='_blank'
+               rel='noopener noreferrer nofollow' class='nickname'></a>
+            <span th:if='${ comment.user.website eq null or comment.user.website eq "" }' class='nickname'
+                  th:text='${ comment.user.nickname }'></span>
+            <span class='spacer'>•</span>
+            <a th:href='${ "#comment-" + comment.id }' class='permalink'>
+              <time th:title='${ comment.time.formattedTime }'
+                    th:datetime='${ comment.time.standardTime }'
+                    th:text='${ comment.time.beautifyTime } '>
+              </time>
+            </a>
+            <span class='note'></span>
+          </div>
+          <div class='text' th:utext='${ comment.content }'></div>
+          <div th:id='${ "comment-item-footer-" + comment.id }' class='comment-item-footer'>
+            <a href='javascript:void(0)' th:id='${ "reply-" + comment.id }'
+               th:onclick='toggleCommentBox(0, [[${ comment.id }]])' class='reply'>回复</a>
+          </div>
+          <div th:if='${ not #lists.isEmpty(comment.childComments) }' class='comment-follow-up'>
+            <div th:id='${ "comment-" + childComment.id }' class='comment-item'
+                 th:each='childComment : ${ comment.childComments }'>
+              <div class='avatar'>
+                <img th:src='${ childComment.user.avatar }'
+                     onerror="this.onerror=null;this.src=&quot;/img/err_img.jpg&quot;" alt='avatar'>
+              </div>
+              <div class='text-wrapper'>
+                <div role='meta' class='comment-item-header'>
+                  <a th:if='${ childComment.user.website ne null and childComment.user.website ne "" }'
+                     th:href='${ childComment.user.website }'
+                     th:text='${ childComment.user.nickname }'
+                     target='_blank'
+                     rel='noopener noreferrer nofollow' class='nickname'></a>
+                  <span th:if='${ childComment.user.website eq null or childComment.user.website eq "" }'
+                        class='nickname'
+                        th:text='${ childComment.user.nickname }'></span>
+                  <span class='spacer'>•</span>
+                  <a th:href='${ "#comment-" + childComment.id }' class='permalink'>
+                    <time th:title='${ childComment.time.formattedTime }'
+                          th:datetime='${ childComment.time.standardTime }'
+                          th:text='${ childComment.time.beautifyTime } '>
+                    </time>
+                  </a>
+                  <span class='note'></span>
+                </div>
+                <div class='text' th:utext='${ childComment.content }'></div>
+                <div th:id='${ "comment-item-footer-" + childComment.id }' class='comment-item-footer'>
+                  <a href='javascript:void(0)' th:id='${ "reply-" + childComment.id }'
+                     th:onclick='toggleCommentBox([[${ comment.id }]], [[${ childComment.id }]])' class='reply'>回复</a>
+                </div>
+                <div class='comment-follow-up'></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <link rel='stylesheet' th:href='${ "/plugin/message/message.css?v=" + v }'/>
+  <script th:src='${ "/plugin/message/message.js?v=" + v }'></script>
+  <script th:src='${ "/plugin/marked/marked.min.js?v=" + v }'></script>
+  <script th:src='${ "/js/marked.renderer.js?v=" + v }'></script>
+  <script th:src='${ "/plugin/dompurify/dist/purify.min.js?v=" + v }'></script>
+  <script th:src='${ "/plugin/lazyload/lazyload.js?v=" + v }'></script>
+  <script th:src='${ "/js/dompurify.config.js?v=" + v }'></script>
+  <script th:src='${ "/js/constants.js?v=" + v }'></script>
+  <script th:src='${ "/js/comment.js?v=" + v }'></script>
+  <script>
+    getUserInfoFromLocalStorage(0)
+  </script>
+</div>

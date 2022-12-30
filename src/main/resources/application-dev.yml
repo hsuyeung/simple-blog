@@ -1,0 +1,44 @@
+server:
+  port: 8083
+file:
+  # 自定义文件上传路径
+  upload-path: D:\test_img_upload
+  # 创建文件夹的日期格式
+  dir-fmt: yyyy/MM/dd
+  domain: http://localhost:${server.port}
+
+spring:
+  # 配置 MySQL 连接信息
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/blog?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root  # TODO: MySQL 用户名
+    password: 12345 # TODO: MySQL 密码
+  # redis 配置
+  redis:
+    host: localhost
+    port: 6379
+  servlet:
+    multipart:
+      # 限制单个文件的大小
+      max-file-size: 5MB
+      # 限制请求总大小
+      max-request-size: 15MB
+  # thymeleaf 配置
+  thymeleaf:
+    # 关闭缓存，用于即时刷新，上线生产环境时改为 true
+    cache: false
+  web:
+    resources:
+      static-locations:
+        - file:${file.upload-path}
+security:
+  config:
+    exclude-path-patterns:
+      - /api/user/login
+      - /api/comment
+      - /api/user/token/validation
+    path-patterns:
+      - /api/**
+      - /admin/preview/mail/text/*
+    token-name: token

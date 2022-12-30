@@ -1,0 +1,53 @@
+<div id='edit-article-panel' class='hidden' th:fragment='edit_article_panel'>
+  <div>
+    <span>文章 ID：</span>
+    <span id='edit-article-id'></span>
+  </div>
+  <div>
+    <label for='edit-article-title'>文章标题：</label>
+    <input type='text' name='edit-article-title' id='edit-article-title'>
+  </div>
+  <div>
+    <label for='edit-article-route'>文章路由：</label>
+    <input type='text' name='edit-article-route' id='edit-article-route'>
+  </div>
+  <div>
+    <label for='edit-article-author'>文章作者：</label>
+    <input type='text' name='edit-article-author' id='edit-article-author'>
+  </div>
+  <div>
+    <label for='edit-article-keywords'>文章关键词：</label>
+    <input type='text' name='edit-article-keywords' id='edit-article-keywords'>
+  </div>
+  <div>
+    <label for='edit-article-desc'>文章描述：</label>
+    <input type='text' name='edit-article-desc' id='edit-article-desc'>
+  </div>
+  <div>
+    <label for='edit-article-pin'>文章是否置顶：</label>
+    <select name='edit-article-pin' id='edit-article-pin'>
+      <option value='0' selected>不置顶</option>
+      <option value='1'>置顶</option>
+    </select>
+  </div>
+  <div>
+    <label for='edit-article-content'>内容：</label>
+    <textarea id='edit-article-content'></textarea>
+  </div>
+  <div>
+    <button id='clear-article-content-btn' onclick='clearEditContentAction()'>清空输入内容</button>
+    <button id='edit-article-cancel-btn' onclick='closeEditArticlePanelAction()'>取消</button>
+    <button id='edit-article-preview-btn' onclick='previewEditArticleAction()'>预览</button>
+    <button id='edit-article-confirm-btn' onclick='confirmEditArticleAction()'>确认</button>
+  </div>
+  <div>
+    <button onclick='editArticleUploadFileAction()'>上传</button>
+    <input type='file' id='edit-file-upload-input' name='file'>
+    <div>
+      <button onclick='clearEditArticleFileUploadList()'>清空文件上传记录</button>
+    </div>
+  </div>
+  <div id='edit-article-file-upload-list'>
+    <!--动态添加-->
+  </div>
+</div>

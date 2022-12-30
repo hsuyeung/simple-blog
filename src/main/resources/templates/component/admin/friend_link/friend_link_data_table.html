@@ -1,0 +1,46 @@
+<div id='friend-link-data-table' th:fragment='friend_link_data_table'>
+  <div id='friend-link-data-search-form'>
+    <span>
+      <label for='search-friend-link-name'>友链名称：</label>
+      <input type='text' id='search-friend-link-name' placeholder='友链名称'>
+    </span>
+    <span>
+      <label for='search-friend-link-url'>友链链接：</label>
+      <input type='text' id='search-friend-link-url' placeholder='友链链接'>
+    </span>
+    <span>
+      <label for='search-friend-link-desc'>友链描述：</label>
+      <input type='text' id='search-friend-link-desc' placeholder='友链描述'>
+    </span>
+    <span>
+      <label for='search-friend-link-group'>友链分组：</label>
+      <input type='text' id='search-friend-link-group' placeholder='友链分组'>
+    </span>
+    <button id='query-friend-link-btn' onclick='resetPageNumAndLoadFriendLinkTableData()'>查询</button>
+    <button id='add-friend-link-btn' onclick='addFriendLinkAction()'>新增友链</button>
+    <button id='refresh-friend-link-cache-btn' onclick='refreshFriendLinkAction()'>刷新缓存</button>
+    <button id='close-friend-link-table' onclick='clearFriendLinkTable()'>关闭列表</button>
+  </div>
+  <div id='friend-link-data-table-body'>
+    <!-- 动态插入数据 -->
+  </div>
+  <div id='friend-link-data-table-footer'>
+      <span id='friend-link-page-num-container'>
+        <span>当前第&nbsp;<span id='friend-link-current-page'><!--x--></span>&nbsp;页</span>
+        <span id='friend-link-total-page'><!--共 x 页--></span>
+        <span id='friend-link-total-size'><!--共 x 条--></span>
+        <span id='friend-link-prev-page'><!--上一页--></span>
+        <span id='friend-link-page-jump'><!--跳转到第 x 页--></span>
+        <span id='friend-link-next-page'><!--下一页--></span>
+      </span>
+    <span id='friend-link-page-size-container'>
+        <label for='friend-link-page-size'>每页数量：</label>
+        <select name='friend-link-page-size-sel' id='friend-link-page-size' onchange='loadFriendLinkTableData()'>
+          <option value='10' selected>10</option>
+          <option value='20'>20</option>
+          <option value='50'>50</option>
+          <option value='100'>100</option>
+        </select>
+      </span>
+  </div>
+</div>

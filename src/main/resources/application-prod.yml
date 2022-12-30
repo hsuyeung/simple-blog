@@ -1,0 +1,44 @@
+server:
+  port: 8083
+file:
+  # 自定义文件上传路径
+  upload-path: /home/hsuyeung/oss/
+  # 创建文件夹的日期格式
+  dir-fmt: yyyy/MM/dd
+  domain: https://www.hsuyeung.com
+spring:
+  # 配置 MySQL 连接信息
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/blog?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false&serverTimezone=Asia/Shanghai
+    username: # TODO: MySQL 用户名
+    password: # TODO: MySQL 密码
+  # redis 配置
+  redis:
+    host: localhost
+    port: 6379
+    password: # TODO: 线上服务器 Redis 连接密码
+  servlet:
+    multipart:
+      max-file-size: 5MB      # 限制单个文件的大小
+      max-request-size: 15MB  # 限制请求总大小
+  thymeleaf:
+    cache: true
+  web:
+    resources:
+      static-locations:
+        - file:${file.upload-path}
+security:
+  config:
+    exclude-path-patterns:
+      - /api/user/login
+      - /api/comment
+      - /api/user/token/validation
+    path-patterns:
+      - /api/**
+      - /admin/preview/mail/text/*
+    token-name: token
+
+knife4j:
+  enable: true
+  production: true

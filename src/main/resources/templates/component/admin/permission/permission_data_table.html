@@ -1,0 +1,49 @@
+<div id='permission-data-table' th:fragment='permission_data_table'>
+  <div id='permission-data-search-form'>
+    <span>
+      <label for='search-permission-path'>权限路径：</label>
+      <input type='text' id='search-permission-path' placeholder='权限路径'>
+    </span>
+    <span>
+      <label for='search-permission-method'>请求类型：</label>
+      <input type='text' id='search-permission-method' placeholder='请求类型'>
+    </span>
+    <span>
+      <label for='search-permission-desc'>权限描述：</label>
+      <input type='text' id='search-permission-desc' placeholder='权限描述'>
+    </span>
+    <span>
+      <label for='search-permission-enabled'>是否可用：</label>
+      <select name='search-permission-enabled' id='search-permission-enabled'>
+        <option value='' selected>全部</option>
+        <option value='0'>不可用</option>
+        <option value='1'>可用</option>
+      </select>
+    </span>
+    <button id='query-permission-btn' onclick='resetPageNumAndLoadPermissionTableData()'>查询</button>
+    <button id='add-permission-btn' onclick='addPermissionAction()'>新增权限</button>
+    <button id='close-permission-table' onclick='clearPermissionTable()'>关闭列表</button>
+  </div>
+  <div id='permission-data-table-body'>
+    <!-- 动态插入数据 -->
+  </div>
+  <div id='permission-data-table-footer'>
+      <span id='permission-page-num-container'>
+        <span>当前第&nbsp;<span id='permission-current-page'><!--x--></span>&nbsp;页</span>
+        <span id='permission-total-page'><!--共 x 页--></span>
+        <span id='permission-total-size'><!--共 x 条--></span>
+        <span id='permission-prev-page'><!--上一页--></span>
+        <span id='permission-page-jump'><!--跳转到第 x 页--></span>
+        <span id='permission-next-page'><!--下一页--></span>
+      </span>
+    <span id='permission-page-size-container'>
+        <label for='permission-page-size'>每页数量：</label>
+        <select name='permission-page-size-sel' id='permission-page-size' onchange='loadPermissionTableData()'>
+          <option value='10' selected>10</option>
+          <option value='20'>20</option>
+          <option value='50'>50</option>
+          <option value='100'>100</option>
+        </select>
+      </span>
+  </div>
+</div>

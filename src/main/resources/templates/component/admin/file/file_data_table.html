@@ -1,0 +1,42 @@
+<div id='file-data-table' th:fragment='file_data_table'>
+  <div id='file-data-search-form'>
+    <div>
+      <span>
+        <label for='search-file-url'>url：</label>
+        <input type='text' id='search-file-url' placeholder='文件路径'>
+      </span>
+      <span>
+        <label for='search-file-send-time-start'>开始时间：</label>
+        <input type='datetime-local' step='1' id='search-file-send-time-start'>
+      </span>
+      <span>
+        <label for='search-file-send-time-end'>结束时间：</label>
+        <input type='datetime-local' step='1' id='search-file-send-time-end'>
+      </span>
+      <button id='query-file-btn' onclick='resetPageNumAndLoadFileTableData()'>查询</button>
+      <button id='close-file-table' onclick='clearFileTable()'>关闭列表</button>
+    </div>
+  </div>
+  <div id='file-data-table-body'>
+    <!-- 动态插入数据 -->
+  </div>
+  <div id='file-data-table-footer'>
+      <span id='file-page-num-container'>
+        <span>当前第&nbsp;<span id='file-current-page'><!--x--></span>&nbsp;页</span>
+        <span id='file-total-page'><!--共 x 页--></span>
+        <span id='file-total-size'><!--共 x 条--></span>
+        <span id='file-prev-page'><!--上一页--></span>
+        <span id='file-page-jump'><!--跳转到第 x 页--></span>
+        <span id='file-next-page'><!--下一页--></span>
+      </span>
+    <span id='file-page-size-container'>
+        <label for='file-page-size'>每页数量：</label>
+        <select name='file-page-size-sel' id='file-page-size' onchange='loadFileTableData()'>
+          <option value='10' selected>10</option>
+          <option value='20'>20</option>
+          <option value='50'>50</option>
+          <option value='100'>100</option>
+        </select>
+      </span>
+  </div>
+</div>

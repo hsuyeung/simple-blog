@@ -1,0 +1,26 @@
+<div id='assign-role-panel' class='hidden' th:fragment='assign_role_panel'>
+  <div>
+    <span>用户 ID：</span>
+    <span id='assign-role-user-id'><!--id--></span>
+  </div>
+  <div>
+    <span>用户名：</span>
+    <span id='assign-role-username'><!--username--></span>
+  </div>
+  <div>
+    <span>用户昵称：</span>
+    <span id='assign-role-nickname'><!--nickname--></span>
+  </div>
+  <div>
+    <span>是否可用：</span>
+    <span id='assign-role-user-enabled'><!--可用 or 不可用--></span>
+  </div>
+  <div>
+    <span>角色列表：</span>
+    <span id='assign-role-all-enabled-roles'><!--角色列表--></span>
+  </div>
+  <div>
+    <button onclick='closeAssignRolePanel()'>关闭</button>
+    <button onclick='confirmAssignRoleAction()'>确认</button>
+  </div>
+</div>

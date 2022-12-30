@@ -1,0 +1,30 @@
+.back-home {
+  font-size: 1.5rem;
+  border-bottom: .1rem solid rgba(154, 128, 92, .7);
+  display: block
+}
+
+.article-title-container {
+  padding: 0 0 1.5rem 0
+}
+
+.article-meta {
+  margin-bottom: 2.8rem;
+  font-size: 1.5rem
+}
+
+.article-sign {
+  text-align: right;
+  margin-top: 4.5rem;
+  font-size: 1.5rem
+}
+
+.article-sign,
+.article-sign a:link,
+.article-sign a:visited {
+  color: #8c704f
+}
+
+.article-sign a:hover {
+  color: rgb(235, 171, 10, 1)
+}

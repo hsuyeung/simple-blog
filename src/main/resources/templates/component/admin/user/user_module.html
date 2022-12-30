@@ -1,0 +1,11 @@
+<div id='user-module' th:fragment='user_module'>
+  <div class='module-title'>
+    <h2>用户管理</h2>
+  </div>
+  <div th:replace='component/admin/user/user_data_table :: user_data_table'></div>
+  <div th:replace='component/admin/user/edit_user_panel :: edit_user_panel'></div>
+  <div th:replace='component/admin/user/assign_role_panel :: assign_role_panel'></div>
+  <div th:replace='component/admin/user/add_user_panel :: add_user_panel'></div>
+  <link rel='stylesheet' th:href='${ "/css/admin/user.min.css?v=" + v }'/>
+  <script th:src='${ "/js/admin/user.js?v=" + v }'></script>
+</div>

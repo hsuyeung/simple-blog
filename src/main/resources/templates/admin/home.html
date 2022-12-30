@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang='zh' xmlns:th='http://www.thymeleaf.org'>
+<head>
+  <title>管理后台 | Hsu Yeung 的博客</title>
+  <meta http-equiv='content-type' content='text/html; charset=utf-8'/>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='icon' href='/favicon.ico' type='image/x-icon'>
+  <link rel='stylesheet' th:href='${ "/css/common.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/admin/index.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/plugin/message/message.css?v=" + v }'/>
+  <script th:src='${ "/js/admin/constants.js?v=" + v }'></script>
+  <script th:src='${ "/js/constants.js?v=" + v }'></script>
+  <script th:src='${ "/js/utils.js?v=" + v }'></script>
+  <script th:src='${ "/js/admin/index.js?v=" + v }'></script>
+  <script th:src='${ "/plugin/message/message.js?v=" + v }'></script>
+</head>
+<body>
+<div>
+  <div id='admin-panel' class='hidden'>
+    <div>
+      <span>欢迎您：<span id='current-nickname'><!--动态生成--></span>(<span id='current-username'><!--动态生成--></span>)</span>
+      <button onclick='logoutAction()'>退出登录</button>
+    </div>
+    <div th:replace='component/admin/article/article_module :: article_module'></div>
+    <div th:replace='component/admin/file/file_module :: file_module'></div>
+    <div th:replace='component/admin/comment/comment_module :: comment_module'></div>
+    <div th:replace='component/admin/mail/mail_module :: mail_module'></div>
+    <div th:replace='component/admin/system_config/system_config_module :: system_config_module'></div>
+    <div th:replace='component/admin/friend_link/friend_link_module :: friend_link_module'></div>
+    <div th:replace='component/admin/user/user_module :: user_module'></div>
+    <div th:replace='component/admin/role/role_module :: role_module'></div>
+    <div th:replace='component/admin/permission/permission_module :: permission_module'></div>
+  </div>
+  <div id='login-panel'>
+    <div th:replace='component/admin/login_module :: login_module'></div>
+  </div>
+  <div>
+    <div th:replace='component/admin/article/edit_article_panel :: edit_article_panel'></div>
+    <div th:replace='component/admin/article/add_article_panel :: add_article_panel'></div>
+    <div th:replace='component/admin/article/preview_article_panel :: preview_article_panel'></div>
+  </div>
+</div>
+<script>
+  checkTokenValidation() ? openAdminPanelAction() : loadRememberMeParam()
+</script>
+</body>
+</html>

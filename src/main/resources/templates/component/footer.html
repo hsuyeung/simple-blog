@@ -1,0 +1,17 @@
+<footer th:fragment='footer'>
+  <div class='copyright'>
+    <span th:text='${ commonCustomConf.footerCopyright }'></span>
+    <span class='divider'>·</span>
+    <a href='/'>Hsu Yeung</a>
+  </div>
+  <div>
+    <a href='/about' th:text='${ commonCustomConf.footerAboutText }'></a>
+    <span class='divider'>·</span>
+    <a href='/friend/link'>友情链接</a>
+  </div>
+  <div>
+    <a href='https://beian.miit.gov.cn/' target='_blank' rel='noopener noreferrer nofollow'
+       th:text='${ commonCustomConf.beianNum }'>
+    </a>
+  </div>
+</footer>

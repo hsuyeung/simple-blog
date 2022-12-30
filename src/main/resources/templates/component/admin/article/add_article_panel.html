@@ -1,0 +1,54 @@
+<div id='add-article-panel' class='hidden' th:fragment='add_article_panel'>
+  <div>
+    <label for='add-article-title'>文章标题：</label>
+    <input type='text' name='add-article-title' id='add-article-title'>
+  </div>
+  <div>
+    <label for='add-article-route'>文章路由：</label>
+    <input type='text' name='add-article-route' id='add-article-route'>
+  </div>
+  <div>
+    <label for='add-article-author'>文章作者：</label>
+    <input type='text' name='add-article-author' id='add-article-author'>
+  </div>
+  <div>
+    <label for='add-article-keywords'>文章关键词：</label>
+    <input type='text' name='add-article-keywords' id='add-article-keywords'>
+  </div>
+  <div>
+    <label for='add-article-desc'>文章描述：</label>
+    <input type='text' name='add-article-desc' id='add-article-desc'>
+  </div>
+  <div>
+    <label for='add-article-pin'>文章是否置顶：</label>
+    <select name='add-article-pin' id='add-article-pin'>
+      <option value='0' selected>不置顶</option>
+      <option value='1'>置顶</option>
+    </select>
+  </div>
+  <div>
+    <label for='add-article-content'>内容：</label>
+    <textarea id='add-article-content' onblur='saveDraftAction()'></textarea>
+  </div>
+  <div>
+    <button id='save-article-draft-btn' onclick='saveDraftAction()'>保存草稿</button>
+    <button id='load-draft-content-btn' onclick='loadDraftContentAction()'>从草稿箱加载内容</button>
+    <button id='clear-article-content-btn' onclick='clearAddContentAction()'>清空输入内容</button>
+    <button id='clear-draft-content-btn' onclick='clearDraftContentAction()'>清空草稿箱内容</button>
+  </div>
+  <div>
+    <button id='add-article-cancel-btn' onclick='closeAddArticlePanelAction()'>取消</button>
+    <button id='add-article-preview-btn' onclick='previewAddArticleAction()'>预览</button>
+    <button id='add-article-confirm-btn' onclick='confirmAddArticleAction()'>确认</button>
+  </div>
+  <div>
+    <button onclick='addArticleUploadFileAction()'>上传</button>
+    <input type='file' id='file-upload-input' name='file'>
+    <div>
+      <button onclick='clearAddArticleFileUploadList()'>清空文件上传记录</button>
+    </div>
+  </div>
+  <div id='add-article-file-upload-list'>
+    <!--动态添加-->
+  </div>
+</div>

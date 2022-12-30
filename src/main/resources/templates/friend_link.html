@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang='zh' xmlns:th='http://www.thymeleaf.org'>
+<head>
+  <title>友链 | Hsu Yeung 的博客</title>
+  <meta http-equiv='content-type' content='text/html; charset=utf-8'/>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <meta name='description' th:content='${ friendLinkCustomConf.friendLinkDesc }'/>
+  <meta name='keywords' th:content='${ friendLinkCustomConf.friendLinkKeywords }'/>
+  <link rel='icon' href='/favicon.ico' type='image/x-icon'>
+  <link rel='stylesheet' th:href='${ "/css/common.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/header.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/friend_link_list.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/about_footer.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/footer.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/iconmoon.min.css?v=" + v }'/>
+</head>
+<body>
+<div class='container'>
+  <div th:replace='component/header :: header'></div>
+  <div>
+    <figure>
+      <img class='width-force-100' th:src='${ friendLinkCustomConf.friendLinkBannerImg }' alt='banner'/>
+      <figcaption></figcaption>
+    </figure>
+    <div th:if='${ friendLinkData eq null }'>
+      <h2>这个博主还没有朋友(ಥ﹏ಥ)</h2>
+    </div>
+    <div class='divider-line-bottom'>
+      <h5>欢迎交换友链 ꉂ(ˊᗜˋ)</h5>
+      <p>
+        请<a href='/about#comment-textarea-0'>&nbsp;留言&nbsp;</a>告诉我你的：
+      </p>
+      <ol>
+        <li>网站名字</li>
+        <li>一句话介绍</li>
+        <li>主页地址</li>
+        <li>头像（HTTPS*）</li>
+      </ol>
+      <p>For Example：</p>
+      <ol>
+        <li>名字:&nbsp;<span><code>Hsu Yeung 的博客</code></span></li>
+        <li>简介:&nbsp;<span><code th:text='${ commonCustomConf.headerText }'></code></span></li>
+        <li>主页地址:&nbsp;<span><code>https://www.hsuyeung.com</code></span></li>
+        <li>头像:&nbsp;<span><code th:text='${ "https://www.hsuyeung.com" + commonCustomConf.avatar }'></code></span>
+        </li>
+      </ol>
+    </div>
+    <div th:if='${ friendLinkData ne null }'>
+      <h4 th:text='${ "总计 " + friendLinkData.totalSize + " 位小伙伴。"}'></h4>
+      <div>
+        <div th:each='linkNode : ${ friendLinkData.friendLinkGroupList }'>
+          <h5 class='quote' th:text='${ linkNode.linkGroup + " (" + linkNode.friendLinkItemList.size() + ")" }'>
+          </h5>
+          <div class='link-list'>
+            <div class='link-list-item' th:each='link: ${ linkNode.friendLinkItemList }'>
+              <a th:href='${ link.linkUrl }' th:title='${ link.linkName }' target='_blank'
+                 rel='noopener noreferrer nofollow'>
+                <div class='link-item-icon'>
+                  <img th:src='${ link.linkAvatar }'
+                       onerror='this.onerror=null;this.src=&quot;/img/err_img.jpg&quot;'
+                       th:alt='${ link.linkName }'>
+                </div>
+                <div class='link-item-name' th:text='${ link.linkName }'></div>
+                <div class='link-item-desc' th:title='${ link.linkDesc }' th:text='${ link.linkDesc }'></div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div th:replace='component/footer :: footer'></div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+.about {
+  display: block;
+  padding-top: 1.4rem;
+  border-top: .1rem solid rgba(154, 128, 92, .2);
+  margin-top: 1.6rem;
+  max-width: 100%;
+  margin-bottom: -3.2rem;
+  font-size: 1.5rem
+}
+
+.about-avatar {
+  float: left
+}
+
+.avatar {
+  display: inline;
+  width: 2.3rem;
+  height: 2.3rem
+}
+
+.about-text {
+  margin-left: 1rem;
+  vertical-align: top
+}
+
+.about-nav {
+  float: right
+}
+
+.about a:link, .about a:visited, .nav a:link, .nav a:visited {
+  color: #503214
+}
+
+.about a:hover, .nav a:hover {
+  color: rgb(235, 171, 10, 1)
+}
+
+.about [class*=" icon-"], .about [class^=icon-] {
+  margin-right: .2rem
+}
+
+@media (max-device-width: 700px) {
+  .about {
+    display: none
+  }
+}

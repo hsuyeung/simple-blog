@@ -1,0 +1,8 @@
+<div id='file-module' th:fragment='file_module'>
+  <div class='module-title'>
+    <h2>文件上传记录管理</h2>
+  </div>
+  <div th:replace='component/admin/file/file_data_table :: file_data_table'></div>
+  <link rel='stylesheet' th:href='${ "/css/admin/file.min.css?v=" + v }'/>
+  <script th:src='${ "/js/admin/file.js?v=" + v }'></script>
+</div>

@@ -1,0 +1,50 @@
+logging:
+  config: classpath:logback-spring.xml
+spring:
+  profiles:
+    active: dev
+  # 发送邮件的配置
+  mail:
+    host:     # TODO: 邮件服务器域名
+    username: # TODO: 邮箱账号
+    password: # TODO: 邮箱设置里开启 POP3/SMTP 服务时生成的授权码，不是登录密码
+    properties:
+      mail:
+        smtp:
+          socketFactory:
+            # 使用 465 端口来代替默认的 25 端口，否则阿里云服务器上无法访问 25 端口
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+          ssl: enable
+          auth: true
+          starttls:
+            enable: true
+            required: true
+# mybatis plus 相关配置
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-aliases-package: com.hsuyeung.blog.model.entity
+  type-enums-package: com.hsuyeung.blog.constant.enums
+  # mapper xml 映射文件所在位置
+  mapper-locations: classpath:mapper/*Mapper.xml
+  global-config:
+    db-config:
+      # 全局逻辑删除字段名
+      logic-delete-field: deleted
+      # 逻辑已删除值(默认为 1)
+      logic-delete-value: 1
+      # 逻辑未删除值(默认为 0)
+      logic-not-delete-value: 0
+# 自定义 HttpClient 的 RequestConfig 配置
+http:
+  client:
+    request:
+      config:
+        connectionRequestTimeout: 6000
+        connectTimeout: 6000
+        socketTimeout: 6000
+server:
+  compression:
+    enabled: true
+    min-response-size: 1024

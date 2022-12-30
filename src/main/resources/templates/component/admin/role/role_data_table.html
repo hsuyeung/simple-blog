@@ -1,0 +1,41 @@
+<div id='role-data-table' th:fragment='role_data_table'>
+  <div id='role-data-search-form'>
+    <span>
+      <label for='search-role-code'>角色编码：</label>
+      <input type='text' id='search-role-code' placeholder='角色编码'>
+    </span>
+    <span>
+      <label for='search-role-enabled'>是否可用：</label>
+      <select name='search-role-enabled' id='search-role-enabled'>
+        <option value='' selected>全部</option>
+        <option value='0'>不可用</option>
+        <option value='1'>可用</option>
+      </select>
+    </span>
+    <button id='query-role-btn' onclick='resetPageNumAndLoadRoleTableData()'>查询</button>
+    <button id='add-role-btn' onclick='addRoleAction()'>新增角色</button>
+    <button id='close-role-table' onclick='clearRoleTable()'>关闭列表</button>
+  </div>
+  <div id='role-data-table-body'>
+    <!-- 动态插入数据 -->
+  </div>
+  <div id='role-data-table-footer'>
+      <span id='role-page-num-container'>
+        <span>当前第&nbsp;<span id='role-current-page'><!--x--></span>&nbsp;页</span>
+        <span id='role-total-page'><!--共 x 页--></span>
+        <span id='role-total-size'><!--共 x 条--></span>
+        <span id='role-prev-page'><!--上一页--></span>
+        <span id='role-page-jump'><!--跳转到第 x 页--></span>
+        <span id='role-next-page'><!--下一页--></span>
+      </span>
+    <span id='role-page-size-container'>
+        <label for='role-page-size'>每页数量：</label>
+        <select name='role-page-size-sel' id='role-page-size' onchange='loadRoleTableData()'>
+          <option value='10' selected>10</option>
+          <option value='20'>20</option>
+          <option value='50'>50</option>
+          <option value='100'>100</option>
+        </select>
+      </span>
+  </div>
+</div>

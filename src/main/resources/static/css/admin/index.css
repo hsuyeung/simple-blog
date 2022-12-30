@@ -1,0 +1,6 @@
+.module-title {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  align-items: center;
+}

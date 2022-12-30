@@ -1,0 +1,10 @@
+<div id='permission-module' th:fragment='permission_module'>
+  <div class='module-title'>
+    <h2>权限管理</h2>
+  </div>
+  <div th:replace='component/admin/permission/permission_data_table :: permission_data_table'></div>
+  <div th:replace='component/admin/permission/edit_permission_panel :: edit_permission_panel'></div>
+  <div th:replace='component/admin/permission/add_permission_panel :: add_permission_panel'></div>
+  <link rel='stylesheet' th:href='${ "/css/admin/permission.min.css?v=" + v }'/>
+  <script th:src='${ "/js/admin/permission.js?v=" + v }'></script>
+</div>

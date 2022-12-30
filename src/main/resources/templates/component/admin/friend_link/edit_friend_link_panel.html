@@ -1,0 +1,30 @@
+<div id='edit-friend-link-panel' class='hidden' th:fragment='edit_friend_link_panel'>
+  <div>
+    <span>友链 ID：</span>
+    <span id='edit-friend-link-id'></span>
+  </div>
+  <div>
+    <label for='edit-friend-link-name'>友链名字：</label>
+    <input type='text' name='edit-friend-link-name' id='edit-friend-link-name'>
+  </div>
+  <div>
+    <label for='edit-friend-link-url'>友链链接：</label>
+    <input type='text' name='edit-friend-link-url' id='edit-friend-link-url'>
+  </div>
+  <div>
+    <label for='edit-friend-link-avatar'>友链头像：</label>
+    <input type='text' name='edit-friend-link-avatar' id='edit-friend-link-avatar'>
+  </div>
+  <div>
+    <label for='edit-friend-link-desc'>友链描述：</label>
+    <input type='text' name='edit-friend-link-desc' id='edit-friend-link-desc'>
+  </div>
+  <div>
+    <label for='edit-friend-link-group'>友链分组：</label>
+    <input type='text' name='edit-friend-link-group' id='edit-friend-link-group'>
+  </div>
+  <div>
+    <button id='edit-friend-link-cancel' onclick='closeEditFriendLinkAction()'>取消</button>
+    <button id='edit-friend-link-confirm' onclick='confirmEditFriendLinkAction()'>确认</button>
+  </div>
+</div>

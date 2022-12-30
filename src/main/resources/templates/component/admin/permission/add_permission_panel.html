@@ -1,0 +1,22 @@
+<div id='add-permission-panel' class='hidden' th:fragment='add_permission_panel'>
+  <div>
+    <label for='add-permission-path'>权限路径：</label>
+    <input type='text' name='add-permission-path' id='add-permission-path'>
+  </div>
+  <div>
+    <label for='add-permission-method'>请求类型：</label>
+    <input type='text' name='add-permission-method' id='add-permission-method'>
+  </div>
+  <div>
+    <label for='add-permission-desc'>权限描述：</label>
+    <input type='text' name='add-permission-desc' id='add-permission-desc'>
+  </div>
+  <div>
+    <label for='add-permission-enabled'>是否可用：</label>
+    <input type='checkbox' name='add-permission-enabled' id='add-permission-enabled'>
+  </div>
+  <div>
+    <button id='add-permission-cancel' onclick='closeAddPermissionPanel()'>取消</button>
+    <button id='add-permission-confirm' onclick='confirmAddPermissionAction()'>确认</button>
+  </div>
+</div>

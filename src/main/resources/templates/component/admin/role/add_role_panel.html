@@ -1,0 +1,18 @@
+<div id='add-role-panel' class='hidden' th:fragment='add_role_panel'>
+  <div>
+    <label for='add-role-code'>角色编码：</label>
+    <input type='text' name='add-role-code' id='add-role-code'>
+  </div>
+  <div>
+    <label for='add-role-desc'>角色描述：</label>
+    <input type='text' name='add-role-desc' id='add-role-desc'>
+  </div>
+  <div>
+    <label for='add-role-enabled'>是否可用：</label>
+    <input type='checkbox' name='add-role-enabled' id='add-role-enabled'>
+  </div>
+  <div>
+    <button id='add-role-cancel' onclick='closeAddRolePanel()'>取消</button>
+    <button id='add-role-confirm' onclick='confirmAddRoleAction()'>确认</button>
+  </div>
+</div>

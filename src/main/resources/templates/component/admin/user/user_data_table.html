@@ -1,0 +1,45 @@
+<div id='user-data-table' th:fragment='user_data_table'>
+  <div id='user-data-search-form'>
+    <span>
+      <label for='admin-username'>用户名：</label>
+      <input type='text' id='admin-username' placeholder='用户名'>
+    </span>
+    <span>
+      <label for='admin-nickname'>用户昵称：</label>
+      <input type='text' id='admin-nickname' placeholder='用户昵称'>
+    </span>
+    <span>
+      <label for='enabled'>是否可用：</label>
+      <select name='enabled-sel' id='enabled'>
+        <option value='' selected>全部</option>
+        <option value='0'>不可用</option>
+        <option value='1'>可用</option>
+      </select>
+    </span>
+    <button id='user-query-btn' onclick='resetPageNumAndLoadUserTableData()'>查询</button>
+    <button id='add-user' onclick='addUserAction()'>新增用户</button>
+    <button id='close-user-table' onclick='clearUserTable()'>关闭列表</button>
+  </div>
+  <div id='user-data-table-body'>
+    <!-- 动态插入数据 -->
+  </div>
+  <div id='user-data-table-footer'>
+      <span id='user-page-num-container'>
+        <span>当前第&nbsp;<span id='user-current-page'><!--x--></span>&nbsp;页</span>
+        <span id='user-total-page'><!--共 x 页--></span>
+        <span id='user-total-size'><!--共 x 条--></span>
+        <span id='user-prev-page'><!--上一页--></span>
+        <span id='user-page-jump'><!--跳转到第 x 页--></span>
+        <span id='user-next-page'><!--下一页--></span>
+      </span>
+    <span id='user-page-size-container'>
+        <label for='user-page-size'>每页数量：</label>
+        <select name='user-page-size-sel' id='user-page-size' onchange='loadUserTableData()'>
+          <option value='10' selected>10</option>
+          <option value='20'>20</option>
+          <option value='50'>50</option>
+          <option value='100'>100</option>
+        </select>
+      </span>
+  </div>
+</div>

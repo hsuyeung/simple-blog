@@ -1,0 +1,26 @@
+<div id='edit-permission-panel' class='hidden' th:fragment='edit_permission_panel'>
+  <div>
+    <span>权限 ID：</span>
+    <span id='edit-permission-id'></span>
+  </div>
+  <div>
+    <label for='edit-permission-path'>权限路径：</label>
+    <input type='text' name='edit-permission-path' id='edit-permission-path'>
+  </div>
+  <div>
+    <label for='edit-permission-method'>权限路径：</label>
+    <input type='text' name='edit-permission-method' id='edit-permission-method'>
+  </div>
+  <div>
+    <label for='edit-permission-desc'>权限描述：</label>
+    <input type='text' name='edit-permission-desc' id='edit-permission-desc'>
+  </div>
+  <div>
+    <label for='edit-permission-enabled'>是否可用：</label>
+    <input type='checkbox' name='edit-permission-enabled' id='edit-permission-enabled'>
+  </div>
+  <div>
+    <button id='edit-permission-cancel' onclick='closeEditPermissionAction()'>取消</button>
+    <button id='edit-permission-confirm' onclick='confirmEditPermissionAction()'>确认</button>
+  </div>
+</div>

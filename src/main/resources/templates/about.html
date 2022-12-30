@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang='zh' xmlns:th='http://www.thymeleaf.org'>
+<head>
+  <title>关于 | Hsu Yeung 的博客</title>
+  <meta http-equiv='content-type' content='text/html; charset=utf-8'/>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <meta name='description' th:content='${ aboutCustomConf.blogAboutDesc }'/>
+  <meta name='keywords' th:content='${ aboutCustomConf.blogAboutKeywords }'/>
+  <link rel='icon' href='/favicon.ico' type='image/x-icon'>
+  <link rel='stylesheet' th:href='${ "/css/common.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/header.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/about.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/comment.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/about_footer.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/footer.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/iconmoon.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/plugin/highlight/monokai-sublime.min.css?v=" + v }'/>
+  <script th:src='${ "/plugin/medium-zoom/medium-zoom.min.js?v=" + v }'></script>
+  <script th:src='${ "/plugin/highlight/highlight.min.js?v=" + v }'></script>
+</head>
+<body>
+<div class='container'>
+  <div th:replace='component/header :: header'></div>
+  <div>
+    <figure>
+      <img class='width-force-100' th:src='${ aboutCustomConf.blogAboutBannerImg }' alt='banner'/>
+      <figcaption></figcaption>
+    </figure>
+    <div id='contact'>
+      <h5>找到我</h5>
+      <ul>
+        <li>邮箱：<a href='mailto:hsuyeung.com@gmail.com'>hsuyeung.com@gmail.com</a></li>
+        <li>Github：<a href='https://github.com/hsuyeung'>hsuyeung</a></li>
+      </ul>
+    </div>
+    <div id='copyright'>
+      <h5>版权声明</h5>
+      <ul>
+        <li>如有非原创文章涉及侵权，请留言或邮件联系本人，将第一时间删除相关文章。</li>
+        <li>原创文章可经邮件或留言联系本人，如允许转载，请注明原文链接及转载声明。</li>
+      </ul>
+    </div>
+    <div class='about-comment-bar'>
+      <h4 class='comment-title'>评论留言</h4>
+    </div>
+    <div th:replace='component/comment_container :: comment_container'></div>
+    <div th:replace='component/about_footer :: about_footer'></div>
+  </div>
+</div>
+<div th:replace='component/footer :: footer'></div>
+<script>
+  cleanAllCommentTextAreaHeightRecord()
+  mediumZoom('img.zoom-img', {background: '#faf5e3'});
+  hljs.configure({
+    ignoreUnescapedHTML: true
+  })
+  hljs.highlightAll();
+</script>
+</body>
+</html>

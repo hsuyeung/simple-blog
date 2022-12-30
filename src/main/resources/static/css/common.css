@@ -1,0 +1,315 @@
+* {
+  padding: 0;
+  margin: 0;
+  word-break: break-all
+}
+
+html {
+  /*1 rem = 10 px*/
+  font-size: 62.5%;
+  width: 100%;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  /*解决苹果手机点击时屏幕闪动问题*/
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+}
+
+textarea,
+body {
+  font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-size: 1.7rem;
+  line-height: 1.7;
+  color: #503214;
+  background-color: #e9dec8;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: subpixel-antialiased;
+  width: 100%;
+}
+
+p {
+  letter-spacing: .05rem
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 3rem 0 1rem;
+  line-height: 1.35
+}
+
+h1, h2, h3, h4 {
+  color: #4f321c
+}
+
+h5, h6 {
+  color: #4f321c
+}
+
+h1 {
+  font-size: 3.3rem
+}
+
+h2 {
+  font-size: 2.9rem
+}
+
+h3 {
+  font-size: 2.4rem
+}
+
+h4 {
+  font-size: 2.1rem
+}
+
+h5 {
+  font-size: 1.7rem
+}
+
+h6 {
+  font-size: 1.5rem
+}
+
+a:link, a:visited {
+  color: #c58e04;
+  text-decoration: none
+}
+
+a:hover {
+  color: rgb(235, 171, 10, 1);
+  text-decoration: none
+}
+
+table {
+  display: block;
+  padding: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+  overflow: auto;
+  width: 100%
+}
+
+table tr {
+  border-top: .1rem solid rgba(154, 128, 92, .3)
+}
+
+table th {
+  font-weight: 600
+}
+
+table td, table th {
+  border: .1rem solid rgba(154, 128, 92, .3);
+  padding: .6rem 1.3rem
+}
+
+table td :first-child, table th :first-child {
+  margin-top: 0
+}
+
+table td :last-child, table th :last-child {
+  margin-bottom: 0
+}
+
+ol, ul {
+  padding-left: 3rem
+}
+
+ul {
+  list-style: disc
+}
+
+ol {
+  list-style: decimal
+}
+
+ol :first-child,
+ul :first-child {
+  margin-top: 0
+}
+
+ol ul, ul ul {
+  list-style-type: circle
+}
+
+hr {
+  border: none;
+  border-bottom: .1rem solid rgba(154, 128, 92, .7);
+  color: rgba(154, 128, 92, .7);
+  height: .4rem;
+  padding: 0
+}
+
+blockquote {
+  border-left: .4rem solid #f4d03f;
+  padding: 0 1.6rem;
+  margin: 2.5rem auto;
+  color: #8c704f
+}
+
+.quote {
+  border-left: .4rem solid #f4d03f;
+  padding: 0 1.6rem;
+}
+
+:target {
+  animation: target-fade 2s 1;
+  -webkit-animation: target-fade 2s 1;
+  -moz-animation: target-fade 2s 1;
+  background-color: #fcf3cf
+}
+
+summary {
+  color: #c58e04;
+  outline: 0;
+  cursor: pointer
+}
+
+summary:hover {
+  color: rgb(235, 171, 10, 1)
+}
+
+@keyframes target-fade {
+  0% {
+    background-color: #f4d03f
+  }
+  100% {
+    background-color: #fcf3cf
+  }
+}
+
+@-webkit-keyframes target-fade {
+  0% {
+    background-color: #f7dc6f
+  }
+  100% {
+    background-color: #fcf3cf
+  }
+}
+
+@-moz-keyframes target-fade {
+  0% {
+    background-color: #f4d03f
+  }
+  100% {
+    background-color: #fcf3cf
+  }
+}
+
+::selection {
+  background: #e6e6d5
+}
+
+.divider {
+  margin: 0 .4rem;
+  color: rgb(80, 50, 20, .5);
+}
+
+.clear {
+  clear: both
+}
+
+.container {
+  display: block;
+  background-color: #faf5e3;
+  margin: 0 auto;
+  padding: 5rem 5.5rem
+}
+
+header h1 a:link,
+header h1 a:visited {
+  color: #4f321c
+}
+
+figure {
+  width: 100%;
+  margin: 3rem auto
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  border-radius: .5rem;
+}
+
+img.width-force-100 {
+  width: 100%
+}
+
+figure img {
+  margin: 0 auto
+}
+
+figcaption {
+  margin: 1.5rem auto;
+  color: #999;
+  text-align: center;
+  font-size: 1.3rem
+}
+
+pre ::selection {
+  background: #444;
+  color: #fff;
+}
+
+code {
+  background: #f4d03f;
+  padding: .2rem;
+  text-shadow: none;
+  border-radius: .5rem;
+}
+
+pre > code {
+  text-shadow: initial;
+  border-radius: initial;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-device-width: 700px) {
+  body {
+    font-size: 1.8rem
+  }
+
+  .container {
+    max-width: 100%;
+    padding: 1.5rem
+  }
+
+  img.max-width-100 {
+    width: 100%;
+    max-width: 100%
+  }
+}
+
+.gray {
+  color: gray;
+}
+
+.divider-line-bottom {
+  border-bottom: .1rem solid rgba(0, 0, 0, 0.1);
+}
+
+@media (min-device-width: 1281px) {
+  .container {
+    max-width: 768px;
+    box-shadow: 0 .5rem 1rem .4rem rgba(0, 0, 0, .13);
+    margin: 2.2rem auto 0 auto
+  }
+
+  header {
+    margin-bottom: 3rem
+  }
+}
+
+@media print {
+  #comment-container {
+    display: none
+  }
+
+  footer {
+    display: none
+  }
+}
+
+input[id$='-page-jump-to'] {
+  max-width: 4rem;
+}

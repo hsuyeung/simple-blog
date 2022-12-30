@@ -1,0 +1,12 @@
+.article-list ul li {
+  margin-top: .8rem
+}
+
+.article-list a:link,
+.article-list a:visited {
+  color: #503214
+}
+
+.article-list a:hover {
+  color: rgb(235, 171, 10, 1)
+}

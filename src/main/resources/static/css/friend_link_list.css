@@ -1,0 +1,82 @@
+.link-list {
+  overflow: auto;
+  padding: 1rem 1rem 0;
+  text-align: center;
+}
+
+.link-list > .link-list-item {
+  position: relative;
+  float: left;
+  overflow: hidden;
+  margin: 1.5rem .3rem;
+  width: calc(100% / 3 - 1.5rem);
+  height: 9rem;
+  line-height: 1.7rem;
+  border: .1rem solid rgba(0, 0, 0, .1);
+  border-radius: 1rem;
+}
+
+.link-list > .link-list-item:hover {
+  background: #f4d03f;
+}
+
+.link-list > .link-list-item:before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  content: '';
+}
+
+.link-list > .link-list-item a {
+  color: #503214;
+  text-decoration: none;
+}
+
+.link-list > .link-list-item a .link-item-icon {
+  float: left;
+  overflow: hidden;
+  margin: 1.5rem 1rem;
+  width: 6rem;
+  height: 6rem;
+  border-radius: 3.5rem;
+}
+
+.link-list > .link-list-item a .link-item-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.link-item-name {
+  padding: 1.6rem 1rem 0 0;
+  height: 4rem;
+  font-weight: bold;
+}
+
+.link-item-desc {
+  height: 5rem;
+  font-size: 1.5rem;
+}
+
+.link-item-name,
+.link-item-desc {
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media screen and (max-width: 1024px) {
+  .link-list > .link-list-item {
+    width: calc(50% - 1.5rem) !important;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .link-list > .link-list-item {
+    width: calc(100% - 1.5rem) !important;
+  }
+}
