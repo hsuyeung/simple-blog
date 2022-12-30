@@ -23,7 +23,8 @@
    js 文件即可
 6. 图片缩放：[medium-zoom](https://github.com/francoischalifour/medium-zoom)
 7. 弹窗消息提醒：[message_js](https://github.com/nyy-2017/message_js)
-8. 评论后提醒博客管理员，评论被回复后根据被评论人的选择决定是否发送邮件提醒被评论人
+8. 图标使用 [IconMoon](https://icomoon.io/)
+9. 评论后提醒博客管理员，评论被回复后根据被评论人的选择决定是否发送邮件提醒被评论人
 
 ### 博客后台已实现功能
 
@@ -36,9 +37,102 @@
 4. 文章、评论、系统配置、友链、用户、角色、权限管理
 5. 支持上传文件至服务器本地并返回可访问链接（懒得用第三方的 OSS 以后迁移麻烦，所以就自己搞了个简单的文件上传、读取功能）
 
+### 项目结构
+
+```text
+├─main
+│  ├─java
+│  │  └─com
+│  │      └─hsuyeung
+│  │          └─blog
+│  │              ├─annotation            # 自定义注解
+│  │              ├─aop                   # 自定义切面
+│  │              ├─cache                 # 缓存相关
+│  │              │  └─lfu                # 基于内存大小而不是缓存数据个数的 LFU 缓存算法实现
+│  │              ├─config                # 各种配置类
+│  │              │  └─properties         # yml 文件中的自定义配置
+│  │              ├─constant              # 各种常量
+│  │              │  └─enums              # 枚举
+│  │              ├─exception             # 自定义异常以及全局异常处理类
+│  │              ├─filter                # 过滤器
+│  │              ├─interceptor           # 拦截器
+│  │              ├─mapper                # mapper 类
+│  │              ├─model                 # 各种数据对象
+│  │              │  ├─dto                # 接口入参、DAO 层和 Service 层相互传递的数据对象
+│  │              │  │  ├─article         # 博客文章相关 DTO
+│  │              │  │  ├─comment         # 博客评论相关 DTO
+│  │              │  │  ├─friendlink      # 博客友链相关 DTO
+│  │              │  │  ├─mail            # 博客邮件相关 DTO
+│  │              │  │  ├─permission      # 权限相关 DTO
+│  │              │  │  ├─role            # 角色相关 DTO
+│  │              │  │  ├─systemconfig    # 系统内置的一些配置项相关 DTO
+│  │              │  │  └─user            # 用户相关 DTO
+│  │              │  ├─entity             # 数据库表对应的实体类
+│  │              │  └─vo                 # 后端向页面传递的需要渲染的数据对象或第三方返回的数据对象
+│  │              │      ├─article        # 文章相关 VO
+│  │              │      ├─comment        # 评论相关 VO
+│  │              │      ├─customconfig   # 各个页面的自定义配置相关 VO
+│  │              │      ├─file           # 文件相关 VO
+│  │              │      ├─friendlink     # 友链相关 VO
+│  │              │      ├─httpclient     # http client 请求相关 VO
+│  │              │      ├─mail           # 邮件相关 VO
+│  │              │      ├─permission     # 权限相关 VO
+│  │              │      ├─role           # 角色相关 VO
+│  │              │      ├─systemconfig   # 系统内置的一些配置项相关 VO
+│  │              │      └─user           # 角色相关 VO
+│  │              ├─schedule              # 定时任务
+│  │              ├─service               # Service 接口
+│  │              │  └─impl               # Service 接口实现
+│  │              ├─util                  # 一些自定义的工具类
+│  │              └─web                   # web 相关
+│  │                  ├─api               # API 接口
+│  │                  ├─controller        # 页面跳转的控制器
+│  │                  └─core              # 一些 web 相关的核心类
+│  └─resources
+│      ├─mapper                           # 编写的 sql 语句
+│      ├─sql                              # 项目初始化需要执行的 sql 文件
+│      ├─static
+│      │  ├─css                           # 项目需要使用到的样式文件
+│      │  │  └─admin                      # 后台页面相关的样式文件
+│      │  ├─fonts                         # iconmoon 字体以及图标相关文件
+│      │  ├─img                           # 图片资源
+│      │  ├─js                            # js 文件
+│      │  │  └─admin                      # 管理后台的 js 文件
+│      │  └─plugin                        # 项目用到的一些外部代码（插件）
+│      │      ├─dompurify                 # xss 净化
+│      │      │  ├─dist
+│      │      │  └─src
+│      │      ├─highlight                 # 代码高亮
+│      │      ├─lazyload                  # 图片懒加载
+│      │      ├─marked                    # markdown 渲染
+│      │      ├─medium-zoom               # 图片点击缩放
+│      │      └─message                   # 消息弹窗
+│      └─templates
+│          ├─admin                        # 管理后台相关页面文件
+│          ├─component                    # 页面组件
+│          │  └─admin                     # 管理后台组件
+│          │      ├─article               # 文章管理相关组件
+│          │      ├─comment               # 评论管理相关组件
+│          │      ├─file                  # 文件管理相关组件
+│          │      ├─friend_link           # 友链管理相关组件
+│          │      ├─mail                  # 邮件管理相关组件
+│          │      ├─permission            # 权限管理相关组件
+│          │      ├─role                  # 角色管理相关组件
+│          │      ├─system_config         # 系统配置管理相关组件
+│          │      └─user                  # 用户管理相关组件
+│          ├─error                        # 404 以及 500 错误页面定义
+│          └─mail                         # 邮件模板文件定义
+└─test                                    # 单元测试相关
+    └─java
+        └─com
+            └─hsuyeung
+                └─blog
+
+```
+
 ## 部署步骤
 
-该部署步骤只介绍让项目正常跑起来必须要做的事情，可改可不改以及页面、功能修改请参考文末的 `修改建议`
+该部署步骤只介绍让项目正常跑起来必须要做的事情，可改可不改以及页面、功能修改请参考下文的 `修改建议`
 
 1. 补充 `application.yml` 文件中注释中带 **TODO** 标识的配置项
 2. `application-dev.yml` 为开发环境配置，`application-prod.yml` 为生产环境配置，根据自己的情况补充其中带 **TODO** 标识的配置项
