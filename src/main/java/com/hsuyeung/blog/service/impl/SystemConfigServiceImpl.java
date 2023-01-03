@@ -79,14 +79,7 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigMapper, Sys
         if (Objects.nonNull(homeCustomConfigVO)) {
             return homeCustomConfigVO;
         }
-        homeCustomConfigVO = HomeCustomConfigVO.builder()
-                .blogHomeTitle(getConfigValue(CUSTOM_BLOG_HOME_TITLE, String.class))
-                .blogHomeDesc(getConfigValue(CUSTOM_BLOG_HOME_DESC, String.class))
-                .blogHomeKeywords(getConfigValue(CUSTOM_BLOG_HOME_KEYWORDS, String.class))
-                .blogHomeBannerImg(getConfigValue(CUSTOM_BLOG_HOME_BANNER_IMG, String.class))
-                .build();
-        systemConfigCache.cachePageCustomConfigCache(key, homeCustomConfigVO);
-        return homeCustomConfigVO;
+        return this.getAndCacheHomeCustomConfig(key);
     }
 
     @Override
@@ -96,13 +89,7 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigMapper, Sys
         if (Objects.nonNull(archiveCustomConfigVO)) {
             return archiveCustomConfigVO;
         }
-        archiveCustomConfigVO = ArchiveCustomConfigVO.builder()
-                .blogArchiveDesc(getConfigValue(CUSTOM_BLOG_ARCHIVE_DESC, String.class))
-                .blogArchiveKeywords(getConfigValue(CUSTOM_BLOG_ARCHIVE_KEYWORDS, String.class))
-                .blogArchiveBannerImg(getConfigValue(CUSTOM_BLOG_ARCHIVE_BANNER_IMG, String.class))
-                .build();
-        systemConfigCache.cachePageCustomConfigCache(key, archiveCustomConfigVO);
-        return archiveCustomConfigVO;
+        return this.getAndCacheArchiveCustomConfig(key);
     }
 
     @Override
@@ -112,14 +99,9 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigMapper, Sys
         if (Objects.nonNull(aboutCustomConfigVO)) {
             return aboutCustomConfigVO;
         }
-        aboutCustomConfigVO = AboutCustomConfigVO.builder()
-                .blogAboutDesc(getConfigValue(CUSTOM_BLOG_ABOUT_DESC, String.class))
-                .blogAboutKeywords(getConfigValue(CUSTOM_BLOG_ABOUT_KEYWORDS, String.class))
-                .blogAboutBannerImg(getConfigValue(CUSTOM_BLOG_ABOUT_BANNER_IMG, String.class))
-                .build();
-        systemConfigCache.cachePageCustomConfigCache(key, aboutCustomConfigVO);
-        return aboutCustomConfigVO;
+        return this.getAndCacheAboutCustomConfig(key);
     }
+
 
     @Override
     public CommonCustomConfigVO getCommonCustomConfig() {
@@ -128,16 +110,7 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigMapper, Sys
         if (Objects.nonNull(commonCustomConfigVO)) {
             return commonCustomConfigVO;
         }
-        commonCustomConfigVO = CommonCustomConfigVO.builder()
-                .headerText(getConfigValue(CUSTOM_HEADER_TEXT, String.class))
-                .aboutFooterText(getConfigValue(CUSTOM_ABOUT_FOOTER_TEXT, String.class))
-                .footerCopyright(getConfigValue(CUSTOM_FOOTER_COPYRIGHT, String.class))
-                .footerAboutText(getConfigValue(CUSTOM_FOOTER_ABOUT_TEXT, String.class))
-                .beianNum(getConfigValue(CUSTOM_BEI_AN_NUM, String.class))
-                .avatar(getConfigValue(CUSTOM_BLOG_AVATAR, String.class))
-                .build();
-        systemConfigCache.cachePageCustomConfigCache(key, commonCustomConfigVO);
-        return commonCustomConfigVO;
+        return this.getAndCacheCommonCustomConfig(key);
     }
 
     @Override
@@ -147,13 +120,7 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigMapper, Sys
         if (Objects.nonNull(friendLinkCustomConfigVO)) {
             return friendLinkCustomConfigVO;
         }
-        friendLinkCustomConfigVO = FriendLinkCustomConfigVO.builder()
-                .friendLinkDesc(getConfigValue(CUSTOM_FRIEND_LINK_DESC, String.class))
-                .friendLinkKeywords(getConfigValue(CUSTOM_FRIEND_LINK_KEYWORDS, String.class))
-                .friendLinkBannerImg(getConfigValue(CUSTOM_FRIEND_LINK_BANNER_IMG, String.class))
-                .build();
-        systemConfigCache.cachePageCustomConfigCache(key, friendLinkCustomConfigVO);
-        return friendLinkCustomConfigVO;
+        return this.getAndCacheFriendLinkCustomConfig(key);
     }
 
     @Override
@@ -200,6 +167,7 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigMapper, Sys
         systemConfigEntity.setEnabled(updateSystemConfigRequestDTO.getEnabled() ? ON : OFF);
         updateById(systemConfigEntity);
         refreshOneCache(id);
+        refreshAllCustomConfig();
     }
 
     @Override
@@ -223,5 +191,103 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigMapper, Sys
             return;
         }
         entityList.forEach(entity -> systemConfigCache.cacheSystemConfig(entity.getConfGroup(), entity.getConfKey(), entity));
+        refreshAllCustomConfig();
+    }
+
+    // --------------------------------------------- PRIVATE METHOD REGION ---------------------------------------------
+
+    /**
+     * 获取并缓存首页的自定义配置
+     *
+     * @param key 缓存的 key
+     * @return 缓存值
+     */
+    private HomeCustomConfigVO getAndCacheHomeCustomConfig(String key) {
+        HomeCustomConfigVO homeCustomConfigVO = HomeCustomConfigVO.builder()
+                .blogHomeTitle(getConfigValue(CUSTOM_BLOG_HOME_TITLE, String.class))
+                .blogHomeDesc(getConfigValue(CUSTOM_BLOG_HOME_DESC, String.class))
+                .blogHomeKeywords(getConfigValue(CUSTOM_BLOG_HOME_KEYWORDS, String.class))
+                .blogHomeBannerImg(getConfigValue(CUSTOM_BLOG_HOME_BANNER_IMG, String.class))
+                .build();
+        systemConfigCache.cachePageCustomConfigCache(key, homeCustomConfigVO);
+        return homeCustomConfigVO;
+    }
+
+    /**
+     * 获取并缓存归档页面的自定义配置
+     *
+     * @param key 缓存的 key
+     * @return 缓存值
+     */
+    private ArchiveCustomConfigVO getAndCacheArchiveCustomConfig(String key) {
+        ArchiveCustomConfigVO archiveCustomConfigVO = ArchiveCustomConfigVO.builder()
+                .blogArchiveDesc(getConfigValue(CUSTOM_BLOG_ARCHIVE_DESC, String.class))
+                .blogArchiveKeywords(getConfigValue(CUSTOM_BLOG_ARCHIVE_KEYWORDS, String.class))
+                .blogArchiveBannerImg(getConfigValue(CUSTOM_BLOG_ARCHIVE_BANNER_IMG, String.class))
+                .build();
+        systemConfigCache.cachePageCustomConfigCache(key, archiveCustomConfigVO);
+        return archiveCustomConfigVO;
+    }
+
+    /**
+     * 获取并缓存关于页面的自定义配置
+     *
+     * @param key 缓存的 key
+     * @return 缓存值
+     */
+    private AboutCustomConfigVO getAndCacheAboutCustomConfig(String key) {
+        AboutCustomConfigVO aboutCustomConfigVO = AboutCustomConfigVO.builder()
+                .blogAboutDesc(getConfigValue(CUSTOM_BLOG_ABOUT_DESC, String.class))
+                .blogAboutKeywords(getConfigValue(CUSTOM_BLOG_ABOUT_KEYWORDS, String.class))
+                .blogAboutBannerImg(getConfigValue(CUSTOM_BLOG_ABOUT_BANNER_IMG, String.class))
+                .build();
+        systemConfigCache.cachePageCustomConfigCache(key, aboutCustomConfigVO);
+        return aboutCustomConfigVO;
+    }
+
+    /**
+     * 获取并缓存所有页面公共的自定义配置
+     *
+     * @param key 缓存的 key
+     * @return 缓存值
+     */
+    private CommonCustomConfigVO getAndCacheCommonCustomConfig(String key) {
+        CommonCustomConfigVO commonCustomConfigVO = CommonCustomConfigVO.builder()
+                .headerText(getConfigValue(CUSTOM_HEADER_TEXT, String.class))
+                .aboutFooterText(getConfigValue(CUSTOM_ABOUT_FOOTER_TEXT, String.class))
+                .footerCopyright(getConfigValue(CUSTOM_FOOTER_COPYRIGHT, String.class))
+                .footerAboutText(getConfigValue(CUSTOM_FOOTER_ABOUT_TEXT, String.class))
+                .beianNum(getConfigValue(CUSTOM_BEI_AN_NUM, String.class))
+                .avatar(getConfigValue(CUSTOM_BLOG_AVATAR, String.class))
+                .build();
+        systemConfigCache.cachePageCustomConfigCache(key, commonCustomConfigVO);
+        return commonCustomConfigVO;
+    }
+
+    /**
+     * 获取并缓存友链页面的自定义配置
+     *
+     * @param key 缓存的 key
+     * @return 缓存值
+     */
+    private FriendLinkCustomConfigVO getAndCacheFriendLinkCustomConfig(String key) {
+        FriendLinkCustomConfigVO friendLinkCustomConfigVO = FriendLinkCustomConfigVO.builder()
+                .friendLinkDesc(getConfigValue(CUSTOM_FRIEND_LINK_DESC, String.class))
+                .friendLinkKeywords(getConfigValue(CUSTOM_FRIEND_LINK_KEYWORDS, String.class))
+                .friendLinkBannerImg(getConfigValue(CUSTOM_FRIEND_LINK_BANNER_IMG, String.class))
+                .build();
+        systemConfigCache.cachePageCustomConfigCache(key, friendLinkCustomConfigVO);
+        return friendLinkCustomConfigVO;
+    }
+
+    /**
+     * 刷新所有的页面自定义配置
+     */
+    private void refreshAllCustomConfig() {
+        this.getAndCacheHomeCustomConfig(getConfigValue(REDIS_HOME_CUSTOM_CONFIG_KEY, String.class));
+        this.getAndCacheArchiveCustomConfig(getConfigValue(REDIS_ARCHIVE_CUSTOM_CONFIG_KEY, String.class));
+        this.getAndCacheAboutCustomConfig(getConfigValue(REDIS_ABOUT_CUSTOM_CONFIG_KEY, String.class));
+        this.getAndCacheCommonCustomConfig(getConfigValue(REDIS_COMMON_CUSTOM_CONFIG_KEY, String.class));
+        this.getAndCacheFriendLinkCustomConfig(getConfigValue(REDIS_FRIEND_LINK_CUSTOM_CONFIG_KEY, String.class));
     }
 }
