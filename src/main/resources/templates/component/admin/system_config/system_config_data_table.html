@@ -38,7 +38,8 @@
       </span>
     <span id='system-config-page-size-container'>
         <label for='system-config-page-size'>每页数量：</label>
-        <select name='system-config-page-size-sel' id='system-config-page-size' onchange='loadSystemConfigTableData()'>
+        <select name='system-config-page-size-sel' id='system-config-page-size'
+                onchange='resetPageNumAndLoadSystemConfigTableData()'>
           <option value='10' selected>10</option>
           <option value='20'>20</option>
           <option value='50'>50</option>

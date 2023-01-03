@@ -38,7 +38,8 @@
       </span>
     <span id='permission-page-size-container'>
         <label for='permission-page-size'>每页数量：</label>
-        <select name='permission-page-size-sel' id='permission-page-size' onchange='loadPermissionTableData()'>
+        <select name='permission-page-size-sel' id='permission-page-size'
+                onchange='resetPageNumAndLoadPermissionTableData()'>
           <option value='10' selected>10</option>
           <option value='20'>20</option>
           <option value='50'>50</option>

@@ -35,7 +35,8 @@
       </span>
     <span id='friend-link-page-size-container'>
         <label for='friend-link-page-size'>每页数量：</label>
-        <select name='friend-link-page-size-sel' id='friend-link-page-size' onchange='loadFriendLinkTableData()'>
+        <select name='friend-link-page-size-sel' id='friend-link-page-size'
+                onchange='resetPageNumAndLoadFriendLinkTableData()'>
           <option value='10' selected>10</option>
           <option value='20'>20</option>
           <option value='50'>50</option>
