@@ -86,7 +86,6 @@ function loadMailTableData(loadPrev = false, loadNext = false, jumpTo = false) {
 }
 
 function generateMailDataTable(total, pageNum, pageSize, mails) {
-  console.log("---------------->", mails)
   total = parseInt(total)
   pageNum = parseInt(pageNum)
   pageSize = parseInt(pageSize)

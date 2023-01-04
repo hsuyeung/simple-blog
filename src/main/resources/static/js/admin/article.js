@@ -766,7 +766,6 @@ function openPreviewArticlePanel() {
 }
 
 function previewAddArticleAction() {
-  console.log(11111)
   closeAddArticlePanel()
   openPreviewArticlePanel()
   document.getElementById('preview-article-text').innerHTML = DOMPurify.sanitize(marked.parse(document.getElementById('add-article-content').value))
