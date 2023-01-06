@@ -27,7 +27,6 @@
 #message h1 {
   font-size: 34px;
   color: #555;
-  margin: 100px 0 40px 0;
 }
 
 #message p {
@@ -51,15 +50,19 @@
   border-radius: 0.3em;
 }
 
-@media (max-width: 420px) {
+@media (max-width: 736px) {
   #message h1 {
-    font-size: 22px;
-    margin: 100px 20px 50px 20px;
+    margin: 0 20px 0 20px;
   }
 
   #message p {
-
     padding: 20px;
+  }
+}
+
+@media (max-width: 420px) {
+  #message h1 {
+    font-size: 22px;
   }
 }
 
