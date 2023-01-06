@@ -259,6 +259,7 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigMapper, Sys
                 .footerAboutText(getConfigValue(CUSTOM_FOOTER_ABOUT_TEXT, String.class))
                 .beianNum(getConfigValue(CUSTOM_BEI_AN_NUM, String.class))
                 .avatar(getConfigValue(CUSTOM_BLOG_AVATAR, String.class))
+                .travellingsLink(getConfigValue(CUSTOM_TRAVELLINGS_LINK, String.class))
                 .build();
         systemConfigCache.cachePageCustomConfigCache(key, commonCustomConfigVO);
         return commonCustomConfigVO;

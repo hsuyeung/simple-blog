@@ -24,4 +24,5 @@ public class CommonCustomConfigVO implements Serializable {
     private String footerAboutText;
     private String beianNum;
     private String avatar;
+    private String travellingsLink;
 }

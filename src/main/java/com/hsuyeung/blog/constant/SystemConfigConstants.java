@@ -230,13 +230,16 @@ public final class SystemConfigConstants {
          * 友链页面 banner 图
          */
         CUSTOM_FRIEND_LINK_BANNER_IMG(GROUP_CUSTOM, "friendLinkBannerImg", "/img/friend_link_banner.png"),
+        /**
+         * 开往社区的链接
+         */
+        CUSTOM_TRAVELLINGS_LINK(GROUP_CUSTOM, "travellingsLink", "https://www.travellings.cn/go.html"),
 
 
         /**
          * 用户 token 加密密钥
-         * TODO: 配置 token 加密密钥
          */
-        USER_TOKEN_SECRET(GROUP_USER, "userTokenSecret", "记得配置我"),
+        USER_TOKEN_SECRET(GROUP_USER, "userTokenSecret", "^hsuyeung@admi$"),
         /**
          * 用户 token 过期时间，单位：秒
          */
@@ -248,9 +251,8 @@ public final class SystemConfigConstants {
 
         /**
          * 网站管理员的邮箱地址，接收网站回复通知
-         * TODO: 修改自己的邮箱地址
          */
-        ADMIN_EMAIL_ADDRESS(GROUP_ADMIN, "adminEmailAddress", "记得配置接收通知的邮箱地址"),
+        ADMIN_EMAIL_ADDRESS(GROUP_ADMIN, "adminEmailAddress", "13658083634@163.com"),
         /**
          * 网站管理员名字
          */
