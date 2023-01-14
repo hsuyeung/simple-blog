@@ -53,7 +53,12 @@ public class MailServiceImpl extends ServiceImpl<MailMapper, MailEntity> impleme
             mailEntity.setMStatus(SUCCESS);
         } catch (Exception e) {
             log.error("发送普通邮件失败", e);
-            mailEntity.setMStatus(FAILED).setErrorMsg(e.getLocalizedMessage());
+            String errorMsg = e.getLocalizedMessage();
+            mailEntity
+                    .setMStatus(FAILED)
+                    .setErrorMsg(StringUtils.hasText(errorMsg)
+                            ? errorMsg.substring(0, Math.min(errorMsg.length(), 255))
+                            : errorMsg);
         }
         // 将邮件发送记录持久化
         mailEntity.setCreateBy(SYSTEM);
@@ -69,7 +74,12 @@ public class MailServiceImpl extends ServiceImpl<MailMapper, MailEntity> impleme
             mailEntity.setMStatus(SUCCESS);
         } catch (Exception e) {
             log.error("发送富文本邮件失败", e);
-            mailEntity.setMStatus(FAILED).setErrorMsg(e.getLocalizedMessage());
+            String errorMsg = e.getLocalizedMessage();
+            mailEntity
+                    .setMStatus(FAILED)
+                    .setErrorMsg(StringUtils.hasText(errorMsg)
+                            ? errorMsg.substring(0, Math.min(errorMsg.length(), 255))
+                            : errorMsg);
         }
         // 将邮件发送记录持久化
         mailEntity.setCreateBy(SYSTEM);
