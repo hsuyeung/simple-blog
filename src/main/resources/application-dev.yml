@@ -8,6 +8,25 @@ file:
   domain: http://localhost:${server.port}
 
 spring:
+  # 发送邮件的配置
+  mail:
+    host:     # TODO: 邮件服务器域名
+    # 本地需要使用 25 端口，否则项目启动时检测邮件服务器是否可用会报错
+    port: 25
+    username: # TODO: 邮箱账号
+    password: # TODO: 邮箱设置里开启 POP3/SMTP 服务时生成的授权码，不是登录密码
+    # 启动的时候检测邮件服务器是否可用
+    test-connection: true
+    properties:
+      mail:
+        smtp:
+          # 启动 ssl
+          ssl: enable
+          auth: true
+          # 设置超时时间
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
   # 配置 MySQL 连接信息
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
