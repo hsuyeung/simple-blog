@@ -174,13 +174,20 @@ public class MailServiceImpl extends ServiceImpl<MailMapper, MailEntity> impleme
                     .update(new MailEntity());
             log.info("id 为 {} 的邮件重发成功", emailId);
         } catch (Exception e) {
-            lambdaUpdate()
-                    .set(MailEntity::getRetryNum, retryNum)
-                    .set(MailEntity::getSendTime, now)
-                    .set(MailEntity::getErrorMsg, e.getMessage())
-                    .set(BaseEntity::getUpdateBy, SYSTEM)
-                    .eq(MailEntity::getId, emailId)
-                    .update(new MailEntity());
+            String errMsg = e.getMessage();
+            try {
+                lambdaUpdate()
+                        .set(MailEntity::getRetryNum, retryNum)
+                        .set(MailEntity::getSendTime, now)
+                        .set(MailEntity::getErrorMsg, StringUtils.hasText(errMsg)
+                                ? errMsg.substring(0, Math.min(errMsg.length(), 255))
+                                : errMsg)
+                        .set(BaseEntity::getUpdateBy, SYSTEM)
+                        .eq(MailEntity::getId, emailId)
+                        .update(new MailEntity());
+            } catch (Exception ex) {
+                log.error("保存数据库失败：", ex);
+            }
             log.error(String.format("重发邮件失败，当前失败次数：%d", retryNum), e);
         }
     }
