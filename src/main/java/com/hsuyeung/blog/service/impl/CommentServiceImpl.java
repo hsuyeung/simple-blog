@@ -351,7 +351,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentEntity
                 .text(MAIL_COMMENT_BE_REPLIED_TEMPLATE
                         .replace("{{emailHeaderImg}}", systemConfigService.getConfigValue(MAIL_HEADER_IMG, String.class))
                         .replace("{{replyCommentAuthor}}", replyComment.getNickname())
-                        .replace("{{blogHomeUrl}}", blogHomeUrl)
                         .replace("{{articleUrl}}", String.format("%s/%s", blogHomeUrl,
                                 isAboutPageComment
                                         ? "about"
