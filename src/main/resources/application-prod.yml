@@ -16,16 +16,18 @@ spring:
     password: # TODO: 邮箱设置里开启 POP3/SMTP 服务时生成的授权码，不是登录密码
     # 启动的时候检测邮件服务器是否可用
     test-connection: true
+    # 在云服务器上使用 465 端口来代替 25 端口，还需要开启以下配置才行
     properties:
       mail:
         smtp:
-          # 启动 ssl
-          ssl: enable
-          auth: true
-          # 设置超时时间
-          connectiontimeout: 5000
-          timeout: 3000
-          writetimeout: 5000
+          ssl:
+            enable: true
+            # 这个有些服务器也可以不配置，暂时不知道为啥，我的阿里云服务器必须要配置这个才行。配置这个的原因参见文章：
+            # https://blog.csdn.net/wjx_jasin/article/details/127934998
+            protocols: TLSv1.2
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
   # 配置 MySQL 连接信息
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource

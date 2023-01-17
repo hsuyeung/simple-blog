@@ -10,23 +10,20 @@ file:
 spring:
   # 发送邮件的配置
   mail:
-    host:     # TODO: 邮件服务器域名
-    # 本地需要使用 25 端口，否则项目启动时检测邮件服务器是否可用会报错
-    port: 25
+    host: # TODO: 邮件服务器域名
+    # 本地可以使用 25 或 465 端口，如果采用 465 端口则还需要 properties 中进行额外配置
+    port: 465
     username: # TODO: 邮箱账号
     password: # TODO: 邮箱设置里开启 POP3/SMTP 服务时生成的授权码，不是登录密码
     # 启动的时候检测邮件服务器是否可用
     test-connection: true
+    # 使用 465 端口来代替 25 端口，还需要开启以下配置才行
     properties:
       mail:
         smtp:
-          # 启动 ssl
-          ssl: enable
-          auth: true
-          # 设置超时时间
-          connectiontimeout: 5000
-          timeout: 3000
-          writetimeout: 5000
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
   # 配置 MySQL 连接信息
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
