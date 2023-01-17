@@ -38,7 +38,8 @@ function editAction(replyCommentId) {
   document.querySelector('#preview-textarea-' + replyCommentId).setAttribute('style', 'display: none;')
   document.querySelector('#comment-box-' + replyCommentId + ' > .form-wrapper input[name="edit"]').setAttribute('style', 'display:none;')
   document.querySelector('#comment-box-' + replyCommentId + ' > .form-wrapper input[name="preview"]').setAttribute('style', 'display: inline;')
-  document.querySelector('#comment-box-' + replyCommentId + ' > .form-wrapper #comment-textarea-' + replyCommentId).setAttribute('style', 'display: block;height: ' + getCurrentTextAreaHeight(replyCommentId))
+  const h = getCurrentTextAreaHeight(replyCommentId);
+  document.querySelector('#comment-box-' + replyCommentId + ' > .form-wrapper #comment-textarea-' + replyCommentId).setAttribute('style', 'display: block;' + (h ? 'height: ' + h : ''))
 }
 
 function submitCommentAction(parentCommentId, replyCommentId) {
@@ -278,7 +279,7 @@ function toggleCommentBox(parentCommentId, replyCommentId) {
             </div>
           </div>
           <section class='comment-form-section'>
-            <div class='input-tips'>支持<a href='https://markdown.com.cn/basic-syntax/' target='_blank'
+            <div class='input-tips gray'>支持<a href='https://markdown.com.cn/basic-syntax/' target='_blank'
                                          rel='noopener noreferrer nofollow'> Markdown </a>语法
             </div>
             <p class='input-wrapper'>
