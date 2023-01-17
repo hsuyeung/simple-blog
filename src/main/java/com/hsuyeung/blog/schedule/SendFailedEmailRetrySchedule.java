@@ -42,6 +42,6 @@ public class SendFailedEmailRetrySchedule {
                 Thread.currentThread().interrupt();
             }
         });
-        log.info("失败邮件重发定时任务结束：执行成功");
+        log.info("失败邮件重发定时任务结束：执行完成");
     }
 }
