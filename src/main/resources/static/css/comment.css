@@ -289,6 +289,10 @@ textarea {
   display: none;
 }
 
+[id^='comment-textarea-'] {
+  display: block;
+}
+
 [id^='comment-box-'] > .form-wrapper [id^='preview-textarea-'] {
   background: #f8f8f8 repeating-linear-gradient(
     -45deg,
