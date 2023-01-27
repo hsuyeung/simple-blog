@@ -13,6 +13,7 @@
   <link rel='stylesheet' th:href='${ "/css/about_footer.min.css?v=" + v }'/>
   <link rel='stylesheet' th:href='${ "/css/footer.min.css?v=" + v }'/>
   <link rel='stylesheet' th:href='${ "/css/iconmoon.min.css?v=" + v }'/>
+  <script th:src='${ "/plugin/lazyload/lazyload.js?v=" + v }'></script>
 </head>
 <body>
 <div class='container'>
@@ -56,8 +57,8 @@
               <a th:href='${ link.linkUrl }' th:title='${ link.linkName }' target='_blank'
                  rel='noopener noreferrer nofollow'>
                 <div class='link-item-icon'>
-                  <img th:src='${ link.linkAvatar }'
-                       onerror='this.onerror=null;this.src=&quot;/img/err_img.jpg&quot;'
+                  <img src='/img/loading.gif'
+                       th:attr='data-src=${ link.linkAvatar }'
                        th:alt='${ link.linkName }'>
                 </div>
                 <div class='link-item-name' th:text='${ link.linkName }'></div>
@@ -71,5 +72,12 @@
   </div>
 </div>
 <div th:replace='component/footer :: footer'></div>
+<script>
+  lazyLoad({
+    lazyAttr: 'data-src',
+    loadType: 'src',
+    errorPath: '/img/err_img.jpg'
+  }).observeLazyLoadNode()
+</script>
 </body>
 </html>
