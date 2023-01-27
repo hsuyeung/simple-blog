@@ -17,6 +17,7 @@
   <link rel='stylesheet' th:href='${ "/plugin/highlight/monokai-sublime.min.css?v=" + v }'/>
   <script th:src='${ "/plugin/medium-zoom/medium-zoom.min.js?v=" + v }'></script>
   <script th:src='${ "/plugin/highlight/highlight.min.js?v=" + v }'></script>
+  <script th:src='${ "/plugin/lazyload/lazyload.js?v=" + v }'></script>
 </head>
 <body>
 <div class='container'>
@@ -55,6 +56,11 @@
     ignoreUnescapedHTML: true
   })
   hljs.highlightAll();
+  lazyLoad({
+    lazyAttr: 'data-src',
+    loadType: 'src',
+    errorPath: '/img/err_img.jpg'
+  }).observeLazyLoadNode()
 </script>
 </body>
 </html>

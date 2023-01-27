@@ -50,7 +50,9 @@
       <div th:id='${ "comment-" + comment.id }' class='comment-item'
            th:each='comment:${ commentData.commentItemList }'>
         <div class='avatar'>
-          <img th:src='${ comment.user.avatar }' alt='avatar'>
+          <img src='/img/loading.gif'
+               th:attr='data-src=${ comment.user.avatar }'
+               alt='avatar'>
         </div>
         <div class='text-wrapper'>
           <div role='meta' class='comment-item-header'>
@@ -79,8 +81,9 @@
             <div th:id='${ "comment-" + childComment.id }' class='comment-item'
                  th:each='childComment : ${ comment.childComments }'>
               <div class='avatar'>
-                <img th:src='${ childComment.user.avatar }'
-                     onerror="this.onerror=null;this.src=&quot;/img/err_img.jpg&quot;" alt='avatar'>
+                <img src='/img/loading.gif'
+                     th:attr='data-src=${ childComment.user.avatar }'
+                     alt='avatar'>
               </div>
               <div class='text-wrapper'>
                 <div role='meta' class='comment-item-header'>
