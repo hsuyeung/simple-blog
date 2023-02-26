@@ -25,6 +25,22 @@
 7. 弹窗消息提醒：[message_js](https://github.com/nyy-2017/message_js)
 8. 图标使用 [IconMoon](https://icomoon.io/)
 9. 评论后提醒博客管理员，评论被回复后根据被评论人的选择决定是否发送邮件提醒被评论人
+10. 支持通过 iframe 嵌入 B 站视频。具体使用方法如下：
+
+```javascript
+// 在新增/编辑文章时，加入如下代码
+<div class='bilibili-aspect-ratio'>
+  <iframe src="//player.bilibili.com/player.html?aid=904641287&bvid=BV1pP4y1i7Xh&cid=949961021&page=1" scrolling="no"
+          border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+</div>
+// iframe 有个问题就是会自动播放视频，体验不是很好
+// 解决办法也很简单，本博客已实现 src 属性的（图片、视频、音频等都可以哦）懒加载功能（功能 3），可以通过懒加载的形式，等 iframe 区域出现在屏幕上时才加载具体资源
+// 具体做法是只需要将 iframe 的 src 属性修改为 data-src 即可
+<div class='bilibili-aspect-ratio'>
+  <iframe data-src="//player.bilibili.com/player.html?aid=904641287&bvid=BV1pP4y1i7Xh&cid=949961021&page=1"
+          scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+</div>
+```
 
 ### 博客后台已实现功能
 
