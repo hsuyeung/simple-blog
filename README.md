@@ -25,7 +25,7 @@
 7. 弹窗消息提醒：[message_js](https://github.com/nyy-2017/message_js)
 8. 图标使用 [IconMoon](https://icomoon.io/)
 9. 评论后提醒博客管理员，评论被回复后根据被评论人的选择决定是否发送邮件提醒被评论人
-10. 支持通过 iframe 嵌入 B 站视频。具体使用方法如下：
+10. 支持通过 iframe 嵌入 B 站视频、网易云音乐。具体使用方法如下：
 
 ```javascript
 // 在新增/编辑文章时，加入如下代码
