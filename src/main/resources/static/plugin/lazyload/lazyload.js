@@ -10,7 +10,7 @@ function lazyLoad(options) {
   const type = options.loadType || 'src'
 
   /**
-   * 更新整个文档的懒加载节点
+   * 更新整个文档的懒加载结点
    */
   function observeLazyLoadNode() {
     const els = document.querySelectorAll(`[${attr}]`)
@@ -22,7 +22,7 @@ function lazyLoad(options) {
 
   /**
    * 加载图片
-   * @param {HTMLImageElement} el 图片节点
+   * @param {HTMLImageElement} el 图片结点
    */
   function loadImage(el) {
     const cache = el.src // 缓存当前 src 加载失败时候用
@@ -33,7 +33,7 @@ function lazyLoad(options) {
   }
 
   /**
-   * 加载单个节点
+   * 加载单个结点
    * @param {HTMLElement} el
    */
   function loadElement(el) {
