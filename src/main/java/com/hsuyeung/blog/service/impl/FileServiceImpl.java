@@ -179,7 +179,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, FileEntity> impleme
     // --------------------------------------------- PRIVATE METHOD REGION ---------------------------------------------
 
     /**
-     * 设置相应的 content-type 属性值
+     * 设置响应的 content-type 属性值
      *
      * @param response {@link HttpServletResponse}
      * @param suffix   文件后缀名
