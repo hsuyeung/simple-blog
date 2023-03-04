@@ -226,7 +226,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
         // 刷新缓存
         this.refreshHomeArticleListCache();
         this.refreshArchiveCache();
-        getArticleDetail(article.getRoute());
+        articleCache.deleteCache(systemConfigService.getConfigValue(REDIS_ARTICLE_DETAIL_KEY, String.class), article.getRoute());
     }
 
     @Transactional(rollbackFor = Exception.class)
