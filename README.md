@@ -98,6 +98,7 @@
 │  │              │      ├─role           # 角色相关 VO
 │  │              │      ├─systemconfig   # 系统内置的一些配置项相关 VO
 │  │              │      └─user           # 角色相关 VO
+│  │              │─rss                   # RSS 订阅文件相关实现
 │  │              ├─schedule              # 定时任务
 │  │              ├─service               # Service 接口
 │  │              │  └─impl               # Service 接口实现
