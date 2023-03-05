@@ -8,6 +8,7 @@ package com.hsuyeung.blog.constant;
  */
 public final class StringConstants {
     public static final String SYSTEM = "system";
+    public static final String RSS_FILE_PATH = "./rss.xml";
 
     private StringConstants() {
     }

@@ -1,16 +1,24 @@
 package com.hsuyeung.blog.web.controller;
 
+import com.hsuyeung.blog.constant.StringConstants;
+import com.hsuyeung.blog.exception.SystemInternalException;
 import com.hsuyeung.blog.model.vo.article.ArticleDetailVO;
 import com.hsuyeung.blog.service.IArticleService;
 import com.hsuyeung.blog.service.ICommentService;
 import com.hsuyeung.blog.service.IFriendLinkService;
 import com.hsuyeung.blog.service.ISystemConfigService;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
+import java.nio.charset.StandardCharsets;
 
 import static com.hsuyeung.blog.constant.SystemConfigConstants.SystemConfigEnum.SYSTEM_BROWSER_STATIC_RESOURCE_VERSION;
 
@@ -84,5 +92,25 @@ public class BlogPageController {
         mv.addObject("v", systemConfigService.getConfigValue(SYSTEM_BROWSER_STATIC_RESOURCE_VERSION, String.class));
         mv.addObject("currentPage", "friend_link");
         return mv;
+    }
+
+    @ResponseBody
+    @RequestMapping("/feed")
+    public void sitemap(HttpServletResponse response) {
+        try (
+                FileInputStream fis = new FileInputStream(StringConstants.RSS_FILE_PATH);
+                ServletOutputStream sos = response.getOutputStream()
+        ) {
+            response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+            response.setContentType(MediaType.APPLICATION_RSS_XML_VALUE);
+            int len;
+            byte[] buffer = new byte[1024 * 10];
+            while ((len = fis.read(buffer)) != -1) {
+                sos.write(buffer, 0, len);
+            }
+            sos.flush();
+        } catch (Exception e) {
+            throw new SystemInternalException("读取文件失败", e);
+        }
     }
 }
