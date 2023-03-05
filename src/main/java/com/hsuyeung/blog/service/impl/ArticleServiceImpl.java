@@ -3,9 +3,12 @@ package com.hsuyeung.blog.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hsuyeung.blog.cache.ArticleCache;
+import com.hsuyeung.blog.constant.StringConstants;
+import com.hsuyeung.blog.constant.SystemConfigConstants;
 import com.hsuyeung.blog.constant.enums.ContentTypeEnum;
 import com.hsuyeung.blog.exception.BizException;
 import com.hsuyeung.blog.exception.NotFoundException;
+import com.hsuyeung.blog.exception.SystemInternalException;
 import com.hsuyeung.blog.mapper.ArticleMapper;
 import com.hsuyeung.blog.model.dto.article.AddArticleRequestDTO;
 import com.hsuyeung.blog.model.dto.article.UpdateArticleRequestDTO;
@@ -13,6 +16,9 @@ import com.hsuyeung.blog.model.entity.ArticleEntity;
 import com.hsuyeung.blog.model.entity.ContentEntity;
 import com.hsuyeung.blog.model.vo.PageVO;
 import com.hsuyeung.blog.model.vo.article.*;
+import com.hsuyeung.blog.rss.Item;
+import com.hsuyeung.blog.rss.RSS;
+import com.hsuyeung.blog.rss.Writer;
 import com.hsuyeung.blog.service.*;
 import com.hsuyeung.blog.util.AssertUtil;
 import com.hsuyeung.blog.util.BizAssertUtil;
@@ -227,6 +233,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
         this.refreshHomeArticleListCache();
         this.refreshArchiveCache();
         articleCache.deleteCache(systemConfigService.getConfigValue(REDIS_ARTICLE_DETAIL_KEY, String.class), article.getRoute());
+        // 刷新 RSS
+        this.refreshRSS();
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -249,6 +257,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
         // 刷新缓存
         this.refreshHomeArticleListCache();
         this.refreshArchiveCache();
+        // 刷新 RSS
+        this.refreshRSS();
     }
 
     @Override
@@ -285,6 +295,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
         this.refreshArchiveCache();
         // 刷新文章详情缓存
         this.refreshArticleDetailCache(articleEntity.getRoute(), updateArticleRequestDTO.getRoute());
+        // 刷新 RSS
+        this.refreshRSS();
     }
 
     // --------------------------------------------- PRIVATE METHOD ---------------------------------------------
@@ -337,5 +349,55 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
         });
         archiveNodeList.sort(Comparator.comparing(ArchiveNode::getTime).reversed());
         return new ArchiveVO(allArticleList.size(), archiveNodeList);
+    }
+
+    /**
+     * 刷新 RSS 文件
+     */
+    private void refreshRSS() {
+        try {
+            List<ArticleEntity> articleList = lambdaQuery()
+                    .orderByDesc(ArticleEntity::getCreateTime)
+                    .list();
+            if (CollectionUtils.isEmpty(articleList)) {
+                return;
+            }
+            String blogHomeUrl = systemConfigService.getConfigValue(SYSTEM_BLOG_HOME_URL, String.class);
+            List<Item> itemList = articleList.stream()
+                    .map(article -> {
+                        String articleUrl = String.format("%s/article/%s", blogHomeUrl, article.getRoute());
+                        return Item.builder()
+                                .title(article.getTitle())
+                                .link(articleUrl)
+                                .description(article.getDescription())
+                                .comments(String.format("%s#comment-container", articleUrl))
+                                .guid(articleUrl)
+                                .pubDate(DateUtil.formatLocalDateTimeToRFC822String(article.getCreateTime(), Locale.ENGLISH))
+                                .source(Item.Source.builder()
+                                        .url(blogHomeUrl)
+                                        .value("Hsu Yeung 的博客")
+                                        .build())
+                                .build();
+                    })
+                    .collect(Collectors.toList());
+            LocalDateTime now = LocalDateTime.now();
+            String rfc822 = DateUtil.formatLocalDateTimeToRFC822String(now, Locale.ENGLISH);
+            RSS rss = RSS.builder()
+                    .title("Hsu Yeung 的博客")
+                    .link(blogHomeUrl)
+                    .description(systemConfigService.getConfigValue(SystemConfigConstants.SystemConfigEnum.CUSTOM_HEADER_TEXT, String.class))
+                    .language("zh")
+                    .copyright(String.format("© 2020 ~ %s", now.getYear()))
+                    .pubDate(rfc822)
+                    .lastBuildDate(rfc822)
+                    .category("blog")
+                    .generator("java")
+                    .docs("https://www.rssboard.org/rss-specification")
+                    .itemList(itemList)
+                    .build();
+            new Writer(rss, StringConstants.RSS_FILE_PATH).write();
+        } catch (Exception e) {
+            throw new SystemInternalException("创建 RSS 文件失败", e);
+        }
     }
 }
