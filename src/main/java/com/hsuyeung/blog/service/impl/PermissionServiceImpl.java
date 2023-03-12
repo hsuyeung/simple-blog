@@ -171,7 +171,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
                         PermissionEntity::getPermissionDesc, PermissionEntity::getEnabled,
                         PermissionEntity::getCreateTime, PermissionEntity::getCreateBy,
                         PermissionEntity::getUpdateTime, PermissionEntity::getUpdateBy)
-                .likeRight(StringUtils.hasLength(path), PermissionEntity::getPath, path)
+                .like(StringUtils.hasLength(path), PermissionEntity::getPath, path)
                 .eq(StringUtils.hasLength(method), PermissionEntity::getMethod, method)
                 .like(StringUtils.hasLength(permissionDesc), PermissionEntity::getPermissionDesc, permissionDesc)
                 .eq(Objects.nonNull(enabled), PermissionEntity::getEnabled, Objects.equals(enabled, true) ? ON : OFF)
