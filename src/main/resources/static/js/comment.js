@@ -17,6 +17,12 @@ function getCurrentTextAreaHeight(commentId) {
 
 function previewAction(replyCommentId) {
   document.getElementById('preview-text-' + replyCommentId).innerHTML = DOMPurify.sanitize(marked.parse(document.getElementById('comment-textarea-' + replyCommentId).value))
+  document.querySelector('#preview-textarea-' + replyCommentId).setAttribute('style', 'display: block;')
+  document.querySelector('#comment-box-' + replyCommentId + ' > .form-wrapper input[name="edit"]').setAttribute('style', 'display:inline;')
+  document.querySelector('#comment-box-' + replyCommentId + ' > .form-wrapper input[name="preview"]').setAttribute('style', 'display: none;')
+  const commentTextAreaNode = document.querySelector('#comment-box-' + replyCommentId + ' > .form-wrapper #comment-textarea-' + replyCommentId);
+  setCurrentTextAreaHeight(replyCommentId, commentTextAreaNode.style.height)
+  commentTextAreaNode.setAttribute('style', 'display: none;')
   hljs.configure({
     ignoreUnescapedHTML: true
   })
@@ -24,14 +30,9 @@ function previewAction(replyCommentId) {
   lazyLoad({
     lazyAttr: 'data-src',
     loadType: 'src',
-    errorPath: '/img/err_img.jpg'
+    errorPath: '/img/err_img.jpg',
+    selectors: `#preview-text-${replyCommentId}`
   }).observeLazyLoadNode()
-  document.querySelector('#preview-textarea-' + replyCommentId).setAttribute('style', 'display: block;')
-  document.querySelector('#comment-box-' + replyCommentId + ' > .form-wrapper input[name="edit"]').setAttribute('style', 'display:inline;')
-  document.querySelector('#comment-box-' + replyCommentId + ' > .form-wrapper input[name="preview"]').setAttribute('style', 'display: none;')
-  const commentTextAreaNode = document.querySelector('#comment-box-' + replyCommentId + ' > .form-wrapper #comment-textarea-' + replyCommentId);
-  setCurrentTextAreaHeight(replyCommentId, commentTextAreaNode.style.height)
-  commentTextAreaNode.setAttribute('style', 'display: none;')
 }
 
 function editAction(replyCommentId) {

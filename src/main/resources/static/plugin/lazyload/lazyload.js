@@ -4,16 +4,18 @@
  * @param {string?} options.lazyAttr 自定义加载的属性（可选）
  * @param {'src'|'background'} options.loadType 加载的类型（默认为 src）
  * @param {string?} options.errorPath 加载失败时显示的资源路径，仅在 loadType 设置为 src 中可用（可选）
+ * @param {string?} options.selectors 选择器，用于指定只对哪些 dom 结点下的资源进行懒加载
  */
 function lazyLoad(options) {
   const attr = options.lazyAttr || 'data-src'
   const type = options.loadType || 'src'
+  const selectors = options.selectors || ''
 
   /**
    * 更新整个文档的懒加载结点
    */
   function observeLazyLoadNode() {
-    const els = document.querySelectorAll(`[${attr}]`)
+    const els = document.querySelectorAll(`${selectors} [${attr}]`)
     for (let i = 0; i < els.length; i++) {
       const el = els[i]
       observer.observe(el)
