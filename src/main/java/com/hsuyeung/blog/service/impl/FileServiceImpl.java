@@ -114,6 +114,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, FileEntity> impleme
         if (filePath.contains(PERCENT_SIGN)) {
             filePath = URLDecoder.decode(filePath, UTF_8);
         }
+        this.setContentType(response, FileUtil.getSuffixLowercase(filePath));
         byte[] fileData = LFU_CACHE.get(filePath);
         try (
                 FileInputStream fis = new FileInputStream(filePath);
@@ -137,7 +138,6 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, FileEntity> impleme
             }
             sos.write(fileData);
             sos.flush();
-            this.setContentType(response, FileUtil.getSuffix(filePath));
             log.info("获取文件成功：{}", filePath);
         } catch (Exception e) {
             log.info("获取文件失败：{}", filePath);
@@ -187,9 +187,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, FileEntity> impleme
     private void setContentType(HttpServletResponse response, String suffix) {
         if (VALID_IMG_SUFFIX.contains(suffix)) {
             response.setContentType("image/" + suffix);
-        } else {
-            // 自动判断下载文件类型
-            response.setContentType("multipart/form-data");
         }
+        // 其余情况自动判断不手动设置
     }
 }

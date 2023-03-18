@@ -22,6 +22,16 @@ public final class FileUtil {
         return fileName.substring(lastIndexOfDot + 1);
     }
 
+    /**
+     * 获取小写的文件名后缀
+     *
+     * @param fileName 文件名
+     * @return 小写的文件名后缀
+     */
+    public static String getSuffixLowercase(String fileName) {
+        return getSuffix(fileName).toLowerCase();
+    }
+
     private FileUtil() {
     }
 }
