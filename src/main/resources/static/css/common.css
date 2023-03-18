@@ -232,7 +232,7 @@ img.width-force-100 {
   width: 100%
 }
 
-figure img {
+figure img, figure div {
   margin: 0 auto
 }
 
@@ -262,6 +262,12 @@ pre > code {
 
 .hidden {
   display: none;
+}
+
+.livePhotoContainer {
+  max-width: 100%;
+  width: 6.4rem;
+  height: 6.4rem;
 }
 
 @media (max-device-width: 700px) {
