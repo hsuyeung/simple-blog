@@ -69,9 +69,9 @@ scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="tru
         data-video-src='视频链接'></div>
     <figcaption>图片说明</figcaption>
 </figure>
+```
 
 该项功能由于实现原理的原因，有诸多限制条件，详情可参考文章 [如何使网页支持 Live Photo 图片的展示](https://www.hsuyeung.com/article/how-to-support-live-photo-in-web)
-```
 
 ### 博客后台已实现功能
 
