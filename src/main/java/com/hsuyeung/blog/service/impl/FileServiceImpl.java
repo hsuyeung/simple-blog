@@ -187,6 +187,8 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, FileEntity> impleme
     private void setContentType(HttpServletResponse response, String suffix) {
         if (VALID_IMG_SUFFIX.contains(suffix)) {
             response.setContentType("image/" + suffix);
+        } else if ("mov".equals(suffix)) {
+            response.setContentType("video/quicktime");
         }
         // 其余情况自动判断不手动设置
     }
