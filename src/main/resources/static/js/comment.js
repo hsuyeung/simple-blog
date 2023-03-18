@@ -33,6 +33,7 @@ function previewAction(replyCommentId) {
     errorPath: '/img/err_img.jpg',
     selectors: `#preview-text-${replyCommentId}`
   }).observeLazyLoadNode()
+  initCommentPreviewLivePhotoPlayer(replyCommentId)
 }
 
 function editAction(replyCommentId) {

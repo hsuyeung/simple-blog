@@ -35,18 +35,18 @@ function loadArticleTableData(loadPrev = false, loadNext = false, jumpTo = false
   const pageSize = pageSizeSelectNode?.options[pageSizeSelectNode?.selectedIndex]?.value || 10
   const xhr = new XMLHttpRequest()
   xhr.open(
-          'GET',
-          '/api/article/page'
-          + '?title=' + (title || '')
-          + '&author=' + (author || '')
-          + '&keywords=' + (keywords || '')
-          + '&desc=' + (desc || '')
-          + '&pin=' + (pin || '')
-          + '&startTimestamp=' + (startTimestamp || '')
-          + '&endTimestamp=' + (endTimestamp || '')
-          + '&pageNum=' + pageNum
-          + '&pageSize=' + pageSize,
-          true)
+    'GET',
+    '/api/article/page'
+    + '?title=' + (title || '')
+    + '&author=' + (author || '')
+    + '&keywords=' + (keywords || '')
+    + '&desc=' + (desc || '')
+    + '&pin=' + (pin || '')
+    + '&startTimestamp=' + (startTimestamp || '')
+    + '&endTimestamp=' + (endTimestamp || '')
+    + '&pageNum=' + pageNum
+    + '&pageSize=' + pageSize,
+    true)
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send()
@@ -182,13 +182,13 @@ function generateArticleDataTable(total, pageNum, pageSize, articles) {
   document.getElementById('article-current-page').textContent = pageNum
   document.getElementById('article-total-size').textContent = `共 ${total} 条`
   document.getElementById('article-prev-page').innerHTML =
-          `<button onclick='loadPrevPageArticleData()' ${(pageNum === 1 || total === 0) ? 'disabled' : ''}>上一页</button>`
+    `<button onclick='loadPrevPageArticleData()' ${(pageNum === 1 || total === 0) ? 'disabled' : ''}>上一页</button>`
   document.getElementById('article-page-jump').innerHTML = `
            <label for='article-page-jump-to'>跳转到第</label>
            <input id='article-page-jump-to' onchange='loadArticleTableData(false, false, true)'>页
   `
   document.getElementById('article-next-page').innerHTML =
-          `<button onclick='loadNextPageArticleData()' ${(pageNum === totalPage || total === 0) ? 'disabled' : ''}>下一页</button>`
+    `<button onclick='loadNextPageArticleData()' ${(pageNum === totalPage || total === 0) ? 'disabled' : ''}>下一页</button>`
 }
 
 function clearArticleTable() {
@@ -779,6 +779,7 @@ function previewAddArticleAction() {
     loadType: 'src',
     errorPath: '/img/err_img.jpg'
   }).observeLazyLoadNode()
+  initArticleLivePhotoPlayer()
 }
 
 function previewEditArticleAction() {
@@ -795,6 +796,7 @@ function previewEditArticleAction() {
     loadType: 'src',
     errorPath: '/img/err_img.jpg'
   }).observeLazyLoadNode()
+  initArticleLivePhotoPlayer()
 }
 
 function closePreviewArticlePanel() {

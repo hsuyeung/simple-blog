@@ -27,19 +27,50 @@
 9. 评论后提醒博客管理员，评论被回复后根据被评论人的选择决定是否发送邮件提醒被评论人
 10. 支持通过 iframe 嵌入 B 站视频、网易云音乐。具体使用方法如下：
 
-```javascript
-// 在新增/编辑文章时，加入如下代码
+```text
+在新增/编辑文章或者发布评论时，加入如下代码：
+
+!bv{{iframe 链接地址}}，例如：
+
+!bv{{<iframe src="//player.bilibili.com/player.html?aid=904641287&bvid=BV1pP4y1i7Xh&cid=949961021&page=1"
+scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>}}
+
+最终会被 marked 解析渲染为
+
 <div class='bilibili-aspect-ratio'>
-  <iframe src="//player.bilibili.com/player.html?aid=904641287&bvid=BV1pP4y1i7Xh&cid=949961021&page=1" scrolling="no"
-          border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
-</div>
-// iframe 有个问题就是会自动播放视频，体验不是很好
-// 解决办法也很简单，本博客已实现 src 属性的（图片、视频、音频等都可以哦）懒加载功能（功能 3），可以通过懒加载的形式，等 iframe 区域出现在屏幕上时才加载具体资源
-// 具体做法是只需要将 iframe 的 src 属性修改为 data-src 即可
-<div class='bilibili-aspect-ratio'>
-  <iframe data-src="//player.bilibili.com/player.html?aid=904641287&bvid=BV1pP4y1i7Xh&cid=949961021&page=1"
+  <iframe src="//player.bilibili.com/player.html?aid=904641287&bvid=BV1pP4y1i7Xh&cid=949961021&page=1"
           scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
 </div>
+
+// iframe 有个问题就是会自动播放视频，体验不是很好
+// 解决办法也很简单，本博客已实现 src 属性的（图片、视频、音频等都可以哦）懒加载功能（功能 3），可以通过懒加载的形式，等 iframe
+区域出现在屏幕上时才加载具体资源
+// 具体做法是只需要将 iframe 的 src 属性修改为 data-src 即可
+!bv{{<iframe data-src="//player.bilibili.com/player.html?aid=904641287&bvid=BV1pP4y1i7Xh&cid=949961021&page=1"
+scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>}}
+```
+
+11. 文章、评论支持 live photo 图片的展示，具体使用方法如下：
+
+```text
+使用如下 marked 扩展语法：
+
+![图片说明](图片链接)(视频链接)
+
+最终将会渲染成以下 HTML 代码：
+
+<figure>
+    <div class='livePhotoContainer'
+        data-live-photo
+        data-effect-type='live'
+        data-playback-style='full'
+        data-proactively-loads-video='true'
+        data-photo-src='图片链接'
+        data-video-src='视频链接'></div>
+    <figcaption>图片说明</figcaption>
+</figure>
+
+该项功能由于实现原理的原因，有诸多限制条件，详情可参考文章 [如何使网页支持 Live Photo 图片的展示](https://www.hsuyeung.com/article/how-to-support-live-photo-in-web)
 ```
 
 ### 博客后台已实现功能
@@ -119,10 +150,9 @@
 │      │  │  └─admin                      # 管理后台的 js 文件
 │      │  └─plugin                        # 项目用到的一些外部代码（插件）
 │      │      ├─dompurify                 # xss 净化
-│      │      │  ├─dist
-│      │      │  └─src
 │      │      ├─highlight                 # 代码高亮
 │      │      ├─lazyload                  # 图片懒加载
+│      │      ├─livephotoskit             # live photo 图片展示
 │      │      ├─marked                    # markdown 渲染
 │      │      ├─medium-zoom               # 图片点击缩放
 │      │      └─message                   # 消息弹窗
