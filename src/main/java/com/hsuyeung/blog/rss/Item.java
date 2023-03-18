@@ -74,7 +74,9 @@ public class Item implements Serializable {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Source {
+    public static class Source implements Serializable {
+        private static final long serialVersionUID = 1000576358920633897L;
+
         @Specification(description = "source 标签的 url 属性值")
         private String url;
 
