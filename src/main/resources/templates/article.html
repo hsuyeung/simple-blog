@@ -17,6 +17,8 @@
   <script th:src='${ "/plugin/medium-zoom/medium-zoom.min.js?v=" + v }'></script>
   <script th:src='${ "/plugin/highlight/highlight.min.js?v=" + v }'></script>
   <script th:src='${ "/plugin/lazyload/lazyload.js?v=" + v }'></script>
+  <script th:src='${ "/plugin/livephotoskit/livephotoskit.min.js?v=" + v }'></script>
+  <script th:src='${ "/plugin/livephotoskit/livephotoskit.extension.js?v=" + v }'></script>
 </head>
 <body>
 <div class='container'>
@@ -59,6 +61,13 @@
     loadType: 'src',
     errorPath: '/img/err_img.jpg'
   }).observeLazyLoadNode()
+  initArticleLivePhotoPlayer()
+  initCommentLivePhotoPlayer()
+  window.onresize = function () {
+    updateArticleLivePhotoPlayer()
+    updateCommentPreviewLivePhotoPlayer(true)
+    updateCommentLivePhotoPlayer()
+  }
 </script>
 </body>
 </html>

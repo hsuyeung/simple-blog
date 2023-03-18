@@ -42,6 +42,9 @@
 </div>
 <script>
   checkTokenValidation() ? openAdminPanelAction() : loadRememberMeParam()
+  window.onresize = function () {
+    updateArticleLivePhotoPlayer()
+  }
 </script>
 </body>
 </html>
