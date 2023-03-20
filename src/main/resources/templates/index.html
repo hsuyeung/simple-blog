@@ -26,8 +26,7 @@
     <p><strong>最新文章</strong></p>
     <div class='article-list'>
       <ul>
-        <li th:each='article : ${ articleList }'>
-          <span th:if='${ article.pin }' class='icon-pin pin-icon'></span>
+        <li th:each='article : ${ articleList }' th:class="${article.pin ? 'pin' : ''}">
           <a th:href='${ "/article/" + article.route}' th:text='${ article.title }'></a>
           <span class='article-publish-date' th:text='${ article.createTime }'></span>
         </li>

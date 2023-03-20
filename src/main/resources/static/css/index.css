@@ -8,8 +8,8 @@
   color: #8c704f
 }
 
-.pin-icon {
-  margin-right: -0.6rem
+.pin {
+  list-style: none url('../img/pin.png');
 }
 
 @media (max-device-width: 700px) {
