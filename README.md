@@ -50,6 +50,8 @@ scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="tru
 scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>}}
 ```
 
+详情可参考文章 [网站支持展示 B 站 iframe 视频](https://www.hsuyeung.com/article/support-bilibili-iframe)
+
 11. 文章、评论支持 live photo 图片的展示，具体使用方法如下：
 
 ```text
@@ -71,7 +73,7 @@ scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="tru
 </figure>
 ```
 
-该项功能由于实现原理的原因，有诸多限制条件，详情可参考文章 [如何使网页支持 Live Photo 图片的展示](https://www.hsuyeung.com/article/how-to-support-live-photo-in-web)
+该项功能由于实现原理的原因，有诸多限制条件，详情可参考文章 [网站支持 Live Photo 图片展示](https://www.hsuyeung.com/article/support-live-photo)
 
 ### 博客后台已实现功能
 
