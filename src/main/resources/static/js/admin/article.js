@@ -757,7 +757,7 @@ function clearAddArticleInfo() {
   document.getElementById('add-article-author').value = ''
   document.getElementById('add-article-keywords').value = ''
   document.getElementById('add-article-desc').value = ''
-  document.getElementById('add-article-pin').value = ''
+  document.getElementById('add-article-pin').value = '0'
   document.getElementById('add-article-content').value = ''
 }
 
