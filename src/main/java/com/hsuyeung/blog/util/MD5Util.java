@@ -3,6 +3,7 @@ package com.hsuyeung.blog.util;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -22,7 +23,7 @@ public final class MD5Util {
 
     public static String md5Hex(String message) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance("MD5");
-        return hex(md.digest(message.getBytes("CP1252")));
+        return hex(md.digest(message.getBytes(StandardCharsets.UTF_8)));
     }
 
     private MD5Util() {
