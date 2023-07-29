@@ -2,6 +2,7 @@ package com.hsuyeung.blog.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hsuyeung.blog.cache.ArticleCache;
 import com.hsuyeung.blog.cache.SystemConfigCache;
 import com.hsuyeung.blog.constant.SystemConfigConstants;
 import com.hsuyeung.blog.mapper.SystemConfigMapper;
@@ -49,6 +50,8 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigMapper, Sys
     @Resource
     @Lazy
     private IUserService userService;
+    @Resource
+    private ArticleCache articleCache;
 
     @Override
     public <T> T getConfigValue(SystemConfigConstants.SystemConfigEnum systemConfigEnum, Class<T> valueType) {
@@ -168,6 +171,11 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigMapper, Sys
         updateById(systemConfigEntity);
         refreshOneCache(id);
         refreshAllCustomConfig();
+        if (SystemConfigConstants.SystemConfigEnum.ARTICLE_HOME_ARTICLE_LIST_SIZE.getGroup().equals(systemConfigEntity.getConfGroup())
+                && SystemConfigConstants.SystemConfigEnum.ARTICLE_HOME_ARTICLE_LIST_SIZE.getKeyName().equals(systemConfigEntity.getConfKey())) {
+            // 删除文章首页列表缓存
+            articleCache.deleteCache(getConfigValue(REDIS_HOME_ARTICLE_LIST_KEY, String.class));
+        }
     }
 
     @Override
