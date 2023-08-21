@@ -133,7 +133,7 @@ VALUES ('mailHeaderImg', 'https://cdn.jsdelivr.net/gh/LIlGG/halo-theme-sakura@1.
 INSERT INTO `t_system_config` (`conf_key`, `conf_value`, `conf_group`, `description`, `is_enabled`, `create_by`,
                                `create_time`, `update_by`, `update_time`, `is_deleted`)
 VALUES ('mailFooterImg', 'https://cdn.jsdelivr.net/gh/LIlGG/halo-theme-sakura@1.3.3/source/images/other/hr.png', 'mail',
-        '邮件模板 header 图片', 1, '1', '2022-06-21 19:33:02', '1', '2022-06-21 19:33:17', 0);
+        '邮件模板 footer 图片', 1, '1', '2022-06-21 19:33:02', '1', '2022-06-21 19:33:17', 0);
 INSERT INTO `t_system_config` (`conf_key`, `conf_value`, `conf_group`, `description`, `is_enabled`, `create_by`,
                                `create_time`, `update_by`, `update_time`, `is_deleted`)
 VALUES ('browserStaticResourceVersion', '1.0.0', 'system', '浏览器静态资源版本，用于当静态资源更新后通知客户端更新缓存',
