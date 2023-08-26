@@ -24,19 +24,21 @@ function loadPermissionTableData(loadPrev = false, loadNext = false, jumpTo = fa
   const pageSizeSelectNode = document.getElementById('permission-page-size')
   const pageSize = pageSizeSelectNode?.options[pageSizeSelectNode?.selectedIndex]?.value || 10
   const xhr = new XMLHttpRequest()
-  xhr.open(
-          'GET',
-          '/api/permission/page'
-          + '?path=' + (permissionPath || '')
-          + '&method=' + (permissionMethod || '')
-          + '&permissionDesc=' + (permissionDesc || '')
-          + '&enabled=' + (!enabled || enabled === '' ? '' : enabled === '1')
-          + '&pageNum=' + pageNum
-          + '&pageSize=' + pageSize,
-          true)
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+  xhr.open('POST', '/api/permission/actions/page', true)
+  xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.setRequestHeader('token', getTokenFromLocal())
-  xhr.send()
+  xhr.send(JSON.stringify({
+    'pageParam': {
+      'pageNum': pageNum,
+      'pageSize': pageSize
+    },
+    'searchParam': {
+      'path': permissionPath,
+      'method': permissionMethod,
+      'permissionDesc': permissionDesc,
+      'enabled': enabled === '' ? null : enabled === '1'
+    }
+  }))
   xhr.onreadystatechange = () => {
     if (xhr.readyState === 4 && xhr.status === 200) {
       const resp = JSON.parse(xhr.responseText)
@@ -104,7 +106,7 @@ function permissionStatusChangeAction(uid) {
   }
   const enabled = enabledCheckBoxNode.checked
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', `/api/permission/${enabled === true ? 'unlock' : 'lock'}/${uid}`, true)
+  xhr.open('PUT', `/api/permission/actions/${enabled === true ? 'unlock' : 'lock'}/${uid}`, true)
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send()
   xhr.onreadystatechange = () => {
@@ -315,7 +317,7 @@ function confirmEditPermissionAction() {
 
 function editPermissionRequest(editPermissionParam) {
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', `/api/permission`, true)
+  xhr.open('PUT', `/api/permission`, true)
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send(JSON.stringify(editPermissionParam))
@@ -485,7 +487,7 @@ function checkAddPermissionEnabled() {
 
 function addPermissionRequest(addPermissionParam) {
   const xhr = new XMLHttpRequest()
-  xhr.open('PUT', `/api/permission`, true)
+  xhr.open('POST', `/api/permission`, true)
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send(JSON.stringify(addPermissionParam))

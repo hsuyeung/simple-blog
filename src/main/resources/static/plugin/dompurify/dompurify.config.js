@@ -1,4 +1,4 @@
 DOMPurify.setConfig({
-  ADD_ATTR: ['target'],
+  ADD_TAGS: ['iframe'],
   ADD_ATTR: ['target', 'allow', 'allowfullscreen', 'frameborder', 'scrolling']
 })

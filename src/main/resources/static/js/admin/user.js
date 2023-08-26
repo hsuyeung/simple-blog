@@ -23,18 +23,20 @@ function loadUserTableData(loadPrev = false, loadNext = false, jumpTo = false) {
   const pageSizeSelectNode = document.querySelector('#user-data-table-footer #user-page-size')
   const pageSize = pageSizeSelectNode?.options[pageSizeSelectNode?.selectedIndex]?.value || 10
   const xhr = new XMLHttpRequest()
-  xhr.open(
-          'GET',
-          '/api/user/page'
-          + '?username=' + (username || '')
-          + '&nickname=' + (nickname || '')
-          + '&enabled=' + (!enabled || enabled === '' ? '' : enabled === '1')
-          + '&pageNum=' + pageNum
-          + '&pageSize=' + pageSize,
-          true)
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+  xhr.open('POST', '/api/user/actions/page', true)
+  xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.setRequestHeader('token', getTokenFromLocal())
-  xhr.send()
+  xhr.send(JSON.stringify({
+    'pageParam': {
+      'pageNum': pageNum,
+      'pageSize': pageSize
+    },
+    'searchParam': {
+      'username': username,
+      'nickname': nickname,
+      'enabled': enabled === '' ? null : enabled === '1'
+    }
+  }))
   xhr.onreadystatechange = () => {
     if (xhr.readyState === 4 && xhr.status === 200) {
       const resp = JSON.parse(xhr.responseText)
@@ -102,7 +104,7 @@ function userStatusChangeAction(uid) {
   }
   const enabled = enabledCheckBoxNode.checked
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', `/api/user/${enabled === true ? 'unlock' : 'lock'}/${uid}`, true)
+  xhr.open('PUT', `/api/user/actions/${enabled === true ? 'unlock' : 'lock'}/${uid}`, true)
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send()
   xhr.onreadystatechange = () => {
@@ -303,7 +305,7 @@ function confirmEditUserAction() {
 
 function editUserRequest(editUserParam) {
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', `/api/user`, true)
+  xhr.open('PUT', `/api/user`, true)
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send(JSON.stringify(editUserParam))
@@ -865,7 +867,7 @@ function checkAddUserReconfirmPassword(addUserPassword) {
 
 function addUserRequest(addUserParam) {
   const xhr = new XMLHttpRequest()
-  xhr.open('PUT', `/api/user`, true)
+  xhr.open('POST', `/api/user`, true)
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send(JSON.stringify(addUserParam))

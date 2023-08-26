@@ -6,24 +6,26 @@ import com.hsuyeung.blog.cache.ArticleCache;
 import com.hsuyeung.blog.cache.SystemConfigCache;
 import com.hsuyeung.blog.constant.SystemConfigConstants;
 import com.hsuyeung.blog.mapper.SystemConfigMapper;
-import com.hsuyeung.blog.model.dto.systemconfig.UpdateSystemConfigRequestDTO;
+import com.hsuyeung.blog.model.dto.PageDTO;
+import com.hsuyeung.blog.model.dto.PageSearchDTO;
+import com.hsuyeung.blog.model.dto.systemconfig.SystemConfigSearchDTO;
+import com.hsuyeung.blog.model.dto.systemconfig.UpdateSystemConfigDTO;
 import com.hsuyeung.blog.model.entity.SystemConfigEntity;
 import com.hsuyeung.blog.model.vo.PageVO;
 import com.hsuyeung.blog.model.vo.customconfig.*;
 import com.hsuyeung.blog.model.vo.systemconfig.SystemConfigInfoVO;
 import com.hsuyeung.blog.service.ISystemConfigService;
 import com.hsuyeung.blog.service.IUserService;
-import com.hsuyeung.blog.util.AssertUtil;
 import com.hsuyeung.blog.util.BizAssertUtil;
 import com.hsuyeung.blog.util.ConvertUtil;
 import com.hsuyeung.blog.util.DateUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -44,18 +46,14 @@ import static com.hsuyeung.blog.constant.enums.LogicSwitchEnum.ON;
  */
 @Slf4j
 @Service("systemConfigService")
+@RequiredArgsConstructor(onConstructor_ = {@Lazy})
 public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigMapper, SystemConfigEntity> implements ISystemConfigService {
-    @Resource
-    private SystemConfigCache systemConfigCache;
-    @Resource
-    @Lazy
-    private IUserService userService;
-    @Resource
-    private ArticleCache articleCache;
+    private final SystemConfigCache systemConfigCache;
+    private final IUserService userService;
+    private final ArticleCache articleCache;
 
     @Override
     public <T> T getConfigValue(SystemConfigConstants.SystemConfigEnum systemConfigEnum, Class<T> valueType) {
-        AssertUtil.notNull(systemConfigEnum, "systemConfigEnum 不能为空");
         String group = systemConfigEnum.getGroup();
         String key = systemConfigEnum.getKeyName();
         SystemConfigEntity systemConfigEntity = systemConfigCache.getSystemConfigValueCache(group, key);
@@ -127,7 +125,21 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigMapper, Sys
     }
 
     @Override
-    public PageVO<SystemConfigInfoVO> getSystemConfigPage(String key, String group, String desc, Boolean enabled, Integer pageNum, Integer pageSize) {
+    public PageVO<SystemConfigInfoVO> getSystemConfigPage(PageSearchDTO<SystemConfigSearchDTO> pageSearchParam) {
+        SystemConfigSearchDTO searchParam = pageSearchParam.getSearchParam();
+        String key = null;
+        String group = null;
+        String desc = null;
+        Boolean enabled = null;
+
+        if (Objects.nonNull(searchParam)) {
+            key = searchParam.getKey();
+            group = searchParam.getGroup();
+            desc = searchParam.getDesc();
+            enabled = searchParam.getEnabled();
+        }
+
+        PageDTO pageParam = pageSearchParam.getPageParam();
         Page<SystemConfigEntity> entityPage = lambdaQuery()
                 .select(SystemConfigEntity::getId, SystemConfigEntity::getConfKey, SystemConfigEntity::getConfValue,
                         SystemConfigEntity::getConfGroup, SystemConfigEntity::getDescription, SystemConfigEntity::getEnabled,
@@ -138,7 +150,7 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigMapper, Sys
                 .like(StringUtils.hasLength(desc), SystemConfigEntity::getDescription, desc)
                 .eq(Objects.nonNull(enabled), SystemConfigEntity::getEnabled, Objects.equals(enabled, true) ? ON : OFF)
                 .orderByDesc(SystemConfigEntity::getUpdateTime)
-                .page(new Page<>(pageNum, pageSize));
+                .page(new Page<>(pageParam.getPageNum(), pageParam.getPageSize()));
         List<SystemConfigEntity> entityList = entityPage.getRecords();
         if (CollectionUtils.isEmpty(entityList)) {
             return new PageVO<>(0L, Collections.emptyList());
@@ -159,15 +171,14 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigMapper, Sys
     }
 
     @Override
-    public void updateSystemConfig(UpdateSystemConfigRequestDTO updateSystemConfigRequestDTO) {
-        AssertUtil.notNull(updateSystemConfigRequestDTO, "updateSystemConfigRequestDTO 不能为空");
-        Long id = updateSystemConfigRequestDTO.getId();
+    public void updateSystemConfig(UpdateSystemConfigDTO updateSystemConfig) {
+        Long id = updateSystemConfig.getId();
         SystemConfigEntity systemConfigEntity = lambdaQuery()
                 .eq(SystemConfigEntity::getId, id)
                 .one();
         BizAssertUtil.notNull(systemConfigEntity, "配置不存在");
-        systemConfigEntity.setConfValue(updateSystemConfigRequestDTO.getConfValue().trim());
-        systemConfigEntity.setEnabled(updateSystemConfigRequestDTO.getEnabled() ? ON : OFF);
+        systemConfigEntity.setConfValue(updateSystemConfig.getConfValue().trim());
+        systemConfigEntity.setEnabled(updateSystemConfig.getEnabled() ? ON : OFF);
         updateById(systemConfigEntity);
         refreshOneCache(id);
         refreshAllCustomConfig();
@@ -180,7 +191,6 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigMapper, Sys
 
     @Override
     public void refreshOneCache(Long confId) {
-        AssertUtil.notNull(confId, "confId 不能为空");
         SystemConfigEntity systemConfigEntity = lambdaQuery()
                 .select(SystemConfigEntity::getConfKey, SystemConfigEntity::getConfGroup, SystemConfigEntity::getConfValue)
                 .eq(SystemConfigEntity::getId, confId)

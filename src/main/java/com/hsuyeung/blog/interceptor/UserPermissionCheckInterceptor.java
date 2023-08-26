@@ -3,11 +3,11 @@ package com.hsuyeung.blog.interceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hsuyeung.blog.service.IRbacAuthorityService;
 import com.hsuyeung.blog.web.core.IBaseWebResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,11 +21,10 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class UserPermissionCheckInterceptor implements HandlerInterceptor, IBaseWebResponse {
-    @Resource
-    private IRbacAuthorityService rbacAuthorityService;
-    @Resource
-    private ObjectMapper objectMapper;
+    private final IRbacAuthorityService rbacAuthorityService;
+    private final ObjectMapper objectMapper;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

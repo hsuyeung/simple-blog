@@ -2,11 +2,11 @@ package com.hsuyeung.blog.schedule;
 
 import com.hsuyeung.blog.model.entity.MailEntity;
 import com.hsuyeung.blog.service.IMailService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -18,9 +18,9 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class SendFailedEmailRetrySchedule {
-    @Resource
-    private IMailService mailService;
+    private final IMailService mailService;
 
     /**
      * 十分钟检查一次是否有发送失败的邮件

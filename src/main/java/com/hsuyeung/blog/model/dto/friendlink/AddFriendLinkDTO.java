@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
@@ -20,20 +21,25 @@ public class AddFriendLinkDTO implements Serializable {
 
     @ApiModelProperty(value = "友链名称", required = true)
     @NotBlank(message = "友链名称不能为空")
+    @Size(max = 255, message = "友链名称不能超过 255 个字符")
     private String linkName;
 
     @ApiModelProperty(value = "友链链接", required = true)
     @NotBlank(message = "友链链接不能为空")
+    @Size(max = 255, message = "友链链接不能超过 255 个字符")
     private String linkUrl;
 
     @ApiModelProperty(value = "友链头像", required = true)
     @NotBlank(message = "友链头像不能为空")
+    @Size(max = 255, message = "友链头像不能超过 255 个字符")
     private String linkAvatar;
 
     @ApiModelProperty("一句话描述")
+    @Size(max = 255, message = "一句话描述不能超过 255 个字符")
     private String linkDesc;
 
     @ApiModelProperty(value = "友链分组", required = true)
     @NotBlank(message = "友链分组不能为空")
+    @Size(max = 255, message = "友链分组不能超过 255 个字符")
     private String linkGroup;
 }

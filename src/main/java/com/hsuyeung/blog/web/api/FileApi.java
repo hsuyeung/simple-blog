@@ -1,5 +1,7 @@
 package com.hsuyeung.blog.web.api;
 
+import com.hsuyeung.blog.model.dto.PageSearchDTO;
+import com.hsuyeung.blog.model.dto.file.FileSearchDTO;
 import com.hsuyeung.blog.model.vo.PageVO;
 import com.hsuyeung.blog.model.vo.file.FileInfoVO;
 import com.hsuyeung.blog.service.IFileService;
@@ -8,10 +10,10 @@ import com.hsuyeung.blog.web.core.WebResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -24,12 +26,12 @@ import java.io.UnsupportedEncodingException;
  */
 @Api(tags = "文件上传下载相关接口")
 @RestController
+@RequiredArgsConstructor
 public class FileApi implements IBaseWebResponse {
-    @Resource
-    private IFileService fileService;
+    private final IFileService fileService;
 
     @ApiOperation("文件上传")
-    @PostMapping("/api/file/upload")
+    @PostMapping("/api/file/actions/upload")
     public WebResponse<String> upload(@ApiParam("文件") @RequestParam("file") MultipartFile file) throws IOException {
         return ok(fileService.upload(file));
     }
@@ -48,21 +50,13 @@ public class FileApi implements IBaseWebResponse {
     /**
      * 查询文件上传记录分页列表
      *
-     * @param url            文件访问路径，全模糊
-     * @param startTimestamp 开始时间戳，大于等于
-     * @param endTimestamp   结束时间戳，小于等于
-     * @param pageNum        页码
-     * @param pageSize       每页数量
+     * @param pageSearchParam 文件分页搜索条件
      * @return 文件上传记录分页列表
      */
     @ApiOperation("查询文件上传记录分页列表")
-    @GetMapping("/api/file/page")
+    @PostMapping("/api/file/actions/page")
     public WebResponse<PageVO<FileInfoVO>> getFilePage(
-            @ApiParam("文件 url") @RequestParam(value = "url", required = false) String url,
-            @ApiParam("开始时间戳") @RequestParam(value = "startTimestamp", required = false) Long startTimestamp,
-            @ApiParam("结束时间戳") @RequestParam(value = "endTimestamp", required = false) Long endTimestamp,
-            @ApiParam("页码") @RequestParam("pageNum") Integer pageNum,
-            @ApiParam("每页数量") @RequestParam("pageSize") Integer pageSize) {
-        return ok(fileService.getFilePage(url, pageNum, startTimestamp, endTimestamp, pageSize));
+            @ApiParam("文件分页搜索条件") @RequestBody PageSearchDTO<FileSearchDTO> pageSearchParam) {
+        return ok(fileService.getFilePage(pageSearchParam));
     }
 }

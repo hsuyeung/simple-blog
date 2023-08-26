@@ -38,24 +38,26 @@ function loadMailTableData(loadPrev = false, loadNext = false, jumpTo = false) {
   const pageSizeSelectNode = document.getElementById('mail-page-size')
   const pageSize = pageSizeSelectNode?.options[pageSizeSelectNode?.selectedIndex]?.value || 10
   const xhr = new XMLHttpRequest()
-  xhr.open(
-          'GET',
-          '/api/mail/page'
-          + '?from=' + (from || '')
-          + '&to=' + (to || '')
-          + '&subject=' + (subject || '')
-          + '&cc=' + (cc || '')
-          + '&bcc=' + (bcc || '')
-          + '&status=' + (status || '')
-          + '&type=' + (type || '')
-          + '&startTimestamp=' + (startTimestamp || '')
-          + '&endTimestamp=' + (endTimestamp || '')
-          + '&pageNum=' + pageNum
-          + '&pageSize=' + pageSize,
-          true)
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+  xhr.open('POST', '/api/mail/actions/page', true)
+  xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.setRequestHeader('token', getTokenFromLocal())
-  xhr.send()
+  xhr.send(JSON.stringify({
+    'pageParam': {
+      'pageNum': pageNum,
+      'pageSize': pageSize
+    },
+    'searchParam': {
+      'from': from,
+      'to': to,
+      'subject': subject,
+      'cc': cc,
+      'bcc': bcc,
+      'status': status,
+      'type': type,
+      'startTimestamp': startTimestamp,
+      'endTimestamp': endTimestamp
+    }
+  }))
   xhr.onreadystatechange = () => {
     if (xhr.readyState === 4 && xhr.status === 200) {
       const resp = JSON.parse(xhr.responseText)

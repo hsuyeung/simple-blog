@@ -1,9 +1,11 @@
 package com.hsuyeung.blog.web.api;
 
 import com.hsuyeung.blog.annotation.ApiRateLimit;
-import com.hsuyeung.blog.model.dto.user.CreateUserRequestDTO;
-import com.hsuyeung.blog.model.dto.user.UpdateUserRequestDTO;
-import com.hsuyeung.blog.model.dto.user.UserLoginRequestDTO;
+import com.hsuyeung.blog.model.dto.PageSearchDTO;
+import com.hsuyeung.blog.model.dto.user.CreateUserDTO;
+import com.hsuyeung.blog.model.dto.user.UpdateUserDTO;
+import com.hsuyeung.blog.model.dto.user.UserLoginDTO;
+import com.hsuyeung.blog.model.dto.user.UserSearchDTO;
 import com.hsuyeung.blog.model.vo.PageVO;
 import com.hsuyeung.blog.model.vo.role.EnabledRoleVO;
 import com.hsuyeung.blog.model.vo.user.UserInfoVO;
@@ -15,10 +17,10 @@ import com.hsuyeung.blog.web.core.WebResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
@@ -38,26 +40,25 @@ import static com.hsuyeung.blog.constant.enums.ApiRateLimitStrategyEnum.IP;
 @Api(tags = "用户相关接口")
 @RestController
 @RequestMapping("/api/user")
+@RequiredArgsConstructor
 public class UserApi implements IBaseWebResponse {
-    @Resource
-    private IUserService userService;
-    @Resource
-    private IUserTokenService userTokenService;
+    private final IUserService userService;
+    private final IUserTokenService userTokenService;
 
     /**
      * 登录（暂时限制一个 IP 在 1 分钟只等调用一次登录接口）
      *
-     * @param userLoginRequestDTO 登录参数
+     * @param userLogin 登录参数
      * @return 登录成功生成的 token
      */
     @ApiRateLimit(value = 60, strategy = IP, message = "请在 {rest} 秒后重试")
     @ApiOperation("用户登录")
-    @PostMapping("/login")
+    @PostMapping("/actions/login")
     public WebResponse<String> login(
-            @ApiParam("用户登录参数") @RequestBody UserLoginRequestDTO userLoginRequestDTO,
+            @ApiParam("用户登录参数") @RequestBody UserLoginDTO userLogin,
             HttpServletRequest request)
             throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        return ok(userService.login(userLoginRequestDTO, IpUtil.getIpAddr(request)));
+        return ok(userService.login(userLogin, IpUtil.getIpAddr(request)));
     }
 
     /**
@@ -66,7 +67,7 @@ public class UserApi implements IBaseWebResponse {
      * @param request {@link HttpServletRequest}
      */
     @ApiOperation("用户退出登录")
-    @PostMapping("/logout")
+    @PostMapping("/actions/logout")
     public WebResponse<Boolean> logout(HttpServletRequest request) {
         return ok(userService.logout(userTokenService.getUserIdFromRequestHeader(request)));
     }
@@ -74,15 +75,15 @@ public class UserApi implements IBaseWebResponse {
     /**
      * 创建用户
      *
-     * @param createUserRequestDTO 创建用户参数
+     * @param createUser 创建用户参数
      * @return 创建是否成功
      */
     @ApiOperation("创建一个用户")
-    @PutMapping
+    @PostMapping
     public WebResponse<Boolean> createUser(
-            @ApiParam("创建用户请求参数") @RequestBody CreateUserRequestDTO createUserRequestDTO)
+            @ApiParam("创建用户请求参数") @RequestBody CreateUserDTO createUser)
             throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        return ok(userService.createUser(createUserRequestDTO));
+        return ok(userService.createUser(createUser));
     }
 
     /**
@@ -103,7 +104,7 @@ public class UserApi implements IBaseWebResponse {
      * @param uid 用户 id
      */
     @ApiOperation("锁定一个用户")
-    @PostMapping("/lock/{uid}")
+    @PutMapping("/actions/lock/{uid}")
     public WebResponse<Void> lockUser(@ApiParam("用户 id") @PathVariable("uid") Long uid) {
         userService.lockUser(uid);
         return ok();
@@ -115,7 +116,7 @@ public class UserApi implements IBaseWebResponse {
      * @param uid 用户 id
      */
     @ApiOperation("解锁一个用户")
-    @PostMapping("/unlock/{uid}")
+    @PutMapping("/actions/unlock/{uid}")
     public WebResponse<Void> unlockUser(@ApiParam("用户 id") @PathVariable("uid") Long uid) {
         userService.unlockUser(uid);
         return ok();
@@ -124,36 +125,28 @@ public class UserApi implements IBaseWebResponse {
     /**
      * 更新用户信息
      *
-     * @param updateUserRequestDTO 更新用户信息参数
+     * @param updateUser 更新用户信息参数
      * @return 更新是否成功
      */
     @ApiOperation("更新用户信息")
-    @PostMapping
+    @PutMapping
     public WebResponse<Boolean> updateUser(
-            @ApiParam("更新用户请求参数") @RequestBody UpdateUserRequestDTO updateUserRequestDTO)
+            @ApiParam("更新用户请求参数") @RequestBody UpdateUserDTO updateUser)
             throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        return ok(userService.updateUser(updateUserRequestDTO));
+        return ok(userService.updateUser(updateUser));
     }
 
     /**
      * 分页查询用户列表
      *
-     * @param username 用户名，全模糊
-     * @param nickname 昵称，全模糊
-     * @param enabled  是否可用，全匹配
-     * @param pageNum  页码
-     * @param pageSize 每页数量
+     * @param pageSearchParam 用户分页搜索条件
      * @return 用户分页列表
      */
     @ApiOperation("分页查询用户列表")
-    @GetMapping("/page")
+    @PostMapping("/actions/page")
     public WebResponse<PageVO<UserInfoVO>> getUserPage(
-            @ApiParam("用户名") @RequestParam(value = "username", required = false) String username,
-            @ApiParam("昵称") @RequestParam(value = "nickname", required = false) String nickname,
-            @ApiParam("是否可用") @RequestParam(value = "enabled", required = false) Boolean enabled,
-            @ApiParam("页码") @RequestParam("pageNum") Integer pageNum,
-            @ApiParam("每页数量") @RequestParam("pageSize") Integer pageSize) {
-        return ok(userService.getUserPage(username, nickname, enabled, pageNum, pageSize));
+            @ApiParam("用户分页搜索条件") @RequestBody PageSearchDTO<UserSearchDTO> pageSearchParam) {
+        return ok(userService.getUserPage(pageSearchParam));
     }
 
     /**

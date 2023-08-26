@@ -3,6 +3,7 @@ package com.hsuyeung.blog.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hsuyeung.blog.model.entity.UserRoleEntity;
 
+import javax.validation.constraints.NotNull;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,7 +21,7 @@ public interface IUserRoleService extends IService<UserRoleEntity> {
      * @param onlyQueryEnabled 是否只查询有效的用户 id 关联的角色 id 集合
      * @return 用户所拥有的角色 id 集合
      */
-    Set<Long> getRoleIds(Long uid, boolean onlyQueryEnabled);
+    Set<Long> getRoleIds(@NotNull(message = "uid 不能为 null") Long uid, boolean onlyQueryEnabled);
 
     /**
      * 根据用户 id 删除角色

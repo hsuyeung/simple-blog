@@ -2,6 +2,7 @@ package com.hsuyeung.blog.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hsuyeung.blog.model.vo.httpclient.HttpClientResult;
+import lombok.RequiredArgsConstructor;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -16,7 +17,6 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
@@ -31,16 +31,15 @@ import java.util.Map.Entry;
  * @date 2021/10/24
  */
 @Component
+@RequiredArgsConstructor
 public class HttpClientUtil {
     /**
      * 编码格式。发送编码格式统一用 UTF-8
      */
     private static final String ENCODING = "UTF-8";
 
-    @Resource(name = "customRequestConfig")
-    private RequestConfig requestConfig;
-    @Resource
-    private ObjectMapper objectMapper;
+    private final RequestConfig requestConfig;
+    private final ObjectMapper objectMapper;
 
     /**
      * 发送 get 请求。不带请求头和请求参数

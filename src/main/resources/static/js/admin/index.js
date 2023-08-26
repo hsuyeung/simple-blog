@@ -87,7 +87,7 @@ function logoutAction() {
 
 function logoutRequest() {
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', '/api/user/logout', false)
+  xhr.open('POST', '/api/user/actions/logout', false)
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send()
   if (xhr.readyState === 4 && xhr.status === 200) {

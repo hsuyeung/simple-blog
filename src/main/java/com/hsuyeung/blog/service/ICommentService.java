@@ -1,7 +1,9 @@
 package com.hsuyeung.blog.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hsuyeung.blog.model.dto.comment.SubmitCommentRequestDTO;
+import com.hsuyeung.blog.model.dto.PageSearchDTO;
+import com.hsuyeung.blog.model.dto.comment.CommentSearchDTO;
+import com.hsuyeung.blog.model.dto.comment.SubmitCommentDTO;
 import com.hsuyeung.blog.model.entity.CommentEntity;
 import com.hsuyeung.blog.model.vo.PageVO;
 import com.hsuyeung.blog.model.vo.comment.CommentInfoVO;
@@ -9,8 +11,7 @@ import com.hsuyeung.blog.model.vo.comment.CommentVO;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import java.io.IOException;
-import java.net.URISyntaxException;
+import javax.validation.constraints.NotNull;
 
 /**
  * <p>
@@ -34,39 +35,28 @@ public interface ICommentService extends IService<CommentEntity> {
     /**
      * 提交评论
      *
-     * @param submitCommentRequestDTO 请求参数
-     * @param remoteAddr              评论者的 ip 地址
+     * @param submitComment 请求参数
+     * @param remoteAddr    评论者的 ip 地址
      * @return 新增的评论的 id
      */
-    Long submitComment(@Valid SubmitCommentRequestDTO submitCommentRequestDTO, String remoteAddr) throws URISyntaxException, IOException;
+    Long submitComment(@NotNull(message = "submitComment 不能为 null") @Valid SubmitCommentDTO submitComment,
+                       String remoteAddr);
 
     /**
      * 分页查询评论列表
      *
-     * @param nickname       昵称，全模糊
-     * @param email          邮箱地址，全模糊
-     * @param website        网站，全模糊
-     * @param parentNickname 父级评论人的昵称，全模糊
-     * @param replyNickname  回复的评论人的昵称，全模糊
-     * @param articleId      文章 id，精准匹配
-     * @param ip             ip 地址，全模糊
-     * @param notification   是否接收邮件提醒，精准匹配
-     * @param startTimestamp 开始时间戳，大于等于
-     * @param endTimestamp   结束时间戳，小于等于
-     * @param pageNum        页码
-     * @param pageSize       每页数量
+     * @param pageSearchParam 评论分页搜索条件
      * @return 评论分页列表
      */
-    PageVO<CommentInfoVO> getCommentPage(String nickname, String email, String website, String parentNickname,
-                                         String replyNickname, Integer articleId, String ip, Integer notification,
-                                         Long startTimestamp, Long endTimestamp, Integer pageNum, Integer pageSize);
+    PageVO<CommentInfoVO> getCommentPage(@NotNull(message = "pageSearchParam 不能为 null") @Valid
+                                         PageSearchDTO<CommentSearchDTO> pageSearchParam);
 
     /**
      * 删除指定的评论
      *
      * @param id 评论 id
      */
-    void deleteComment(Long id);
+    void deleteComment(@NotNull(message = "id 不能为 null") Long id);
 
     /**
      * 统计文章的评论数

@@ -3,14 +3,19 @@ package com.hsuyeung.blog.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hsuyeung.blog.constant.enums.ContentTypeEnum;
-import com.hsuyeung.blog.model.dto.article.AddArticleRequestDTO;
-import com.hsuyeung.blog.model.dto.article.UpdateArticleRequestDTO;
+import com.hsuyeung.blog.model.dto.PageSearchDTO;
+import com.hsuyeung.blog.model.dto.article.AddArticleDTO;
+import com.hsuyeung.blog.model.dto.article.ArticleSearchDTO;
+import com.hsuyeung.blog.model.dto.article.UpdateArticleDTO;
 import com.hsuyeung.blog.model.entity.ArticleEntity;
 import com.hsuyeung.blog.model.vo.PageVO;
 import com.hsuyeung.blog.model.vo.article.*;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +44,7 @@ public interface IArticleService extends IService<ArticleEntity> {
      * @param articleRoute 文章路由
      * @return {@link ArticleDetailVO}
      */
-    ArticleDetailVO getArticleDetail(String articleRoute);
+    ArticleDetailVO getArticleDetail(@NotBlank(message = "articleRoute 不能为空") String articleRoute);
 
     /**
      * 获取归档页面数据列表
@@ -62,7 +67,7 @@ public interface IArticleService extends IService<ArticleEntity> {
      * @param articleId 文章 id
      * @return {@link ArticleRouteAndTitleVO}
      */
-    ArticleRouteAndTitleVO getArticleRouteAndTitle(Long articleId);
+    ArticleRouteAndTitleVO getArticleRouteAndTitle(@NotNull(message = "articleId 不能为 null") Long articleId);
 
     /**
      * 查询文章标题列表
@@ -77,24 +82,16 @@ public interface IArticleService extends IService<ArticleEntity> {
      * @param ids 文章 id 集合
      * @return key-文章 id，value-文章路由
      */
-    Map<Long, ArticleRouteAndTitleVO> getArticleRouteAndTitle(Collection<Long> ids);
+    Map<Long, ArticleRouteAndTitleVO> getArticleRouteAndTitle(@NotEmpty(message = "ids 不能为空") Collection<Long> ids);
 
     /**
      * 查询文章分页列表
      *
-     * @param title          标题，全模糊
-     * @param author         作者，全模糊
-     * @param keywords       关键词，全模糊
-     * @param desc           描述，全模糊
-     * @param pin            是否置顶，精确搜索
-     * @param pageNum        页码
-     * @param startTimestamp 开始时间戳，大于等于
-     * @param endTimestamp   结束时间戳，小于等于
-     * @param pageSize       每页数量
+     * @param pageSearchParam 文章分页搜索条件
      * @return 文章分页列表
      */
-    PageVO<ArticleInfoVO> getArticlePage(String title, String author, String keywords, String desc, Boolean pin,
-                                         Integer pageNum, Long startTimestamp, Long endTimestamp, Integer pageSize);
+    PageVO<ArticleInfoVO> getArticlePage(@NotNull(message = "pageSearchParam 不能为 null") @Valid
+                                         PageSearchDTO<ArticleSearchDTO> pageSearchParam);
 
     /**
      * 删除指定文章
@@ -106,9 +103,9 @@ public interface IArticleService extends IService<ArticleEntity> {
     /**
      * 新增一篇文章
      *
-     * @param addArticleRequestDTO 新增文章请求参数
+     * @param addArticle 新增文章请求参数
      */
-    void addArticle(@Valid AddArticleRequestDTO addArticleRequestDTO);
+    void addArticle(@NotNull(message = "addArticle 不能为 null") @Valid AddArticleDTO addArticle);
 
     /**
      * 根据文章 id 获取文章的指定格式的内容
@@ -117,12 +114,13 @@ public interface IArticleService extends IService<ArticleEntity> {
      * @param contentType 文章类型，{@link ContentTypeEnum}
      * @return 文章内容
      */
-    String getArticleContent(Long aid, ContentTypeEnum contentType);
+    String getArticleContent(@NotNull(message = "aid 不能为 null") Long aid,
+                             @NotBlank(message = "contentType 不能为 null") ContentTypeEnum contentType);
 
     /**
      * 更新文章
      *
-     * @param updateArticleRequestDTO 更新文章请求参数
+     * @param updateArticle 更新文章请求参数
      */
-    void updateArticle(@Valid UpdateArticleRequestDTO updateArticleRequestDTO);
+    void updateArticle(@NotNull(message = "updateArticle 不能为 null") @Valid UpdateArticleDTO updateArticle);
 }

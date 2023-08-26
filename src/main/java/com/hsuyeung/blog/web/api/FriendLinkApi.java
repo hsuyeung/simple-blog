@@ -1,6 +1,8 @@
 package com.hsuyeung.blog.web.api;
 
+import com.hsuyeung.blog.model.dto.PageSearchDTO;
 import com.hsuyeung.blog.model.dto.friendlink.AddFriendLinkDTO;
+import com.hsuyeung.blog.model.dto.friendlink.FriendLinkSearchDTO;
 import com.hsuyeung.blog.model.dto.friendlink.UpdateFriendLinkDTO;
 import com.hsuyeung.blog.model.vo.PageVO;
 import com.hsuyeung.blog.model.vo.friendlink.FriendLinkInfoVO;
@@ -10,9 +12,8 @@ import com.hsuyeung.blog.web.core.WebResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
 
 /**
  * 友链相关接口
@@ -23,15 +24,15 @@ import javax.annotation.Resource;
 @Api(tags = "友链相关接口")
 @RestController
 @RequestMapping("/api/friend/link")
+@RequiredArgsConstructor
 public class FriendLinkApi implements IBaseWebResponse {
-    @Resource
-    private IFriendLinkService friendLinkService;
+    private final IFriendLinkService friendLinkService;
 
     @ApiOperation("增加一个友链")
-    @PutMapping
+    @PostMapping
     public WebResponse<Void> addFriendLink(
-            @ApiParam("新增友链请求参数") @RequestBody AddFriendLinkDTO addFriendLinkDTO) {
-        friendLinkService.addFriendLink(addFriendLinkDTO);
+            @ApiParam("新增友链请求参数") @RequestBody AddFriendLinkDTO addFriendLink) {
+        friendLinkService.addFriendLink(addFriendLink);
         return ok();
     }
 
@@ -43,34 +44,24 @@ public class FriendLinkApi implements IBaseWebResponse {
     }
 
     @ApiOperation("更新友链")
-    @PostMapping
+    @PutMapping
     public WebResponse<Void> updateFriendLink(
-            @ApiParam("更新友链请求参数") @RequestBody UpdateFriendLinkDTO updateFriendLinkDTO) {
-        friendLinkService.updateFriendLink(updateFriendLinkDTO);
+            @ApiParam("更新友链请求参数") @RequestBody UpdateFriendLinkDTO updateFriendLink) {
+        friendLinkService.updateFriendLink(updateFriendLink);
         return ok();
     }
 
     /**
      * 分页查询友链列表
      *
-     * @param linkName  友链名字，全模糊
-     * @param linkUrl   友链链接，全模糊
-     * @param linkDesc  友链描述，全模糊
-     * @param linkGroup 友链分组，精确匹配
-     * @param pageNum   页码
-     * @param pageSize  每页数量
+     * @param pageSearchParam 友链分页搜索条件
      * @return 友链分页列表
      */
     @ApiOperation("分页查询友链列表")
-    @GetMapping("/page")
+    @PostMapping("/actions/page")
     public WebResponse<PageVO<FriendLinkInfoVO>> getFriendLinkPage(
-            @ApiParam("友链名字") @RequestParam(value = "linkName", required = false) String linkName,
-            @ApiParam("友链链接") @RequestParam(value = "linkUrl", required = false) String linkUrl,
-            @ApiParam("友链描述") @RequestParam(value = "linkDesc", required = false) String linkDesc,
-            @ApiParam("友链分组") @RequestParam(value = "linkGroup", required = false) String linkGroup,
-            @ApiParam("页码") @RequestParam("pageNum") Integer pageNum,
-            @ApiParam("每页数量") @RequestParam("pageSize") Integer pageSize) {
-        return ok(friendLinkService.getFriendLinkPage(linkName, linkUrl, linkDesc, linkGroup, pageNum, pageSize));
+            @ApiParam("友链分页搜索条件") @RequestBody PageSearchDTO<FriendLinkSearchDTO> pageSearchParam) {
+        return ok(friendLinkService.getFriendLinkPage(pageSearchParam));
     }
 
     /**

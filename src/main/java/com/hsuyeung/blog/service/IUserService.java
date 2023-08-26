@@ -1,9 +1,11 @@
 package com.hsuyeung.blog.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hsuyeung.blog.model.dto.user.CreateUserRequestDTO;
-import com.hsuyeung.blog.model.dto.user.UpdateUserRequestDTO;
-import com.hsuyeung.blog.model.dto.user.UserLoginRequestDTO;
+import com.hsuyeung.blog.model.dto.PageSearchDTO;
+import com.hsuyeung.blog.model.dto.user.CreateUserDTO;
+import com.hsuyeung.blog.model.dto.user.UpdateUserDTO;
+import com.hsuyeung.blog.model.dto.user.UserLoginDTO;
+import com.hsuyeung.blog.model.dto.user.UserSearchDTO;
 import com.hsuyeung.blog.model.entity.UserEntity;
 import com.hsuyeung.blog.model.vo.PageVO;
 import com.hsuyeung.blog.model.vo.role.EnabledRoleVO;
@@ -11,6 +13,8 @@ import com.hsuyeung.blog.model.vo.user.UserInfoVO;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
@@ -37,13 +41,13 @@ public interface IUserService extends IService<UserEntity> {
     /**
      * 用户登录
      *
-     * @param userLoginRequestDTO 登录参数
-     * @param ipAddr              ip 地址
+     * @param userLogin 登录参数
+     * @param ipAddr    ip 地址
      * @return 生成的 token
      * @throws UnsupportedEncodingException 密码加密失败
      * @throws NoSuchAlgorithmException     密码加密失败
      */
-    String login(@Valid UserLoginRequestDTO userLoginRequestDTO, String ipAddr)
+    String login(@NotNull(message = "userLogin 不能为 null") @Valid UserLoginDTO userLogin, String ipAddr)
             throws UnsupportedEncodingException, NoSuchAlgorithmException;
 
     /**
@@ -57,12 +61,12 @@ public interface IUserService extends IService<UserEntity> {
     /**
      * 创建一个用户
      *
-     * @param createUserRequestDTO 创建用户参数
+     * @param createUser 创建用户参数
      * @return 创建成功返回 true。否则返回 false
      * @throws UnsupportedEncodingException 密码加密失败
      * @throws NoSuchAlgorithmException     密码加密失败
      */
-    boolean createUser(@Valid CreateUserRequestDTO createUserRequestDTO)
+    boolean createUser(@NotNull(message = "createUser 不能为 null") @Valid CreateUserDTO createUser)
             throws UnsupportedEncodingException, NoSuchAlgorithmException;
 
     /**
@@ -77,24 +81,24 @@ public interface IUserService extends IService<UserEntity> {
      *
      * @param uid uid
      */
-    void lockUser(Long uid);
+    void lockUser(@NotNull(message = "uid 不能为 null") Long uid);
 
     /**
      * 根据 id 解锁一个用户
      *
      * @param uid 用户 id
      */
-    void unlockUser(Long uid);
+    void unlockUser(@NotNull(message = "uid 不能为 null") Long uid);
 
     /**
      * 更新用户信息
      *
-     * @param updateUserRequestDTO 更新用户信息参数
+     * @param updateUser 更新用户信息参数
      * @return 更新成功返回 true，否则返回 false
      * @throws UnsupportedEncodingException 密码加密失败
      * @throws NoSuchAlgorithmException     密码加密失败
      */
-    boolean updateUser(@Valid UpdateUserRequestDTO updateUserRequestDTO)
+    boolean updateUser(@NotNull(message = "updateUser 不能为 null") @Valid UpdateUserDTO updateUser)
             throws UnsupportedEncodingException, NoSuchAlgorithmException;
 
     /**
@@ -108,15 +112,11 @@ public interface IUserService extends IService<UserEntity> {
     /**
      * 分页查询用户列表
      *
-     * @param username 用户名，全模糊
-     * @param nickname 昵称，全模糊
-     * @param enabled  是否可用，全匹配
-     * @param pageNum  页码
-     * @param pageSize 每页数量
+     * @param pageSearchParam 用户分页搜索条件
      * @return 用户分页列表
      */
-    PageVO<UserInfoVO> getUserPage(String username, String nickname, Boolean enabled,
-                                   Integer pageNum, Integer pageSize);
+    PageVO<UserInfoVO> getUserPage(@NotNull(message = "pageSeatchParam 不能为 null") @Valid
+                                   PageSearchDTO<UserSearchDTO> pageSearchParam);
 
     /**
      * 获取用户拥有的所有启用状态的角色列表
@@ -132,7 +132,8 @@ public interface IUserService extends IService<UserEntity> {
      * @param uid  用户 id
      * @param rids 角色 id 集合
      */
-    void assignUserRole(Long uid, Collection<Long> rids);
+    void assignUserRole(@NotNull(message = "uid 不能为 null") Long uid,
+                        @NotEmpty(message = "rids 不能为空") Collection<Long> rids);
 
     /**
      * 根据用户 id 获取用户名

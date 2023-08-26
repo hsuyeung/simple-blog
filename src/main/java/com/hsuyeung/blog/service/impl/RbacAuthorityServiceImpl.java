@@ -3,14 +3,13 @@ package com.hsuyeung.blog.service.impl;
 import com.hsuyeung.blog.cache.RbacCache;
 import com.hsuyeung.blog.model.vo.permission.PermissionVO;
 import com.hsuyeung.blog.service.*;
-import com.hsuyeung.blog.util.AssertUtil;
 import com.hsuyeung.blog.util.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 
@@ -25,34 +24,26 @@ import static com.hsuyeung.blog.constant.SystemConfigConstants.SystemConfigEnum.
  */
 @Slf4j
 @Service("rbacAuthorityService")
+@RequiredArgsConstructor
 public class RbacAuthorityServiceImpl implements IRbacAuthorityService {
     private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
 
-    @Resource
-    private RbacCache rbacCache;
-    @Resource
-    private IUserService userService;
-    @Resource
-    private IUserRoleService userRoleService;
-    @Resource
-    private IRolePermissionService rolePermissionService;
-    @Resource
-    private IPermissionService permissionService;
-    @Resource
-    private ISystemConfigService systemConfigService;
-    @Resource
-    private IUserTokenService userTokenService;
+    private final RbacCache rbacCache;
+    private final IUserService userService;
+    private final IUserRoleService userRoleService;
+    private final IRolePermissionService rolePermissionService;
+    private final IPermissionService permissionService;
+    private final ISystemConfigService systemConfigService;
+    private final IUserTokenService userTokenService;
 
     @Override
     public boolean hasPermission(HttpServletRequest request) {
-        AssertUtil.notNull(request, "request 不能为空");
         Long uid = userTokenService.getUserIdFromRequestHeader(request);
         return this.checkRequest(request, uid);
     }
 
     @Override
     public boolean hasPermission(HttpServletRequest request, String token) {
-        AssertUtil.notNull(token, "token 不能为空");
         Long uid = JwtUtil.getClaim(token, "id", Long.class, systemConfigService.getConfigValue(USER_TOKEN_SECRET, String.class));
         return this.checkRequest(request, uid);
     }

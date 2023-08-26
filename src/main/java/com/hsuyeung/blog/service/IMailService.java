@@ -1,6 +1,8 @@
 package com.hsuyeung.blog.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.hsuyeung.blog.model.dto.PageSearchDTO;
+import com.hsuyeung.blog.model.dto.mail.MailSearchDTO;
 import com.hsuyeung.blog.model.dto.mail.SendMailDTO;
 import com.hsuyeung.blog.model.entity.MailEntity;
 import com.hsuyeung.blog.model.vo.PageVO;
@@ -24,38 +26,27 @@ public interface IMailService extends IService<MailEntity> {
     /**
      * 异步发送普通邮件
      *
-     * @param sendMailDTO 发送邮件参数
+     * @param sendMail 发送邮件参数
      */
     @Async("asyncServiceExecutor")
-    void sendSimpleEmail(@Valid SendMailDTO sendMailDTO);
+    void sendSimpleEmail(@Valid SendMailDTO sendMail);
 
     /**
      * 异步发送异步发送支持富文本和附件的邮件
      *
-     * @param sendMailDTO 发送邮件参数
+     * @param sendMail 发送邮件参数
      */
     @Async("asyncServiceExecutor")
-    void sendMimeMail(@Valid SendMailDTO sendMailDTO);
+    void sendMimeMail(@Valid SendMailDTO sendMail);
 
     /**
      * 分页查询邮件列表
      *
-     * @param from           发件人，全模糊
-     * @param to             收件人，全模糊
-     * @param subject        主题，全模糊
-     * @param cc             抄送人，全模糊
-     * @param bcc            密送人，全模糊
-     * @param status         状态，精确匹配
-     * @param type           类型，精确匹配
-     * @param startTimestamp 开始时间戳
-     * @param endTimestamp   结束时间戳
-     * @param pageNum        页码
-     * @param pageSize       每页数量
+     * @param pageSearchParam 邮件分页搜索条件
      * @return 邮件分页列表
      */
-    PageVO<MailInfoVO> getMailPage(String from, String to, String subject, String cc, String bcc,
-                                   Integer status, Integer type, Long startTimestamp, Long endTimestamp,
-                                   Integer pageNum, Integer pageSize);
+    PageVO<MailInfoVO> getMailPage(@NotNull(message = "pageSearchParam 不能为 null") @Valid
+                                   PageSearchDTO<MailSearchDTO> pageSearchParam);
 
     /**
      * 获取指定邮件的内容

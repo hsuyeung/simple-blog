@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hsuyeung.blog.config.properties.SecurityProperties;
 import com.hsuyeung.blog.interceptor.UserPermissionCheckInterceptor;
 import com.hsuyeung.blog.interceptor.UserTokenCheckInterceptor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -12,7 +13,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -23,15 +23,12 @@ import java.util.List;
  */
 @EnableWebMvc
 @Configuration
+@RequiredArgsConstructor
 public class WebConfigurer implements WebMvcConfigurer {
-    @Resource
-    private UserPermissionCheckInterceptor userPermissionCheckInterceptor;
-    @Resource
-    private UserTokenCheckInterceptor userTokenCheckInterceptor;
-    @Resource(name = "securityProperties")
-    private SecurityProperties properties;
-    @Resource
-    private ObjectMapper objectMapper;
+    private final UserPermissionCheckInterceptor userPermissionCheckInterceptor;
+    private final UserTokenCheckInterceptor userTokenCheckInterceptor;
+    private final SecurityProperties properties;
+    private final ObjectMapper objectMapper;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

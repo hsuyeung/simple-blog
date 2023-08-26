@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hsuyeung.blog.cache.FriendLinkCache;
 import com.hsuyeung.blog.mapper.FriendLinkMapper;
+import com.hsuyeung.blog.model.dto.PageDTO;
+import com.hsuyeung.blog.model.dto.PageSearchDTO;
 import com.hsuyeung.blog.model.dto.friendlink.AddFriendLinkDTO;
+import com.hsuyeung.blog.model.dto.friendlink.FriendLinkSearchDTO;
 import com.hsuyeung.blog.model.dto.friendlink.UpdateFriendLinkDTO;
 import com.hsuyeung.blog.model.entity.FriendLinkEntity;
 import com.hsuyeung.blog.model.vo.PageVO;
@@ -15,17 +18,16 @@ import com.hsuyeung.blog.model.vo.friendlink.FriendLinkVO;
 import com.hsuyeung.blog.service.IFriendLinkService;
 import com.hsuyeung.blog.service.ISystemConfigService;
 import com.hsuyeung.blog.service.IUserService;
-import com.hsuyeung.blog.util.AssertUtil;
 import com.hsuyeung.blog.util.BizAssertUtil;
 import com.hsuyeung.blog.util.ConvertUtil;
 import com.hsuyeung.blog.util.DateUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,13 +39,11 @@ import static com.hsuyeung.blog.constant.SystemConfigConstants.SystemConfigEnum.
  * @date 2022/06/22
  */
 @Service("friendLinkService")
+@RequiredArgsConstructor
 public class FriendLinkServiceImpl extends ServiceImpl<FriendLinkMapper, FriendLinkEntity> implements IFriendLinkService {
-    @Resource
-    private FriendLinkCache friendLinkCache;
-    @Resource
-    private ISystemConfigService systemConfigService;
-    @Resource
-    private IUserService userService;
+    private final FriendLinkCache friendLinkCache;
+    private final ISystemConfigService systemConfigService;
+    private final IUserService userService;
 
     @Override
     public FriendLinkVO getFriendLinkData() {
@@ -63,42 +63,52 @@ public class FriendLinkServiceImpl extends ServiceImpl<FriendLinkMapper, FriendL
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void addFriendLink(AddFriendLinkDTO addFriendLinkDTO) {
-        AssertUtil.notNull(addFriendLinkDTO, "addFriendLinkDTO 不能为空");
-        save(ConvertUtil.convert(addFriendLinkDTO, FriendLinkEntity.class));
+    public void addFriendLink(AddFriendLinkDTO addFriendLink) {
+        save(ConvertUtil.convert(addFriendLink, FriendLinkEntity.class));
         refreshFriendLinkCache();
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteFriendLink(Long id) {
-        AssertUtil.notNull(id, "id 不能为空");
         lambdaUpdate().eq(FriendLinkEntity::getId, id).remove();
         refreshFriendLinkCache();
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void updateFriendLink(UpdateFriendLinkDTO updateFriendLinkDTO) {
-        AssertUtil.notNull(updateFriendLinkDTO, "updateFriendLinkDTO 不能为空");
-        Long id = updateFriendLinkDTO.getId();
+    public void updateFriendLink(UpdateFriendLinkDTO updateFriendLink) {
+        Long id = updateFriendLink.getId();
         FriendLinkEntity friendLinkEntity = lambdaQuery()
                 .select(FriendLinkEntity::getId, FriendLinkEntity::getLinkName, FriendLinkEntity::getLinkUrl,
                         FriendLinkEntity::getLinkAvatar, FriendLinkEntity::getLinkDesc, FriendLinkEntity::getLinkGroup)
                 .eq(FriendLinkEntity::getId, id)
                 .one();
         BizAssertUtil.notNull(friendLinkEntity, String.format("id 为 %d 的友链不存在", id));
-        if (Objects.isNull(updateFriendLinkDTO.getLinkDesc())) {
-            updateFriendLinkDTO.setLinkDesc("");
+        if (Objects.isNull(updateFriendLink.getLinkDesc())) {
+            updateFriendLink.setLinkDesc("");
         }
-        BeanUtils.copyProperties(updateFriendLinkDTO, friendLinkEntity);
+        BeanUtils.copyProperties(updateFriendLink, friendLinkEntity);
         updateById(friendLinkEntity);
         refreshFriendLinkCache();
     }
 
     @Override
-    public PageVO<FriendLinkInfoVO> getFriendLinkPage(String linkName, String linkUrl, String linkDesc, String linkGroup,
-                                                      Integer pageNum, Integer pageSize) {
+    public PageVO<FriendLinkInfoVO> getFriendLinkPage(PageSearchDTO<FriendLinkSearchDTO> pageSearchParam) {
+        FriendLinkSearchDTO searchParam = pageSearchParam.getSearchParam();
+        String linkName = null;
+        String linkUrl = null;
+        String linkDesc = null;
+        String linkGroup = null;
+
+        if (Objects.nonNull(searchParam)) {
+            linkName = searchParam.getLinkName();
+            linkUrl = searchParam.getLinkUrl();
+            linkDesc = searchParam.getLinkDesc();
+            linkGroup = searchParam.getLinkGroup();
+        }
+
+        PageDTO pageParam = pageSearchParam.getPageParam();
         Page<FriendLinkEntity> entityPage = lambdaQuery()
                 .select(FriendLinkEntity::getId, FriendLinkEntity::getLinkUrl, FriendLinkEntity::getLinkName,
                         FriendLinkEntity::getLinkAvatar, FriendLinkEntity::getLinkDesc, FriendLinkEntity::getLinkGroup,
@@ -109,7 +119,7 @@ public class FriendLinkServiceImpl extends ServiceImpl<FriendLinkMapper, FriendL
                 .like(StringUtils.hasLength(linkDesc), FriendLinkEntity::getLinkDesc, linkDesc)
                 .eq(StringUtils.hasLength(linkGroup), FriendLinkEntity::getLinkGroup, linkGroup)
                 .orderByDesc(FriendLinkEntity::getUpdateTime)
-                .page(new Page<>(pageNum, pageSize));
+                .page(new Page<>(pageParam.getPageNum(), pageParam.getPageSize()));
         List<FriendLinkEntity> entityList = entityPage.getRecords();
         if (CollectionUtils.isEmpty(entityList)) {
             return new PageVO<>(0L, Collections.emptyList());

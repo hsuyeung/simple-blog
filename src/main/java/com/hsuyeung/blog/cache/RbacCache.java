@@ -10,11 +10,11 @@ import com.hsuyeung.blog.service.IRolePermissionService;
 import com.hsuyeung.blog.service.IUserRoleService;
 import com.hsuyeung.blog.service.IUserService;
 import com.hsuyeung.blog.util.RedisUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,21 +25,14 @@ import java.util.Set;
  * @date 2022/06/28
  */
 @Component
+@RequiredArgsConstructor(onConstructor_ = {@Lazy})
 public class RbacCache {
-    @Resource
-    private RedisUtil redisUtil;
-    @Resource
-    private ObjectMapper objectMapper;
-    @Resource
-    private IUserRoleService userRoleService;
-    @Resource
-    private IRolePermissionService rolePermissionService;
-    @Resource
-    @Lazy
-    private IPermissionService permissionService;
-    @Resource
-    @Lazy
-    private IUserService userService;
+    private final RedisUtil redisUtil;
+    private final ObjectMapper objectMapper;
+    private final IUserRoleService userRoleService;
+    private final IRolePermissionService rolePermissionService;
+    private final IPermissionService permissionService;
+    private final IUserService userService;
 
     public Set<PermissionVO> getUserPermissions(String key, Long uid) {
         String value = (String) redisUtil.hGet(key, String.valueOf(uid));

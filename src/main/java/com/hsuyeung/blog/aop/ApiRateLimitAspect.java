@@ -9,6 +9,7 @@ import com.hsuyeung.blog.util.DateUtil;
 import com.hsuyeung.blog.util.IpUtil;
 import com.hsuyeung.blog.util.RedisUtil;
 import com.hsuyeung.blog.web.core.RequestUserHolder;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -20,7 +21,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -38,11 +38,10 @@ import static com.hsuyeung.blog.constant.enums.ApiRateLimitStrategyEnum.USER;
 @Aspect
 @Profile({"dev", "prod"})
 @Slf4j
+@RequiredArgsConstructor
 public class ApiRateLimitAspect {
-    @Resource
-    private RedisUtil redisUtil;
-    @Resource
-    private ISystemConfigService systemConfigService;
+    private final RedisUtil redisUtil;
+    private final ISystemConfigService systemConfigService;
 
     /**
      * 以自定义 @ApiRateLimit 注解为切点
@@ -65,7 +64,7 @@ public class ApiRateLimitAspect {
             this.checkApiRate(joinPoint, apiRateLimit, currentUid, REDIS_API_RATE_LIMIT_BY_UID_KEY);
         } else {
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-            AssertUtil.notNull(attributes, "attributes 不能为空");
+            AssertUtil.notNull(attributes, "attributes 不能为 null");
             String ipAddr = IpUtil.getIpAddr(attributes.getRequest());
             this.checkApiRate(joinPoint, apiRateLimit, ipAddr, REDIS_API_RATE_LIMIT_BY_IP_KEY);
         }

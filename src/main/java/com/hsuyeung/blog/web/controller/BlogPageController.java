@@ -7,6 +7,7 @@ import com.hsuyeung.blog.service.IArticleService;
 import com.hsuyeung.blog.service.ICommentService;
 import com.hsuyeung.blog.service.IFriendLinkService;
 import com.hsuyeung.blog.service.ISystemConfigService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
@@ -29,15 +29,12 @@ import static com.hsuyeung.blog.constant.SystemConfigConstants.SystemConfigEnum.
  * @date 2022/06/04
  */
 @Controller
+@RequiredArgsConstructor
 public class BlogPageController {
-    @Resource
-    private IArticleService articleService;
-    @Resource
-    private ICommentService commentService;
-    @Resource
-    private ISystemConfigService systemConfigService;
-    @Resource
-    private IFriendLinkService friendLinkService;
+    private final IArticleService articleService;
+    private final ICommentService commentService;
+    private final ISystemConfigService systemConfigService;
+    private final IFriendLinkService friendLinkService;
 
     @RequestMapping("/")
     public ModelAndView index() {

@@ -5,12 +5,11 @@ import com.hsuyeung.blog.web.core.IBaseWebResponse;
 import com.hsuyeung.blog.web.core.WebResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.Resource;
 
 /**
  * 用户 token 相关接口
@@ -21,9 +20,9 @@ import javax.annotation.Resource;
 @Api(tags = "用户 token 相关接口")
 @RestController
 @RequestMapping("/api/user/token")
+@RequiredArgsConstructor
 public class UserTokenApi implements IBaseWebResponse {
-    @Resource
-    private IUserTokenService userTokenService;
+    private final IUserTokenService userTokenService;
 
     @ApiOperation("校验 token 是否有效")
     @GetMapping("/validation")

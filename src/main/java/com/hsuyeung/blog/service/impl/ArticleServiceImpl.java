@@ -10,8 +10,11 @@ import com.hsuyeung.blog.exception.BizException;
 import com.hsuyeung.blog.exception.NotFoundException;
 import com.hsuyeung.blog.exception.SystemInternalException;
 import com.hsuyeung.blog.mapper.ArticleMapper;
-import com.hsuyeung.blog.model.dto.article.AddArticleRequestDTO;
-import com.hsuyeung.blog.model.dto.article.UpdateArticleRequestDTO;
+import com.hsuyeung.blog.model.dto.PageDTO;
+import com.hsuyeung.blog.model.dto.PageSearchDTO;
+import com.hsuyeung.blog.model.dto.article.AddArticleDTO;
+import com.hsuyeung.blog.model.dto.article.ArticleSearchDTO;
+import com.hsuyeung.blog.model.dto.article.UpdateArticleDTO;
 import com.hsuyeung.blog.model.entity.ArticleEntity;
 import com.hsuyeung.blog.model.entity.ContentEntity;
 import com.hsuyeung.blog.model.vo.PageVO;
@@ -24,6 +27,7 @@ import com.hsuyeung.blog.util.AssertUtil;
 import com.hsuyeung.blog.util.BizAssertUtil;
 import com.hsuyeung.blog.util.ConvertUtil;
 import com.hsuyeung.blog.util.DateUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -31,7 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -51,18 +54,13 @@ import static com.hsuyeung.blog.constant.enums.PinEnum.UN_PIN;
  * @since 2022/06/05
  */
 @Service("articleService")
+@RequiredArgsConstructor(onConstructor_ = {@Lazy})
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity> implements IArticleService {
-    @Resource
-    private ArticleCache articleCache;
-    @Resource
-    private ISystemConfigService systemConfigService;
-    @Resource
-    private IContentService contentService;
-    @Resource
-    private IUserService userService;
-    @Resource
-    @Lazy
-    private ICommentService commentService;
+    private final ArticleCache articleCache;
+    private final ISystemConfigService systemConfigService;
+    private final IContentService contentService;
+    private final IUserService userService;
+    private final ICommentService commentService;
 
     @Override
     public List<HomeArticleVO> getHomeArticleList() {
@@ -93,7 +91,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
 
     @Override
     public ArticleDetailVO getArticleDetail(String articleRoute) {
-        AssertUtil.hasLength(articleRoute, "articleRoute 不能为空");
         String key = systemConfigService.getConfigValue(REDIS_ARTICLE_DETAIL_KEY, String.class);
         ArticleDetailVO articleDetail = articleCache.getArticleDetail(key, articleRoute);
         if (Objects.nonNull(articleDetail)) {
@@ -143,7 +140,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
 
     @Override
     public ArticleRouteAndTitleVO getArticleRouteAndTitle(Long articleId) {
-        AssertUtil.notNull(articleId, "articleId 不能为空");
         ArticleEntity articleEntity = lambdaQuery().select(ArticleEntity::getRoute, ArticleEntity::getTitle).eq(ArticleEntity::getId, articleId).one();
         AssertUtil.notNull(articleEntity, String.format("id 为 %d 的文章不存在", articleId));
         return ConvertUtil.convert(articleEntity, ArticleRouteAndTitleVO.class);
@@ -161,7 +157,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
 
     @Override
     public Map<Long, ArticleRouteAndTitleVO> getArticleRouteAndTitle(Collection<Long> ids) {
-        AssertUtil.notNull(ids, "ids 不能为空");
         List<ArticleEntity> entityList = lambdaQuery()
                 .select(ArticleEntity::getId, ArticleEntity::getRoute, ArticleEntity::getTitle)
                 .in(ArticleEntity::getId, ids)
@@ -175,16 +170,28 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
     }
 
     @Override
-    public PageVO<ArticleInfoVO> getArticlePage(String title, String author, String keywords, String desc, Boolean pin,
-                                                Integer pageNum, Long startTimestamp, Long endTimestamp, Integer pageSize) {
-        LocalDateTime startTime = null;
+    public PageVO<ArticleInfoVO> getArticlePage(PageSearchDTO<ArticleSearchDTO> pageSearchParam) {
+        ArticleSearchDTO searchParam = pageSearchParam.getSearchParam();
+        Long startTimestamp;
+        Long endTimestamp;
         LocalDateTime endTime = null;
-        if (Objects.nonNull(startTimestamp)) {
-            startTime = DateUtil.fromLongToJava8LocalDate(startTimestamp);
+        LocalDateTime startTime = null;
+        if (Objects.nonNull(searchParam)) {
+            startTimestamp = searchParam.getStartTimestamp();
+            if (Objects.nonNull(startTimestamp)) {
+                startTime = DateUtil.fromLongToJava8LocalDate(startTimestamp);
+            }
+            endTimestamp = searchParam.getEndTimestamp();
+            if (Objects.nonNull(endTimestamp)) {
+                endTime = DateUtil.fromLongToJava8LocalDate(endTimestamp);
+            }
         }
-        if (Objects.nonNull(endTimestamp)) {
-            endTime = DateUtil.fromLongToJava8LocalDate(endTimestamp);
-        }
+        String title = searchParam.getTitle();
+        String author = searchParam.getAuthor();
+        String keywords = searchParam.getKeywords();
+        String desc = searchParam.getDesc();
+        Boolean pin = searchParam.getPin();
+        PageDTO pageParam = pageSearchParam.getPageParam();
         Page<ArticleEntity> entityPage = lambdaQuery()
                 .select(ArticleEntity::getId, ArticleEntity::getTitle, ArticleEntity::getAuthor, ArticleEntity::getKeywords,
                         ArticleEntity::getPin, ArticleEntity::getRoute, ArticleEntity::getDescription,
@@ -198,7 +205,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
                 .ge(Objects.nonNull(startTime), ArticleEntity::getCreateTime, startTime)
                 .le(Objects.nonNull(endTime), ArticleEntity::getCreateTime, endTime)
                 .orderByDesc(ArticleEntity::getUpdateTime)
-                .page(new Page<>(pageNum, pageSize));
+                .page(new Page<>(pageParam.getPageNum(), pageParam.getPageSize()));
         List<ArticleEntity> entityList = entityPage.getRecords();
         if (CollectionUtils.isEmpty(entityList)) {
             return new PageVO<>(0L, Collections.emptyList());
@@ -239,16 +246,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void addArticle(AddArticleRequestDTO addArticleRequestDTO) {
-        AssertUtil.notNull(addArticleRequestDTO, "addArticleRequestDTO 不能为空");
+    public void addArticle(AddArticleDTO addArticle) {
         ContentEntity contentEntity = ContentEntity.builder()
-                .mdContent(addArticleRequestDTO.getMdContent())
-                .htmlContent(addArticleRequestDTO.getHtmlContent())
+                .mdContent(addArticle.getMdContent())
+                .htmlContent(addArticle.getHtmlContent())
                 .build();
         contentService.save(contentEntity);
-        ArticleEntity articleEntity = ConvertUtil.convert(addArticleRequestDTO, ArticleEntity.class)
+        ArticleEntity articleEntity = ConvertUtil.convert(addArticle, ArticleEntity.class)
                 .setContentId(contentEntity.getId())
-                .setPin(Objects.equals(addArticleRequestDTO.getPin(), true) ? PIN : UN_PIN);
+                .setPin(Objects.equals(addArticle.getPin(), true) ? PIN : UN_PIN);
         try {
             save(articleEntity);
         } catch (DuplicateKeyException e) {
@@ -263,8 +269,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
 
     @Override
     public String getArticleContent(Long aid, ContentTypeEnum contentType) {
-        AssertUtil.notNull(aid, "aid 不能为空");
-        AssertUtil.notNull(contentType, "contentType 不能为空");
         ArticleEntity article = lambdaQuery().select(ArticleEntity::getContentId).eq(ArticleEntity::getId, aid).one();
         BizAssertUtil.notNull(article, "文章不存在");
         return contentService.getContent(article.getContentId(), contentType);
@@ -272,19 +276,18 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void updateArticle(UpdateArticleRequestDTO updateArticleRequestDTO) {
-        AssertUtil.notNull(updateArticleRequestDTO, "updateArticleRequestDTO 不能为空");
-        ArticleEntity articleEntity = lambdaQuery().eq(ArticleEntity::getId, updateArticleRequestDTO.getId()).one();
+    public void updateArticle(UpdateArticleDTO updateArticle) {
+        ArticleEntity articleEntity = lambdaQuery().eq(ArticleEntity::getId, updateArticle.getId()).one();
         BizAssertUtil.notNull(articleEntity, "文章不存在");
         try {
             // 更新文章
-            updateById(ConvertUtil.convert(updateArticleRequestDTO, ArticleEntity.class)
-                    .setPin(Objects.equals(updateArticleRequestDTO.getPin(), true) ? PIN : UN_PIN));
+            updateById(ConvertUtil.convert(updateArticle, ArticleEntity.class)
+                    .setPin(Objects.equals(updateArticle.getPin(), true) ? PIN : UN_PIN));
             // 更新文章内容
             contentService.updateById(ContentEntity.builder()
                     .id(articleEntity.getContentId())
-                    .mdContent(updateArticleRequestDTO.getMdContent())
-                    .htmlContent(updateArticleRequestDTO.getHtmlContent())
+                    .mdContent(updateArticle.getMdContent())
+                    .htmlContent(updateArticle.getHtmlContent())
                     .build());
         } catch (DuplicateKeyException e) {
             throw new BizException("文章重复", e);
@@ -294,7 +297,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
         // 刷新文章归档缓存
         this.refreshArchiveCache();
         // 刷新文章详情缓存
-        this.refreshArticleDetailCache(articleEntity.getRoute(), updateArticleRequestDTO.getRoute());
+        this.refreshArticleDetailCache(articleEntity.getRoute(), updateArticle.getRoute());
         // 刷新 RSS
         this.refreshRSS();
     }

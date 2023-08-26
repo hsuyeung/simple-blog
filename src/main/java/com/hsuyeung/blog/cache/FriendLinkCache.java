@@ -5,9 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hsuyeung.blog.exception.SystemInternalException;
 import com.hsuyeung.blog.model.vo.friendlink.FriendLinkVO;
 import com.hsuyeung.blog.util.RedisUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * 友链缓存
@@ -16,11 +15,10 @@ import javax.annotation.Resource;
  * @date 2022/06/23
  */
 @Component
+@RequiredArgsConstructor
 public class FriendLinkCache {
-    @Resource
-    private RedisUtil redisUtil;
-    @Resource
-    private ObjectMapper objectMapper;
+    private final RedisUtil redisUtil;
+    private final ObjectMapper objectMapper;
 
 
     public FriendLinkVO getFriendLinkVO(String key) {

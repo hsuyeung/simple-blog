@@ -1,7 +1,9 @@
 package com.hsuyeung.blog.web.api;
 
-import com.hsuyeung.blog.model.dto.article.AddArticleRequestDTO;
-import com.hsuyeung.blog.model.dto.article.UpdateArticleRequestDTO;
+import com.hsuyeung.blog.model.dto.PageSearchDTO;
+import com.hsuyeung.blog.model.dto.article.AddArticleDTO;
+import com.hsuyeung.blog.model.dto.article.ArticleSearchDTO;
+import com.hsuyeung.blog.model.dto.article.UpdateArticleDTO;
 import com.hsuyeung.blog.model.vo.PageVO;
 import com.hsuyeung.blog.model.vo.article.ArticleInfoVO;
 import com.hsuyeung.blog.model.vo.article.ArticleTitleInfoVO;
@@ -11,9 +13,9 @@ import com.hsuyeung.blog.web.core.WebResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 import static com.hsuyeung.blog.constant.enums.ContentTypeEnum.MARKDOWN;
@@ -25,9 +27,9 @@ import static com.hsuyeung.blog.constant.enums.ContentTypeEnum.MARKDOWN;
 @Api(tags = "文章相关接口")
 @RestController
 @RequestMapping("/api/article")
+@RequiredArgsConstructor
 public class ArticleApi implements IBaseWebResponse {
-    @Resource
-    private IArticleService articleService;
+    private final IArticleService articleService;
 
     /**
      * 查询文章标题列表
@@ -43,29 +45,15 @@ public class ArticleApi implements IBaseWebResponse {
     /**
      * 查询文章分页列表
      *
-     * @param title          标题，全模糊
-     * @param author         作者，全模糊
-     * @param keywords       关键词，全模糊
-     * @param desc           描述，全模糊
-     * @param startTimestamp 开始时间戳，大于等于
-     * @param endTimestamp   结束时间戳，小于等于
-     * @param pageNum        页码
-     * @param pageSize       每页数量
+     * @param pageSearchParam 文章分页搜索条件
      * @return 文章分页列表
      */
     @ApiOperation("查询文章分页列表")
-    @GetMapping("/page")
+    @PostMapping("/actions/page")
     public WebResponse<PageVO<ArticleInfoVO>> getArticlePage(
-            @ApiParam("标题") @RequestParam(value = "title", required = false) String title,
-            @ApiParam("作者") @RequestParam(value = "author", required = false) String author,
-            @ApiParam("关键词") @RequestParam(value = "keywords", required = false) String keywords,
-            @ApiParam("描述") @RequestParam(value = "desc", required = false) String desc,
-            @ApiParam("是否置顶") @RequestParam(value = "pin", required = false) Boolean pin,
-            @ApiParam("开始时间戳") @RequestParam(value = "startTimestamp", required = false) Long startTimestamp,
-            @ApiParam("结束时间戳") @RequestParam(value = "endTimestamp", required = false) Long endTimestamp,
-            @ApiParam("页码") @RequestParam("pageNum") Integer pageNum,
-            @ApiParam("每页数量") @RequestParam("pageSize") Integer pageSize) {
-        return ok(articleService.getArticlePage(title, author, keywords, desc, pin, pageNum, startTimestamp, endTimestamp, pageSize));
+            @ApiParam(value = "文章分页搜索条件", required = true) @RequestBody
+            PageSearchDTO<ArticleSearchDTO> pageSearchParam) {
+        return ok(articleService.getArticlePage(pageSearchParam));
     }
 
     /**
@@ -83,13 +71,13 @@ public class ArticleApi implements IBaseWebResponse {
     /**
      * 新增一篇文章
      *
-     * @param addArticleRequestDTO 新增文章请求参数
+     * @param addArticle 新增文章请求参数
      */
     @ApiOperation("新增一篇文章")
-    @PutMapping
+    @PostMapping
     public WebResponse<Void> addArticle(
-            @ApiParam("新增文章请求参数") @RequestBody AddArticleRequestDTO addArticleRequestDTO) {
-        articleService.addArticle(addArticleRequestDTO);
+            @ApiParam("新增文章请求参数") @RequestBody AddArticleDTO addArticle) {
+        articleService.addArticle(addArticle);
         return ok();
     }
 
@@ -108,13 +96,13 @@ public class ArticleApi implements IBaseWebResponse {
     /**
      * 更新文章
      *
-     * @param updateArticleRequestDTO 更新文章请求参数
+     * @param updateArticle 更新文章请求参数
      */
     @ApiOperation("更新文章")
-    @PostMapping
+    @PutMapping
     public WebResponse<Void> updateArticle(
-            @ApiParam("更新文章信息请求参数") @RequestBody UpdateArticleRequestDTO updateArticleRequestDTO) {
-        articleService.updateArticle(updateArticleRequestDTO);
+            @ApiParam("更新文章信息请求参数") @RequestBody UpdateArticleDTO updateArticle) {
+        articleService.updateArticle(updateArticle);
         return ok();
     }
 }

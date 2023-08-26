@@ -1,6 +1,7 @@
 package com.hsuyeung.blog.util;
 
 import com.hsuyeung.blog.model.dto.mail.SendMailDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import java.util.Objects;
 
@@ -19,52 +19,53 @@ import java.util.Objects;
  * @date 2020/10/19 23:32
  */
 @Component
+@RequiredArgsConstructor
 public class MailUtil {
+    private final JavaMailSender mailSender;
+
     private static final String COMMA = ",";
-    @Resource
-    private JavaMailSender mailSender;
 
     /**
      * 发送普通邮件
      */
-    public void sendSimpleEmail(SendMailDTO sendMailDTO) {
+    public void sendSimpleEmail(SendMailDTO sendMail) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(sendMailDTO.getMFrom());
-        message.setTo(sendMailDTO.getMTo().split(COMMA));
-        if (StringUtils.hasLength(sendMailDTO.getCc())) {
-            message.setCc(sendMailDTO.getCc().split(COMMA));
+        message.setFrom(sendMail.getMFrom());
+        message.setTo(sendMail.getMTo().split(COMMA));
+        if (StringUtils.hasLength(sendMail.getCc())) {
+            message.setCc(sendMail.getCc().split(COMMA));
         }
-        if (StringUtils.hasLength(sendMailDTO.getBcc())) {
-            message.setBcc(sendMailDTO.getBcc().split(COMMA));
+        if (StringUtils.hasLength(sendMail.getBcc())) {
+            message.setBcc(sendMail.getBcc().split(COMMA));
         }
-        message.setSubject(sendMailDTO.getMSubject());
-        message.setText(sendMailDTO.getText());
-        message.setSentDate(DateUtil.fromJava8LocalDateToDate(sendMailDTO.getSendTime()));
+        message.setSubject(sendMail.getMSubject());
+        message.setText(sendMail.getText());
+        message.setSentDate(DateUtil.fromJava8LocalDateToDate(sendMail.getSendTime()));
         mailSender.send(message);
     }
 
     /**
      * 发送支持富文本和附件的邮件
      */
-    public void sendMimeMail(SendMailDTO sendMailDTO) throws MessagingException {
+    public void sendMimeMail(SendMailDTO sendMail) throws MessagingException {
         // true 表示支持复杂类型
         MimeMessageHelper messageHelper = new MimeMessageHelper(mailSender.createMimeMessage(), true);
-        messageHelper.setFrom(sendMailDTO.getMFrom());
-        messageHelper.setTo(sendMailDTO.getMTo().split(COMMA));
-        messageHelper.setSubject(sendMailDTO.getMSubject());
-        messageHelper.setText(sendMailDTO.getText(), true);
-        if (StringUtils.hasLength(sendMailDTO.getCc())) {
-            messageHelper.setCc(sendMailDTO.getCc().split(COMMA));
+        messageHelper.setFrom(sendMail.getMFrom());
+        messageHelper.setTo(sendMail.getMTo().split(COMMA));
+        messageHelper.setSubject(sendMail.getMSubject());
+        messageHelper.setText(sendMail.getText(), true);
+        if (StringUtils.hasLength(sendMail.getCc())) {
+            messageHelper.setCc(sendMail.getCc().split(COMMA));
         }
-        if (StringUtils.hasLength(sendMailDTO.getBcc())) {
-            messageHelper.setCc(sendMailDTO.getBcc().split(COMMA));
+        if (StringUtils.hasLength(sendMail.getBcc())) {
+            messageHelper.setCc(sendMail.getBcc().split(COMMA));
         }
-        if (sendMailDTO.getMultipartFiles() != null) {
-            for (MultipartFile multipartFile : sendMailDTO.getMultipartFiles()) {
+        if (sendMail.getMultipartFiles() != null) {
+            for (MultipartFile multipartFile : sendMail.getMultipartFiles()) {
                 messageHelper.addAttachment(Objects.requireNonNull(multipartFile.getOriginalFilename()), multipartFile);
             }
         }
-        messageHelper.setSentDate(DateUtil.fromJava8LocalDateToDate(sendMailDTO.getSendTime()));
+        messageHelper.setSentDate(DateUtil.fromJava8LocalDateToDate(sendMail.getSendTime()));
         mailSender.send(messageHelper.getMimeMessage());
     }
 }

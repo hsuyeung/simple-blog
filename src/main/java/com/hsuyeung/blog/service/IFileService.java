@@ -1,12 +1,16 @@
 package com.hsuyeung.blog.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.hsuyeung.blog.model.dto.PageSearchDTO;
+import com.hsuyeung.blog.model.dto.file.FileSearchDTO;
 import com.hsuyeung.blog.model.entity.FileEntity;
 import com.hsuyeung.blog.model.vo.PageVO;
 import com.hsuyeung.blog.model.vo.file.FileInfoVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
@@ -41,12 +45,9 @@ public interface IFileService extends IService<FileEntity> {
     /**
      * 查询文件上传记录分页列表
      *
-     * @param url            文件访问路径，全模糊
-     * @param startTimestamp 开始时间戳，大于等于
-     * @param endTimestamp   结束时间戳，小于等于
-     * @param pageNum        页码
-     * @param pageSize       每页数量
+     * @param pageSearchParam 文件分页搜索条件
      * @return 文件上传记录分页列表
      */
-    PageVO<FileInfoVO> getFilePage(String url, Integer pageNum, Long startTimestamp, Long endTimestamp, Integer pageSize);
+    PageVO<FileInfoVO> getFilePage(@NotNull(message = "pageSearchParam 不能为 null") @Valid
+                                   PageSearchDTO<FileSearchDTO> pageSearchParam);
 }

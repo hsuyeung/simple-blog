@@ -5,9 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hsuyeung.blog.exception.SystemInternalException;
 import com.hsuyeung.blog.model.entity.SystemConfigEntity;
 import com.hsuyeung.blog.util.RedisUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 import static com.hsuyeung.blog.constant.SystemConfigConstants.SYSTEM_CONFIG_KEY_FORMAT;
 
@@ -18,11 +17,10 @@ import static com.hsuyeung.blog.constant.SystemConfigConstants.SYSTEM_CONFIG_KEY
  * @date 2022/06/06
  */
 @Component
+@RequiredArgsConstructor
 public class SystemConfigCache {
-    @Resource
-    private RedisUtil redisUtil;
-    @Resource
-    private ObjectMapper objectMapper;
+    private final RedisUtil redisUtil;
+    private final ObjectMapper objectMapper;
 
     /**
      * 从 redis 中获取指定分组的单个系统配置

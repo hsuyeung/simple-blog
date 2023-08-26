@@ -24,19 +24,21 @@ function loadSystemConfigTableData(loadPrev = false, loadNext = false, jumpTo = 
   const pageSizeSelectNode = document.getElementById('system-config-page-size')
   const pageSize = pageSizeSelectNode?.options[pageSizeSelectNode?.selectedIndex]?.value || 10
   const xhr = new XMLHttpRequest()
-  xhr.open(
-          'GET',
-          '/api/system/config/page'
-          + '?key=' + (systemConfigKey || '')
-          + '&desc=' + (systemConfigDesc || '')
-          + '&group=' + (systemConfigGroup || '')
-          + '&enabled=' + (!enabled || enabled === '' ? '' : enabled === '1')
-          + '&pageNum=' + pageNum
-          + '&pageSize=' + pageSize,
-          true)
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+  xhr.open('POST', '/api/system/config/actions/page', true)
+  xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.setRequestHeader('token', getTokenFromLocal())
-  xhr.send()
+  xhr.send(JSON.stringify({
+    'pageParam': {
+      'pageNum': pageNum,
+      'pageSize': pageSize
+    },
+    'searchParam': {
+      'key': systemConfigKey,
+      'group': systemConfigGroup,
+      'desc': systemConfigDesc,
+      'enabled': enabled
+    }
+  }))
   xhr.onreadystatechange = () => {
     if (xhr.readyState === 4 && xhr.status === 200) {
       const resp = JSON.parse(xhr.responseText)
@@ -205,7 +207,7 @@ function confirmEditSystemConfigAction() {
 
 function editSystemConfigRequest(editSystemConfigParam) {
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', `/api/system/config`, true)
+  xhr.open('PUT', `/api/system/config`, true)
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send(JSON.stringify(editSystemConfigParam))
@@ -285,7 +287,7 @@ function closeSystemConfigDataTable() {
 
 function refreshOneSystemConfigAction(confId) {
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', `/api/system/config/refresh/cache/${confId}`, true)
+  xhr.open('PUT', `/api/system/config/actions/refresh/cache/${confId}`, true)
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send()
   xhr.onreadystatechange = () => {
@@ -314,7 +316,7 @@ function refreshOneSystemConfigAction(confId) {
 
 function refreshAllSystemConfigAction() {
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', `/api/system/config/refresh/cache`, true)
+  xhr.open('PUT', `/api/system/config/actions/refresh/cache`, true)
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send()
   xhr.onreadystatechange = () => {

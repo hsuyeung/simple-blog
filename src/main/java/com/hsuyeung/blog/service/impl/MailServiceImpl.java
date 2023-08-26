@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hsuyeung.blog.constant.enums.MailStatusEnum;
 import com.hsuyeung.blog.constant.enums.MailTypeEnum;
 import com.hsuyeung.blog.mapper.MailMapper;
+import com.hsuyeung.blog.model.dto.PageDTO;
+import com.hsuyeung.blog.model.dto.PageSearchDTO;
+import com.hsuyeung.blog.model.dto.mail.MailSearchDTO;
 import com.hsuyeung.blog.model.dto.mail.SendMailDTO;
 import com.hsuyeung.blog.model.entity.BaseEntity;
 import com.hsuyeung.blog.model.entity.MailEntity;
@@ -12,14 +15,17 @@ import com.hsuyeung.blog.model.vo.PageVO;
 import com.hsuyeung.blog.model.vo.mail.MailInfoVO;
 import com.hsuyeung.blog.service.IMailService;
 import com.hsuyeung.blog.service.ISystemConfigService;
-import com.hsuyeung.blog.util.*;
+import com.hsuyeung.blog.util.BizAssertUtil;
+import com.hsuyeung.blog.util.ConvertUtil;
+import com.hsuyeung.blog.util.DateUtil;
+import com.hsuyeung.blog.util.MailUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -39,17 +45,16 @@ import static com.hsuyeung.blog.constant.enums.MailStatusEnum.SUCCESS;
  */
 @Service("mailService")
 @Slf4j
+@RequiredArgsConstructor
 public class MailServiceImpl extends ServiceImpl<MailMapper, MailEntity> implements IMailService {
-    @Resource
-    private MailUtil mailUtil;
-    @Resource
-    private ISystemConfigService systemConfigService;
+    private final MailUtil mailUtil;
+    private final ISystemConfigService systemConfigService;
 
     @Override
-    public void sendSimpleEmail(SendMailDTO sendMailDTO) {
-        MailEntity mailEntity = ConvertUtil.convert(sendMailDTO, MailEntity.class);
+    public void sendSimpleEmail(SendMailDTO sendMail) {
+        MailEntity mailEntity = ConvertUtil.convert(sendMail, MailEntity.class);
         try {
-            mailUtil.sendSimpleEmail(sendMailDTO);
+            mailUtil.sendSimpleEmail(sendMail);
             mailEntity.setMStatus(SUCCESS);
         } catch (Exception e) {
             log.error("发送普通邮件失败", e);
@@ -67,10 +72,10 @@ public class MailServiceImpl extends ServiceImpl<MailMapper, MailEntity> impleme
     }
 
     @Override
-    public void sendMimeMail(SendMailDTO sendMailDTO) {
-        MailEntity mailEntity = ConvertUtil.convert(sendMailDTO, MailEntity.class);
+    public void sendMimeMail(SendMailDTO sendMail) {
+        MailEntity mailEntity = ConvertUtil.convert(sendMail, MailEntity.class);
         try {
-            mailUtil.sendMimeMail(sendMailDTO);
+            mailUtil.sendMimeMail(sendMail);
             mailEntity.setMStatus(SUCCESS);
         } catch (Exception e) {
             log.error("发送富文本邮件失败", e);
@@ -88,19 +93,37 @@ public class MailServiceImpl extends ServiceImpl<MailMapper, MailEntity> impleme
     }
 
     @Override
-    public PageVO<MailInfoVO> getMailPage(String from, String to, String subject, String cc, String bcc,
-                                          Integer status, Integer type, Long startTimestamp, Long endTimestamp,
-                                          Integer pageNum, Integer pageSize) {
-        MailStatusEnum statusEnum = MailStatusEnum.getByCode(status);
-        MailTypeEnum typeEnum = MailTypeEnum.getByCode(type);
+    public PageVO<MailInfoVO> getMailPage(PageSearchDTO<MailSearchDTO> pageSearchParam) {
+        MailSearchDTO searchParam = pageSearchParam.getSearchParam();
+        MailStatusEnum statusEnum = null;
+        MailTypeEnum typeEnum = null;
         LocalDateTime startTime = null;
         LocalDateTime endTime = null;
-        if (Objects.nonNull(startTimestamp)) {
-            startTime = DateUtil.fromLongToJava8LocalDate(startTimestamp);
+        String from = null;
+        String to = null;
+        String subject = null;
+        String cc = null;
+        String bcc = null;
+        if (Objects.nonNull(searchParam)) {
+            statusEnum = MailStatusEnum.getByCode(searchParam.getStatus());
+            typeEnum = MailTypeEnum.getByCode(searchParam.getType());
+            Long startTimestamp = searchParam.getStartTimestamp();
+            Long endTimestamp = searchParam.getEndTimestamp();
+            from = searchParam.getFrom();
+            to = searchParam.getTo();
+            subject = searchParam.getSubject();
+            cc = searchParam.getCc();
+            bcc = searchParam.getBcc();
+
+            if (Objects.nonNull(startTimestamp)) {
+                startTime = DateUtil.fromLongToJava8LocalDate(startTimestamp);
+            }
+            if (Objects.nonNull(endTimestamp)) {
+                endTime = DateUtil.fromLongToJava8LocalDate(endTimestamp);
+            }
         }
-        if (Objects.nonNull(endTimestamp)) {
-            endTime = DateUtil.fromLongToJava8LocalDate(endTimestamp);
-        }
+
+        PageDTO pageParam = pageSearchParam.getPageParam();
         Page<MailEntity> entityPage = lambdaQuery()
                 .select(MailEntity::getId, MailEntity::getMFrom, MailEntity::getMTo, MailEntity::getMSubject,
                         MailEntity::getCc, MailEntity::getBcc, MailEntity::getMStatus, MailEntity::getErrorMsg,
@@ -115,7 +138,7 @@ public class MailServiceImpl extends ServiceImpl<MailMapper, MailEntity> impleme
                 .ge(Objects.nonNull(startTime), MailEntity::getSendTime, startTime)
                 .le(Objects.nonNull(endTime), MailEntity::getSendTime, endTime)
                 .orderByDesc(MailEntity::getSendTime)
-                .page(new Page<>(pageNum, pageSize));
+                .page(new Page<>(pageParam.getPageNum(), pageParam.getPageSize()));
         List<MailEntity> entityList = entityPage.getRecords();
         if (CollectionUtils.isEmpty(entityList)) {
             return new PageVO<>(0L, Collections.emptyList());
@@ -135,7 +158,6 @@ public class MailServiceImpl extends ServiceImpl<MailMapper, MailEntity> impleme
 
     @Override
     public String getMailText(Long mailId) {
-        AssertUtil.notNull(mailId, "mailId 不能为空");
         MailEntity mailEntity = lambdaQuery().select(MailEntity::getText).eq(MailEntity::getId, mailId).one();
         BizAssertUtil.notNull(mailEntity, "邮件不存在");
         return mailEntity.getText();
@@ -155,15 +177,15 @@ public class MailServiceImpl extends ServiceImpl<MailMapper, MailEntity> impleme
         if (retryNum >= mailRetryMaxNum) {
             log.error("重发邮件失败：id 为 {} 的邮件重试次数已达 {} 次，最大允许重试次数为：{} 次", emailId, retryNum, mailRetryMaxNum);
         }
-        SendMailDTO sendMailDTO = ConvertUtil.convert(mailEntity, SendMailDTO.class);
+        SendMailDTO sendMail = ConvertUtil.convert(mailEntity, SendMailDTO.class);
         LocalDateTime now = LocalDateTime.now();
-        sendMailDTO.setSendTime(now);
+        sendMail.setSendTime(now);
         retryNum++;
         try {
             if (isMime) {
-                mailUtil.sendMimeMail(sendMailDTO);
+                mailUtil.sendMimeMail(sendMail);
             } else {
-                mailUtil.sendSimpleEmail(sendMailDTO);
+                mailUtil.sendSimpleEmail(sendMail);
             }
             lambdaUpdate()
                     .set(MailEntity::getRetryNum, retryNum)

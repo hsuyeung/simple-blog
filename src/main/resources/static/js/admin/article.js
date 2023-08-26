@@ -34,22 +34,24 @@ function loadArticleTableData(loadPrev = false, loadNext = false, jumpTo = false
   const pageSizeSelectNode = document.getElementById('article-page-size')
   const pageSize = pageSizeSelectNode?.options[pageSizeSelectNode?.selectedIndex]?.value || 10
   const xhr = new XMLHttpRequest()
-  xhr.open(
-          'GET',
-          '/api/article/page'
-          + '?title=' + (title || '')
-          + '&author=' + (author || '')
-          + '&keywords=' + (keywords || '')
-          + '&desc=' + (desc || '')
-          + '&pin=' + (pin || '')
-          + '&startTimestamp=' + (startTimestamp || '')
-          + '&endTimestamp=' + (endTimestamp || '')
-          + '&pageNum=' + pageNum
-          + '&pageSize=' + pageSize,
-          true)
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+  xhr.open('POST', '/api/article/actions/page', true)
+  xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.setRequestHeader('token', getTokenFromLocal())
-  xhr.send()
+  xhr.send(JSON.stringify({
+    'pageParam': {
+      'pageNum': pageNum,
+      'pageSize': pageSize
+    },
+    'searchParam': {
+      'title': title,
+      'author': author,
+      'keywords': keywords,
+      'desc': desc,
+      'pin': pin,
+      'startTimestamp': startTimestamp,
+      'endTimestamp': endTimestamp
+    }
+  }))
   xhr.onreadystatechange = () => {
     if (xhr.readyState === 4 && xhr.status === 200) {
       const resp = JSON.parse(xhr.responseText)
@@ -419,7 +421,7 @@ function confirmEditArticleAction() {
 
 function editArticleRequest(editArticleParam) {
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', `/api/article`, true)
+  xhr.open('PUT', `/api/article`, true)
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send(JSON.stringify(editArticleParam))
@@ -564,7 +566,7 @@ function checkAddArticleDesc() {
 
 function addArticleRequest(addArticleParam) {
   const xhr = new XMLHttpRequest()
-  xhr.open('PUT', `/api/article`, true)
+  xhr.open('POST', `/api/article`, true)
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send(JSON.stringify(addArticleParam))
@@ -858,7 +860,7 @@ function addArticleUploadFileAction() {
   formData.append('file', file);
 
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', `/api/file/upload`, true)
+  xhr.open('POST', `/api/file/actions/upload`, true)
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send(formData)
   xhr.onreadystatechange = function () {
@@ -908,7 +910,7 @@ function editArticleUploadFileAction() {
   formData.append('file', file);
 
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', `/api/file/upload`, true)
+  xhr.open('POST', `/api/file/actions/upload`, true)
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send(formData)
   xhr.onreadystatechange = function () {

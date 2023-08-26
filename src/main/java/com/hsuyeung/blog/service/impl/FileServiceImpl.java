@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hsuyeung.blog.cache.lfu.LFUCache;
 import com.hsuyeung.blog.exception.SystemInternalException;
 import com.hsuyeung.blog.mapper.FileMapper;
+import com.hsuyeung.blog.model.dto.PageDTO;
+import com.hsuyeung.blog.model.dto.PageSearchDTO;
+import com.hsuyeung.blog.model.dto.file.FileSearchDTO;
 import com.hsuyeung.blog.model.entity.FileEntity;
 import com.hsuyeung.blog.model.vo.PageVO;
 import com.hsuyeung.blog.model.vo.file.FileInfoVO;
@@ -146,22 +149,32 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, FileEntity> impleme
     }
 
     @Override
-    public PageVO<FileInfoVO> getFilePage(String url, Integer pageNum, Long startTimestamp, Long endTimestamp, Integer pageSize) {
+    public PageVO<FileInfoVO> getFilePage(PageSearchDTO<FileSearchDTO> pageSearchParam) {
+        FileSearchDTO searchParam = pageSearchParam.getSearchParam();
         LocalDateTime startTime = null;
         LocalDateTime endTime = null;
-        if (Objects.nonNull(startTimestamp)) {
-            startTime = DateUtil.fromLongToJava8LocalDate(startTimestamp);
+        String url = null;
+        if (Objects.nonNull(searchParam)) {
+            Long startTimestamp = searchParam.getStartTimestamp();
+            Long endTimestamp = searchParam.getEndTimestamp();
+            url = searchParam.getUrl();
+
+            if (Objects.nonNull(startTimestamp)) {
+                startTime = DateUtil.fromLongToJava8LocalDate(startTimestamp);
+            }
+            if (Objects.nonNull(endTimestamp)) {
+                endTime = DateUtil.fromLongToJava8LocalDate(endTimestamp);
+            }
         }
-        if (Objects.nonNull(endTimestamp)) {
-            endTime = DateUtil.fromLongToJava8LocalDate(endTimestamp);
-        }
+
+        PageDTO pageParam = pageSearchParam.getPageParam();
         Page<FileEntity> entityPage = lambdaQuery()
                 .select(FileEntity::getId, FileEntity::getUrl, FileEntity::getCreateTime, FileEntity::getCreateBy)
                 .like(StringUtils.hasLength(url), FileEntity::getUrl, url)
                 .ge(Objects.nonNull(startTime), FileEntity::getCreateTime, startTime)
                 .le(Objects.nonNull(endTime), FileEntity::getCreateTime, endTime)
                 .orderByDesc(FileEntity::getCreateTime)
-                .page(new Page<>(pageNum, pageSize));
+                .page(new Page<>(pageParam.getPageNum(), pageParam.getPageSize()));
         List<FileEntity> entityList = entityPage.getRecords();
         if (CollectionUtils.isEmpty(entityList)) {
             return new PageVO<>(0L, Collections.emptyList());

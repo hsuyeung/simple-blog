@@ -5,12 +5,12 @@ import com.hsuyeung.blog.config.properties.SecurityProperties;
 import com.hsuyeung.blog.service.IUserTokenService;
 import com.hsuyeung.blog.web.core.IBaseWebResponse;
 import com.hsuyeung.blog.web.core.RequestUserHolder;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,13 +24,11 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class UserTokenCheckInterceptor implements HandlerInterceptor, IBaseWebResponse {
-    @Resource
-    private IUserTokenService userTokenService;
-    @Resource
-    private ObjectMapper objectMapper;
-    @Resource(name = "securityProperties")
-    private SecurityProperties properties;
+    private final IUserTokenService userTokenService;
+    private final ObjectMapper objectMapper;
+    private final SecurityProperties properties;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

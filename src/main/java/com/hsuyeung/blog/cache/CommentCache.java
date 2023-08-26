@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hsuyeung.blog.exception.SystemInternalException;
 import com.hsuyeung.blog.model.entity.CommentEntity;
 import com.hsuyeung.blog.util.RedisUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -16,11 +16,10 @@ import java.util.List;
  * @date 2022/06/18
  */
 @Component
+@RequiredArgsConstructor
 public class CommentCache {
-    @Resource
-    private RedisUtil redisUtil;
-    @Resource
-    private ObjectMapper objectMapper;
+    private final RedisUtil redisUtil;
+    private final ObjectMapper objectMapper;
 
 
     public List<CommentEntity> getCommentList(String key, Long articleId) {

@@ -1,7 +1,9 @@
 package com.hsuyeung.blog.web.api;
 
-import com.hsuyeung.blog.model.dto.permission.CreatePermissionRequestDTO;
-import com.hsuyeung.blog.model.dto.permission.UpdatePermissionRequestDTO;
+import com.hsuyeung.blog.model.dto.PageSearchDTO;
+import com.hsuyeung.blog.model.dto.permission.CreatePermissionDTO;
+import com.hsuyeung.blog.model.dto.permission.PermissionSearchDTO;
+import com.hsuyeung.blog.model.dto.permission.UpdatePermissionDTO;
 import com.hsuyeung.blog.model.vo.PageVO;
 import com.hsuyeung.blog.model.vo.permission.EnabledPermissionVO;
 import com.hsuyeung.blog.model.vo.permission.PermissionInfoVO;
@@ -11,9 +13,9 @@ import com.hsuyeung.blog.web.core.WebResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -25,21 +27,21 @@ import java.util.List;
 @Api(tags = "权限相关接口")
 @RestController
 @RequestMapping("/api/permission")
+@RequiredArgsConstructor
 public class PermissionApi implements IBaseWebResponse {
-    @Resource
-    private IPermissionService permissionService;
+    private final IPermissionService permissionService;
 
     /**
      * 创建一个权限
      *
-     * @param createPermissionRequestDTO 创建权限请求参数
+     * @param createPermission 创建权限请求参数
      * @return 创建是否成功
      */
     @ApiOperation("创建一个权限")
-    @PutMapping
+    @PostMapping
     public WebResponse<Boolean> createPermission(
-            @ApiParam("创建权限请求参数") @RequestBody CreatePermissionRequestDTO createPermissionRequestDTO) {
-        return ok(permissionService.createPermission(createPermissionRequestDTO));
+            @ApiParam("创建权限请求参数") @RequestBody CreatePermissionDTO createPermission) {
+        return ok(permissionService.createPermission(createPermission));
     }
 
     /**
@@ -57,14 +59,14 @@ public class PermissionApi implements IBaseWebResponse {
     /**
      * 更新权限
      *
-     * @param updatePermissionRequestDTO 更新权限请求参数
+     * @param updatePermission 更新权限请求参数
      * @return 更新是否成功
      */
     @ApiOperation("更新权限")
-    @PostMapping
+    @PutMapping
     public WebResponse<Boolean> updatePermission(
-            @ApiParam("更新权限请求参数") @RequestBody UpdatePermissionRequestDTO updatePermissionRequestDTO) {
-        return ok(permissionService.updatePermission(updatePermissionRequestDTO));
+            @ApiParam("更新权限请求参数") @RequestBody UpdatePermissionDTO updatePermission) {
+        return ok(permissionService.updatePermission(updatePermission));
     }
 
     /**
@@ -73,7 +75,7 @@ public class PermissionApi implements IBaseWebResponse {
      * @param pid 权限 id
      */
     @ApiOperation("锁定一个权限")
-    @PostMapping("/lock/{pid}")
+    @PutMapping("/actions/lock/{pid}")
     public WebResponse<Void> lockPermission(@ApiParam("权限 id") @PathVariable("pid") Long pid) {
         permissionService.lockPermission(pid);
         return ok();
@@ -85,7 +87,7 @@ public class PermissionApi implements IBaseWebResponse {
      * @param pid 权限 id
      */
     @ApiOperation("解锁一个权限")
-    @PostMapping("/unlock/{pid}")
+    @PutMapping("/actions/unlock/{pid}")
     public WebResponse<Void> unlockPermission(@ApiParam("权限 id") @PathVariable("pid") Long pid) {
         permissionService.unlockPermission(pid);
         return ok();
@@ -105,23 +107,13 @@ public class PermissionApi implements IBaseWebResponse {
     /**
      * 分页查询权限列表
      *
-     * @param path           权限路径，右模糊
-     * @param method         请求方法类型，全匹配，不区分大小写
-     * @param permissionDesc 权限描述，全模糊
-     * @param enabled        是否可用，全匹配
-     * @param pageNum        页码
-     * @param pageSize       每页数量
+     * @param pageSearchParam 权限分页搜索条件
      * @return 权限分页列表
      */
     @ApiOperation("分页查询权限列表")
-    @GetMapping("/page")
+    @PostMapping("/actions/page")
     public WebResponse<PageVO<PermissionInfoVO>> getPermissionPage(
-            @ApiParam("权限路径") @RequestParam(value = "path", required = false) String path,
-            @ApiParam("请求方法类型") @RequestParam(value = "method", required = false) String method,
-            @ApiParam("权限描述") @RequestParam(value = "permissionDesc", required = false) String permissionDesc,
-            @ApiParam("是否可用") @RequestParam(value = "enabled", required = false) Boolean enabled,
-            @ApiParam("页码") @RequestParam("pageNum") Integer pageNum,
-            @ApiParam("每页数量") @RequestParam("pageSize") Integer pageSize) {
-        return ok(permissionService.getPermissionPage(path, method, permissionDesc, enabled, pageNum, pageSize));
+            @ApiParam("权限分页搜索条件") @RequestBody PageSearchDTO<PermissionSearchDTO> pageSearchParam) {
+        return ok(permissionService.getPermissionPage(pageSearchParam));
     }
 }

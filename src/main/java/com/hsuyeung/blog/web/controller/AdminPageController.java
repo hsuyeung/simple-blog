@@ -2,12 +2,11 @@ package com.hsuyeung.blog.web.controller;
 
 import com.hsuyeung.blog.service.IMailService;
 import com.hsuyeung.blog.service.ISystemConfigService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.annotation.Resource;
 
 import static com.hsuyeung.blog.constant.SystemConfigConstants.SystemConfigEnum.SYSTEM_BROWSER_STATIC_RESOURCE_VERSION;
 
@@ -19,11 +18,10 @@ import static com.hsuyeung.blog.constant.SystemConfigConstants.SystemConfigEnum.
  */
 @Controller
 @RequestMapping("/admin")
+@RequiredArgsConstructor
 public class AdminPageController {
-    @Resource
-    private ISystemConfigService systemConfigService;
-    @Resource
-    private IMailService mailService;
+    private final ISystemConfigService systemConfigService;
+    private final IMailService mailService;
 
     @RequestMapping("/home")
     public ModelAndView index() {

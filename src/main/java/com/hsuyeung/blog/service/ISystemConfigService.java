@@ -2,7 +2,9 @@ package com.hsuyeung.blog.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hsuyeung.blog.constant.SystemConfigConstants;
-import com.hsuyeung.blog.model.dto.systemconfig.UpdateSystemConfigRequestDTO;
+import com.hsuyeung.blog.model.dto.PageSearchDTO;
+import com.hsuyeung.blog.model.dto.systemconfig.SystemConfigSearchDTO;
+import com.hsuyeung.blog.model.dto.systemconfig.UpdateSystemConfigDTO;
 import com.hsuyeung.blog.model.entity.SystemConfigEntity;
 import com.hsuyeung.blog.model.vo.PageVO;
 import com.hsuyeung.blog.model.vo.customconfig.*;
@@ -10,6 +12,7 @@ import com.hsuyeung.blog.model.vo.systemconfig.SystemConfigInfoVO;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  * <p>
@@ -30,7 +33,8 @@ public interface ISystemConfigService extends IService<SystemConfigEntity> {
      * @param <T>              值的类型
      * @return 值
      */
-    <T> T getConfigValue(SystemConfigConstants.SystemConfigEnum systemConfigEnum, Class<T> valueType);
+    <T> T getConfigValue(@NotNull(message = "systemConfigEnum 不能为 null") SystemConfigConstants.SystemConfigEnum systemConfigEnum,
+                         @NotNull(message = "valueType 不能为 null") Class<T> valueType);
 
     /**
      * 获取首页的自定义配置
@@ -70,23 +74,18 @@ public interface ISystemConfigService extends IService<SystemConfigEntity> {
     /**
      * 分页查询系统配置列表
      *
-     * @param key      系统配置 key，全模糊
-     * @param group    系统配置分组，精确匹配
-     * @param desc     系统配置描述，全模糊
-     * @param enabled  是否可用，全匹配
-     * @param pageNum  页码
-     * @param pageSize 每页数量
+     * @param pageSearchParam 系统配置分页搜索条件
      * @return 系统配置分页列表
      */
-    PageVO<SystemConfigInfoVO> getSystemConfigPage(String key, String group, String desc, Boolean enabled,
-                                                   Integer pageNum, Integer pageSize);
+    PageVO<SystemConfigInfoVO> getSystemConfigPage(@NotNull(message = "pageSearchParam 不能为 null") @Valid
+                                                   PageSearchDTO<SystemConfigSearchDTO> pageSearchParam);
 
     /**
      * 更新一个系统配置
      *
-     * @param updateSystemConfigRequestDTO 更新系统配置请求参数
+     * @param updateSystemConfig 更新系统配置请求参数
      */
-    void updateSystemConfig(@Valid UpdateSystemConfigRequestDTO updateSystemConfigRequestDTO);
+    void updateSystemConfig(@NotNull(message = "updateSystemConfig 不能为 null") @Valid UpdateSystemConfigDTO updateSystemConfig);
 
     /**
      * 刷新指定的系统配置缓存

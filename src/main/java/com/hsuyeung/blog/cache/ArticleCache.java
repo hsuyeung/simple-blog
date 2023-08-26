@@ -8,9 +8,9 @@ import com.hsuyeung.blog.model.vo.article.ArchiveVO;
 import com.hsuyeung.blog.model.vo.article.ArticleDetailVO;
 import com.hsuyeung.blog.model.vo.article.HomeArticleVO;
 import com.hsuyeung.blog.util.RedisUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 
@@ -21,11 +21,10 @@ import java.util.List;
  * @date 2022/06/06
  */
 @Component
+@RequiredArgsConstructor
 public class ArticleCache {
-    @Resource
-    private RedisUtil redisUtil;
-    @Resource
-    private ObjectMapper objectMapper;
+    private final RedisUtil redisUtil;
+    private final ObjectMapper objectMapper;
 
     public List<HomeArticleVO> getHomeArticleList(String key) {
         String value = (String) redisUtil.get(key);

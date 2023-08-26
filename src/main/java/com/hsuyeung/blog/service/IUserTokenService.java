@@ -1,6 +1,7 @@
 package com.hsuyeung.blog.service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
@@ -43,5 +44,5 @@ public interface IUserTokenService {
      * @param request {@link HttpServletRequest}
      * @return 用户 id
      */
-    Long getUserIdFromRequestHeader(HttpServletRequest request);
+    Long getUserIdFromRequestHeader(@NotNull(message = "request 不能为 null") HttpServletRequest request);
 }

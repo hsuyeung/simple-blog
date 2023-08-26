@@ -67,7 +67,7 @@ function submitCommentAction(parentCommentId, replyCommentId) {
   }
   setUserInfoToLocalStorage(nickname, email, website, isNotificationChecked)
   const xhr = new XMLHttpRequest()
-  xhr.open('PUT', '/api/comment', true)
+  xhr.open('POST', '/api/comment/actions/submit', true)
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.send(JSON.stringify({
     'articleId': articleId || 0,

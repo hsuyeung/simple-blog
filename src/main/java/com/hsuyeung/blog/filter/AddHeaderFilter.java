@@ -2,10 +2,10 @@ package com.hsuyeung.blog.filter;
 
 import com.hsuyeung.blog.config.properties.SecurityProperties;
 import com.hsuyeung.blog.web.core.HeaderMapRequestWrapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -15,9 +15,9 @@ import java.io.IOException;
  * @date 2022/12/23
  */
 @Component
+@RequiredArgsConstructor
 public class AddHeaderFilter implements Filter {
-    @Resource(name = "securityProperties")
-    private SecurityProperties properties;
+    private final SecurityProperties properties;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

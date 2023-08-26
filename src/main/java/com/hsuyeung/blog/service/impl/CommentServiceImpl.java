@@ -6,18 +6,21 @@ import com.hsuyeung.blog.cache.CommentCache;
 import com.hsuyeung.blog.constant.enums.CommentNotificationSwitchEnum;
 import com.hsuyeung.blog.exception.SystemInternalException;
 import com.hsuyeung.blog.mapper.CommentMapper;
-import com.hsuyeung.blog.model.dto.comment.SubmitCommentRequestDTO;
+import com.hsuyeung.blog.model.dto.PageDTO;
+import com.hsuyeung.blog.model.dto.PageSearchDTO;
+import com.hsuyeung.blog.model.dto.comment.CommentSearchDTO;
+import com.hsuyeung.blog.model.dto.comment.SubmitCommentDTO;
 import com.hsuyeung.blog.model.dto.mail.SendMailDTO;
 import com.hsuyeung.blog.model.entity.CommentEntity;
 import com.hsuyeung.blog.model.vo.PageVO;
 import com.hsuyeung.blog.model.vo.article.ArticleRouteAndTitleVO;
 import com.hsuyeung.blog.model.vo.comment.*;
-import com.hsuyeung.blog.model.vo.httpclient.HttpClientResult;
 import com.hsuyeung.blog.service.IArticleService;
 import com.hsuyeung.blog.service.ICommentService;
 import com.hsuyeung.blog.service.IMailService;
 import com.hsuyeung.blog.service.ISystemConfigService;
 import com.hsuyeung.blog.util.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,10 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -54,19 +54,14 @@ import static com.hsuyeung.blog.constant.enums.MailTypeEnum.COMMENT_BE_REPLIED;
  */
 @Slf4j
 @Service("commentService")
+@RequiredArgsConstructor
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentEntity> implements ICommentService {
     @Value("${spring.mail.username}")
     private String from;
-    @Resource
-    private IArticleService articleService;
-    @Resource
-    private ISystemConfigService systemConfigService;
-    @Resource
-    private CommentCache commentCache;
-    @Resource
-    private IMailService mailService;
-    @Resource
-    private HttpClientUtil httpClientUtil;
+    private final IArticleService articleService;
+    private final ISystemConfigService systemConfigService;
+    private final CommentCache commentCache;
+    private final IMailService mailService;
 
     @Override
     public CommentVO getCommentList(Long articleId) {
@@ -99,16 +94,15 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentEntity
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Long submitComment(SubmitCommentRequestDTO submitCommentRequestDTO, String ipAddr) throws URISyntaxException, IOException {
-        AssertUtil.notNull(submitCommentRequestDTO, "submitCommentRequestDTO 不能为空");
-        Long articleId = submitCommentRequestDTO.getArticleId();
-        String nickname = submitCommentRequestDTO.getNickname();
+    public Long submitComment(SubmitCommentDTO submitComment, String ipAddr) {
+        Long articleId = submitComment.getArticleId();
+        String nickname = submitComment.getNickname();
         BizAssertUtil.isTrue(nickname.matches(NICKNAME_REGEX), "用户名非法");
         BizAssertUtil.isTrue(articleService.isExists(articleId), "评论的文章不存在");
         // 校验邮箱
-        String email = submitCommentRequestDTO.getEmail();
+        String email = submitComment.getEmail();
         AssertUtil.isTrue(email.matches(EMAIL_REGEX), "请输入正确的邮箱地址");
-        String website = submitCommentRequestDTO.getWebsite();
+        String website = submitComment.getWebsite();
         if (!StringUtils.hasLength(website)) {
             website = "";
         } else {
@@ -117,14 +111,14 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentEntity
                 website = "http://" + website;
             }
         }
-        Long parentCommentId = submitCommentRequestDTO.getParentCommentId();
-        Long replyCommentId = submitCommentRequestDTO.getReplyCommentId();
+        Long parentCommentId = submitComment.getParentCommentId();
+        Long replyCommentId = submitComment.getReplyCommentId();
         CommentEntity commentEntity = CommentEntity.builder()
                 .nickname(nickname)
-                .notification(Boolean.TRUE.equals(submitCommentRequestDTO.getIsNotificationChecked()) ? ON : OFF)
+                .notification(Boolean.TRUE.equals(submitComment.getIsNotificationChecked()) ? ON : OFF)
                 .parentId(parentCommentId)
                 .replyId(replyCommentId)
-                .content(submitCommentRequestDTO.getContent())
+                .content(submitComment.getContent())
                 .email(email)
                 .website(website)
                 .articleId(articleId)
@@ -149,26 +143,47 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentEntity
     }
 
     @Override
-    public PageVO<CommentInfoVO> getCommentPage(String nickname, String email, String website, String parentNickname,
-                                                String replyNickname, Integer articleId, String ip, Integer notification,
-                                                Long startTimestamp, Long endTimestamp, Integer pageNum, Integer pageSize) {
-        CommentNotificationSwitchEnum commentNotificationSwitchEnum = CommentNotificationSwitchEnum.getByCode(notification);
+    public PageVO<CommentInfoVO> getCommentPage(PageSearchDTO<CommentSearchDTO> pageSearchParam) {
+        CommentSearchDTO searchParam = pageSearchParam.getSearchParam();
+        CommentNotificationSwitchEnum commentNotificationSwitchEnum = null;
         LocalDateTime startTime = null;
         LocalDateTime endTime = null;
-        if (Objects.nonNull(startTimestamp)) {
-            startTime = DateUtil.fromLongToJava8LocalDate(startTimestamp);
-        }
-        if (Objects.nonNull(endTimestamp)) {
-            endTime = DateUtil.fromLongToJava8LocalDate(endTimestamp);
-        }
         List<Long> parentIdList = null;
-        if (StringUtils.hasLength(parentNickname)) {
-            parentIdList = this.getIdsByNickname(parentNickname);
-        }
         List<Long> replyIdList = null;
-        if (StringUtils.hasLength(replyNickname)) {
-            replyIdList = this.getIdsByNickname(replyNickname);
+        String nickname = null;
+        String email = null;
+        String website = null;
+        Long articleId = null;
+        String ip = null;
+
+
+        if (Objects.nonNull(searchParam)) {
+            commentNotificationSwitchEnum = CommentNotificationSwitchEnum.getByCode(searchParam.getNotification());
+            Long startTimestamp = searchParam.getStartTimestamp();
+            Long endTimestamp = searchParam.getEndTimestamp();
+            String parentNickname = searchParam.getParentNickname();
+            String replyNickname = searchParam.getReplyNickname();
+            nickname = searchParam.getNickname();
+            email = searchParam.getEmail();
+            website = searchParam.getWebsite();
+            articleId = searchParam.getArticleId();
+            ip = searchParam.getIp();
+
+            if (Objects.nonNull(startTimestamp)) {
+                startTime = DateUtil.fromLongToJava8LocalDate(startTimestamp);
+            }
+            if (Objects.nonNull(endTimestamp)) {
+                endTime = DateUtil.fromLongToJava8LocalDate(endTimestamp);
+            }
+            if (StringUtils.hasLength(parentNickname)) {
+                parentIdList = this.getIdsByNickname(parentNickname);
+            }
+            if (StringUtils.hasLength(replyNickname)) {
+                replyIdList = this.getIdsByNickname(replyNickname);
+            }
         }
+
+        PageDTO pageParam = pageSearchParam.getPageParam();
         Page<CommentEntity> entityPage = lambdaQuery()
                 .select(CommentEntity::getId, CommentEntity::getNickname, CommentEntity::getAvatar, CommentEntity::getEmail,
                         CommentEntity::getWebsite, CommentEntity::getContent, CommentEntity::getParentId, CommentEntity::getReplyId,
@@ -184,7 +199,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentEntity
                 .ge(Objects.nonNull(startTime), CommentEntity::getCreateTime, startTime)
                 .le(Objects.nonNull(endTime), CommentEntity::getCreateTime, endTime)
                 .orderByDesc(CommentEntity::getCreateTime)
-                .page(new Page<>(pageNum, pageSize));
+                .page(new Page<>(pageParam.getPageNum(), pageParam.getPageSize()));
         List<CommentEntity> entityList = entityPage.getRecords();
         if (CollectionUtils.isEmpty(entityList)) {
             return new PageVO<>(0L, Collections.emptyList());
@@ -217,23 +232,18 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentEntity
 
     @Override
     public void deleteComment(Long id) {
-        AssertUtil.notNull(id, "id 不能为空");
         List<Long> articleIdList = lambdaQuery()
                 .select(CommentEntity::getArticleId)
                 .eq(CommentEntity::getId, id)
-                .or()
-                .eq(CommentEntity::getParentId, id)
-                .or()
-                .eq(CommentEntity::getReplyId, id)
+                .or(lq -> lq.eq(CommentEntity::getParentId, id))
+                .or(lq -> lq.eq(CommentEntity::getReplyId, id))
                 .list()
                 .stream()
                 .map(CommentEntity::getArticleId).distinct().collect(Collectors.toList());
         lambdaUpdate()
                 .eq(CommentEntity::getId, id)
-                .or()
-                .eq(CommentEntity::getParentId, id)
-                .or()
-                .eq(CommentEntity::getReplyId, id)
+                .or(lq -> lq.eq(CommentEntity::getParentId, id))
+                .or(lq -> lq.eq(CommentEntity::getReplyId, id))
                 .remove();
         // 更新缓存
         articleIdList.forEach(articleId ->
@@ -245,7 +255,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentEntity
 
     @Override
     public Long countByArticleId(Long aid) {
-        AssertUtil.notNull(aid, "aid 不能为空");
         return lambdaQuery().eq(CommentEntity::getArticleId, aid).count();
     }
 
@@ -261,7 +270,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentEntity
         }
         String commentEntityContent = CommonUtil.removeTag(commentEntity.getContent());
         String blogHomeUrl = systemConfigService.getConfigValue(SYSTEM_BLOG_HOME_URL, String.class);
-        SendMailDTO sendMailDTO = SendMailDTO.builder()
+        SendMailDTO sendMail = SendMailDTO.builder()
                 .mFrom(from)
                 .mTo(systemConfigService.getConfigValue(ADMIN_EMAIL_ADDRESS, String.class))
                 .mSubject("您的博客收到了一条新的评论~")
@@ -283,7 +292,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentEntity
                 .type(BE_COMMENTED)
                 .sendTime(LocalDateTime.now())
                 .build();
-        mailService.sendMimeMail(sendMailDTO);
+        mailService.sendMimeMail(sendMail);
     }
 
     /**
@@ -293,7 +302,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentEntity
      * @return 昵称
      */
     private String getNicknameById(Long id) {
-        AssertUtil.notNull(id, "id 不能为空");
         CommentEntity comment = lambdaQuery().select(CommentEntity::getNickname).eq(CommentEntity::getId, id).one();
         return Objects.isNull(comment) ? "" : comment.getNickname();
     }
@@ -305,7 +313,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentEntity
      * @return 满足条件的 id 列表
      */
     private List<Long> getIdsByNickname(String nickname) {
-        AssertUtil.notNull(nickname, "nickname 不能为空");
         return lambdaQuery()
                 .select(CommentEntity::getId)
                 .like(CommentEntity::getNickname, nickname)
@@ -341,9 +348,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentEntity
         if (!isAboutPageComment) {
             articleRouteAndTitle = articleService.getArticleRouteAndTitle(replyComment.getArticleId());
         }
-        String replyCommentContent = CommonUtil.removeTag(replyComment.getContent());
-        String commentEntityContent = commentEntity.getContent();
-        SendMailDTO sendMailDTO = SendMailDTO.builder()
+        String replyCommentContent = replyComment.getContent();
+        String commentEntityContent = CommonUtil.removeTag(commentEntity.getContent());
+        SendMailDTO sendMail = SendMailDTO.builder()
                 .mFrom(from)
                 // replyComment 是直接的收件人
                 .mTo(replyComment.getEmail())
@@ -356,13 +363,13 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentEntity
                                         ? "about"
                                         : String.format("article/%s", articleRouteAndTitle.getRoute())))
                         .replace("{{articleTitle}}", isAboutPageComment ? "留言板" : articleRouteAndTitle.getTitle())
-                        .replace("{{replyCommentContent}}", String.format("%s%s",
+                        .replace("{{replyCommentContent}}", CommonUtil.removeTag(String.format("%s%s",
                                 replyCommentContent.substring(0, Math.min(50, replyCommentContent.length())),
-                                replyCommentContent.length() > 50 ? " ..." : ""))
+                                replyCommentContent.length() > 50 ? " ..." : "")))
                         .replace("{{commentAuthor}}", commentEntity.getNickname())
-                        .replace("{{commentContent}}", CommonUtil.removeTag(String.format("%s%s",
+                        .replace("{{commentContent}}", String.format("%s%s",
                                 commentEntityContent.substring(0, Math.min(50, commentEntityContent.length())),
-                                commentEntityContent.length() > 50 ? " ..." : "")))
+                                commentEntityContent.length() > 50 ? " ..." : ""))
                         .replace("{{emailFooterImg}}", systemConfigService.getConfigValue(MAIL_FOOTER_IMG, String.class))
                         .replace("{{commentUrl}}", isAboutPageComment
                                 ? String.format("%s/about#comment-%d", blogHomeUrl, replyCommentId)
@@ -370,7 +377,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentEntity
                 .type(COMMENT_BE_REPLIED)
                 .sendTime(LocalDateTime.now())
                 .build();
-        mailService.sendMimeMail(sendMailDTO);
+        mailService.sendMimeMail(sendMail);
     }
 
     /**
@@ -392,34 +399,10 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentEntity
      * 根据邮箱获取头像
      *
      * @param email 合法的邮箱地址
-     * @return 如果是 qq 邮箱且用的是 qq 号，则根据 qq 号获取 qq 头像；否则，根据邮箱的 MD5 值从 gravatar 获取头像
+     * @return 根据邮箱的 MD5 值从 gravatar 获取头像
      */
-    private String generateAvatar(String email) throws URISyntaxException, IOException {
-        email = email.toLowerCase();
-        int lastIndexOfAt = email.lastIndexOf("@");
-        String emailUsername = email.substring(0, lastIndexOfAt);
-        String emailDomain = email.substring(lastIndexOfAt);
-        int indexOfDot = emailUsername.length() + emailDomain.indexOf(".");
-        String domainName = email.substring(lastIndexOfAt + 1, indexOfDot);
-        if (Objects.equals(domainName, "qq") && emailUsername.matches(ALL_NUMBER_REGEX)) {
-            return this.getQQAvatar(emailUsername);
-        }
-        return this.getGravatarUrl(email);
-    }
-
-    /**
-     * 获取 QQ 头像
-     *
-     * @param qqNum QQ 号
-     * @return QQ 头像地址
-     */
-    private String getQQAvatar(String qqNum) throws URISyntaxException, IOException {
-        HttpClientResult httpClientResult = httpClientUtil.doGet(systemConfigService.getConfigValue(SYSTEM_QQ_NUM_EXCHANGE_K_URL, String.class)
-                .replace("{qq}", qqNum));
-        String content = httpClientResult.getContent();
-        String k = content.substring(content.indexOf("&k=") + "&k=".length(), content.indexOf("&s="));
-        return systemConfigService.getConfigValue(SYSTEM_QQ_AVATAR_REQUEST_URL, String.class)
-                .replace("{k}", k);
+    private String generateAvatar(String email) {
+        return this.getGravatarUrl(email.toLowerCase());
     }
 
     /**
@@ -477,7 +460,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentEntity
      * @return 指定父级评论的所有二级评论列表
      */
     private List<CommentItemVO> findChildCommentList(List<CommentEntity> commentEntityList, Long parentId) {
-        AssertUtil.notNull(parentId, "parentId 不能为空");
+        AssertUtil.notNull(parentId, "parentId 不能为 null");
         List<CommentItemVO> childCommentList = new ArrayList<>(4);
         // 筛选出二级评论
         for (CommentEntity commentEntity : commentEntityList) {

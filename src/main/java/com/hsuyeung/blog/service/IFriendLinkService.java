@@ -1,7 +1,9 @@
 package com.hsuyeung.blog.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.hsuyeung.blog.model.dto.PageSearchDTO;
 import com.hsuyeung.blog.model.dto.friendlink.AddFriendLinkDTO;
+import com.hsuyeung.blog.model.dto.friendlink.FriendLinkSearchDTO;
 import com.hsuyeung.blog.model.dto.friendlink.UpdateFriendLinkDTO;
 import com.hsuyeung.blog.model.entity.FriendLinkEntity;
 import com.hsuyeung.blog.model.vo.PageVO;
@@ -10,6 +12,7 @@ import com.hsuyeung.blog.model.vo.friendlink.FriendLinkVO;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author hsuyeung
@@ -28,9 +31,9 @@ public interface IFriendLinkService extends IService<FriendLinkEntity> {
     /**
      * 添加一个友链
      *
-     * @param addFriendLinkDTO {@link AddFriendLinkDTO}
+     * @param addFriendLink {@link AddFriendLinkDTO}
      */
-    void addFriendLink(@Valid AddFriendLinkDTO addFriendLinkDTO);
+    void addFriendLink(@NotNull(message = "addFriendLink 不能为 null") @Valid AddFriendLinkDTO addFriendLink);
 
     /**
      * 根据 id 删除一个友链
@@ -42,23 +45,18 @@ public interface IFriendLinkService extends IService<FriendLinkEntity> {
     /**
      * 更新友链
      *
-     * @param updateFriendLinkDTO {@link UpdateFriendLinkDTO}
+     * @param updateFriendLink {@link UpdateFriendLinkDTO}
      */
-    void updateFriendLink(@Valid UpdateFriendLinkDTO updateFriendLinkDTO);
+    void updateFriendLink(@NotNull(message = "updateFriendLink 不能为 null") @Valid UpdateFriendLinkDTO updateFriendLink);
 
     /**
      * 分页查询友链列表
      *
-     * @param linkName  友链名字，全模糊
-     * @param linkUrl   友链链接，全模糊
-     * @param linkDesc  友链描述，全模糊
-     * @param linkGroup 友链分组，精确匹配
-     * @param pageNum   页码
-     * @param pageSize  每页数量
+     * @param pageSearchParam 友链分页搜索条件
      * @return 友链分页列表
      */
-    PageVO<FriendLinkInfoVO> getFriendLinkPage(String linkName, String linkUrl, String linkDesc, String linkGroup,
-                                               Integer pageNum, Integer pageSize);
+    PageVO<FriendLinkInfoVO> getFriendLinkPage(@NotNull(message = "pageSearchParam 不能为 null") @Valid
+                                               PageSearchDTO<FriendLinkSearchDTO> pageSearchParam);
 
     /**
      * 刷新友链缓存

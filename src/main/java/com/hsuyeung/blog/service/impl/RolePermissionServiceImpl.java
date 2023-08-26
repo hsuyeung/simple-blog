@@ -5,13 +5,12 @@ import com.hsuyeung.blog.mapper.RolePermissionMapper;
 import com.hsuyeung.blog.model.entity.RolePermissionEntity;
 import com.hsuyeung.blog.service.IRolePermissionService;
 import com.hsuyeung.blog.service.IRoleService;
-import com.hsuyeung.blog.util.AssertUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -24,14 +23,12 @@ import java.util.stream.Collectors;
  * @date 2022/06/28
  */
 @Service("rolePermissionService")
+@RequiredArgsConstructor(onConstructor_ = {@Lazy})
 public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper, RolePermissionEntity> implements IRolePermissionService {
-    @Resource
-    @Lazy
-    private IRoleService roleService;
+    private final IRoleService roleService;
 
     @Override
     public Set<Long> getPermissionIds(Collection<Long> rids, boolean onlyQueryEnabled) {
-        AssertUtil.notEmpty(rids, "rids 不能为空");
         if (onlyQueryEnabled) {
             rids = roleService.filterNotEnabledRid(rids);
         }
@@ -50,7 +47,6 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean deleteByRid(Long rid) {
-        AssertUtil.notNull(rid, "rid 不能为空");
         return lambdaUpdate()
                 .eq(RolePermissionEntity::getRid, rid)
                 .remove();
@@ -59,7 +55,6 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean deleteByPid(Long pid) {
-        AssertUtil.notNull(pid, "pid 不能为空");
         return lambdaUpdate()
                 .eq(RolePermissionEntity::getPid, pid)
                 .remove();

@@ -52,8 +52,8 @@ spring:
 security:
   config:
     exclude-path-patterns:
-      - /api/user/login
-      - /api/comment
+      - /api/user/actions/login
+      - /api/comment/actions/submit
       - /api/user/token/validation
     path-patterns:
       - /api/**

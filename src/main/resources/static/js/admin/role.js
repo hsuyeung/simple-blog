@@ -22,17 +22,19 @@ function loadRoleTableData(loadPrev = false, loadNext = false, jumpTo = false) {
   const pageSizeSelectNode = document.getElementById('role-page-size')
   const pageSize = pageSizeSelectNode?.options[pageSizeSelectNode?.selectedIndex]?.value || 10
   const xhr = new XMLHttpRequest()
-  xhr.open(
-          'GET',
-          '/api/role/page'
-          + '?roleCode=' + (roleCode || '')
-          + '&enabled=' + (!enabled || enabled === '' ? '' : enabled === '1')
-          + '&pageNum=' + pageNum
-          + '&pageSize=' + pageSize,
-          true)
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+  xhr.open('POST', '/api/role/actions/page', true)
+  xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.setRequestHeader('token', getTokenFromLocal())
-  xhr.send()
+  xhr.send(JSON.stringify({
+    'pageParam': {
+      'pageNum': pageNum,
+      'pageSize': pageSize
+    },
+    'searchParam': {
+      'roleCode': roleCode,
+      'enabled': enabled === '' ? null : enabled === '1'
+    }
+  }))
   xhr.onreadystatechange = () => {
     if (xhr.readyState === 4 && xhr.status === 200) {
       const resp = JSON.parse(xhr.responseText)
@@ -100,7 +102,7 @@ function roleStatusChangeAction(uid) {
   }
   const enabled = enabledCheckBoxNode.checked
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', `/api/role/${enabled === true ? 'unlock' : 'lock'}/${uid}`, true)
+  xhr.open('PUT', `/api/role/actions/${enabled === true ? 'unlock' : 'lock'}/${uid}`, true)
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send()
   xhr.onreadystatechange = () => {
@@ -275,7 +277,7 @@ function confirmEditRoleAction() {
 
 function editRoleRequest(editRoleParam) {
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', `/api/role`, true)
+  xhr.open('PUT', `/api/role`, true)
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send(JSON.stringify(editRoleParam))
@@ -610,7 +612,7 @@ function checkAddRoleEnabled() {
 
 function addRoleRequest(addRoleParam) {
   const xhr = new XMLHttpRequest()
-  xhr.open('PUT', `/api/role`, true)
+  xhr.open('POST', `/api/role`, true)
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send(JSON.stringify(addRoleParam))

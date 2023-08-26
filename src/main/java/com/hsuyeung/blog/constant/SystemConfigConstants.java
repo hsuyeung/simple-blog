@@ -121,14 +121,6 @@ public final class SystemConfigConstants {
          */
         SYSTEM_GRAVATAR_DEFAULT_AVATAR_PARAM(GROUP_SYSTEM, "gravatarDefaultAvatarParam", "monsterid"),
         /**
-         * qq 号换取头像 k 值 的url
-         */
-        SYSTEM_QQ_NUM_EXCHANGE_K_URL(GROUP_SYSTEM, "qqNumExchangeKUrl", "https://ptlogin2.qq.com/getface?&imgtype=1&uin={qq}"),
-        /**
-         * qq 头像请求的 url
-         */
-        SYSTEM_QQ_AVATAR_REQUEST_URL(GROUP_SYSTEM, "qqAvatarRequestUrl", "https://q1.qlogo.cn/g?b=qq&k={k}&s=160"),
-        /**
          * 博客首页 url
          */
         SYSTEM_BLOG_HOME_URL(GROUP_SYSTEM, "blogHomeUrl", "https://www.hsuyeung.com"),

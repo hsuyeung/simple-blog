@@ -3,6 +3,7 @@ package com.hsuyeung.blog.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hsuyeung.blog.model.entity.RolePermissionEntity;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
 import java.util.Set;
 
@@ -20,7 +21,7 @@ public interface IRolePermissionService extends IService<RolePermissionEntity> {
      * @param onlyQueryEnabled 是否只查询可用的角色 id 关联的权限 id 集合
      * @return 权限 id 集合
      */
-    Set<Long> getPermissionIds(Collection<Long> rids, boolean onlyQueryEnabled);
+    Set<Long> getPermissionIds(@NotEmpty(message = "rids 不能为空") Collection<Long> rids, boolean onlyQueryEnabled);
 
     /**
      * 根据角色 id 删除权限

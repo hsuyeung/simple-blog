@@ -11,12 +11,12 @@ import com.hsuyeung.blog.util.AssertUtil;
 import com.hsuyeung.blog.util.DateUtil;
 import com.hsuyeung.blog.util.JwtUtil;
 import com.hsuyeung.blog.util.RedisUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -35,13 +35,11 @@ import static com.hsuyeung.blog.constant.SystemConfigConstants.SystemConfigEnum.
  */
 @Slf4j
 @Service("userTokenService")
+@RequiredArgsConstructor
 public class UserTokenServiceImpl implements IUserTokenService {
-    @Resource
-    private RedisUtil redisUtil;
-    @Resource
-    private ISystemConfigService systemConfigService;
-    @Resource(name = "securityProperties")
-    private SecurityProperties properties;
+    private final RedisUtil redisUtil;
+    private final ISystemConfigService systemConfigService;
+    private final SecurityProperties properties;
 
 
     @Override
@@ -106,9 +104,8 @@ public class UserTokenServiceImpl implements IUserTokenService {
 
     @Override
     public Long getUserIdFromRequestHeader(HttpServletRequest request) {
-        AssertUtil.notNull(request, "request 不能为空");
         String token = request.getHeader(properties.getTokenName());
-        AssertUtil.hasLength(token, "token 不能为空");
+        AssertUtil.hasLength(token, "token 获取失败");
         return JwtUtil.getClaim(token, "id", Long.class, systemConfigService.getConfigValue(USER_TOKEN_SECRET, String.class));
     }
 }

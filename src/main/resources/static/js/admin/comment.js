@@ -39,25 +39,27 @@ function loadCommentTableData(loadPrev = false, loadNext = false, jumpTo = false
   const pageSizeSelectNode = document.getElementById('comment-page-size')
   const pageSize = pageSizeSelectNode?.options[pageSizeSelectNode?.selectedIndex]?.value || 10
   const xhr = new XMLHttpRequest()
-  xhr.open(
-          'GET',
-          '/api/comment/page'
-          + '?nickname=' + (nickname || '')
-          + '&email=' + (email || '')
-          + '&website=' + (website || '')
-          + '&parentNickname=' + (parentNickname || '')
-          + '&replyNickname=' + (replyNickname || '')
-          + '&articleId=' + (articleId || '')
-          + '&ip=' + (ip || '')
-          + '&notification=' + (notification || '')
-          + '&startTimestamp=' + (startTimestamp || '')
-          + '&endTimestamp=' + (endTimestamp || '')
-          + '&pageNum=' + pageNum
-          + '&pageSize=' + pageSize,
-          true)
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+  xhr.open('POST', '/api/comment/actions/page', true)
+  xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.setRequestHeader('token', getTokenFromLocal())
-  xhr.send()
+  xhr.send(JSON.stringify({
+    'pageParam': {
+      'pageNum': pageNum,
+      'pageSize': pageSize
+    },
+    'searchParam': {
+      'nickname': nickname,
+      'email': email,
+      'website': website,
+      'parentNickname': parentNickname,
+      'replyNickname': replyNickname,
+      'articleId': articleId,
+      'ip': ip,
+      'notification': notification,
+      'startTimestamp': startTimestamp,
+      'endTimestamp': endTimestamp
+    }
+  }))
   xhr.onreadystatechange = () => {
     if (xhr.readyState === 4 && xhr.status === 200) {
       const resp = JSON.parse(xhr.responseText)

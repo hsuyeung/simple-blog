@@ -24,18 +24,21 @@ function loadFriendLinkTableData(loadPrev = false, loadNext = false, jumpTo = fa
   const pageSize = pageSizeSelectNode?.options[pageSizeSelectNode?.selectedIndex]?.value || 10
   const xhr = new XMLHttpRequest()
   xhr.open(
-          'GET',
-          '/api/friend/link/page'
-          + '?linkName=' + (friendLinkName || '')
-          + '&linkUrl=' + (friendLinkUrl || '')
-          + '&linkDesc=' + (friendLinkDesc || '')
-          + '&linkGroup=' + (friendLinkGroup || '')
-          + '&pageNum=' + pageNum
-          + '&pageSize=' + pageSize,
-          true)
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+          'POST', '/api/friend/link/actions/page', true)
+  xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.setRequestHeader('token', getTokenFromLocal())
-  xhr.send()
+  xhr.send(JSON.stringify({
+    'pageParam': {
+      'pageNum': pageNum,
+      'pageSize': pageSize
+    },
+    'searchParam': {
+      'linkName': friendLinkName,
+      'linkUrl': friendLinkUrl,
+      'linkDesc': friendLinkDesc,
+      'linkGroup': friendLinkGroup
+    }
+  }))
   xhr.onreadystatechange = () => {
     if (xhr.readyState === 4 && xhr.status === 200) {
       const resp = JSON.parse(xhr.responseText)
@@ -313,7 +316,7 @@ function confirmEditFriendLinkAction() {
 
 function editFriendLinkRequest(editFriendLinkParam) {
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', `/api/friend/link`, true)
+  xhr.open('PUT', `/api/friend/link`, true)
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send(JSON.stringify(editFriendLinkParam))
@@ -474,7 +477,7 @@ function checkAddFriendLinkGroup() {
 
 function addFriendLinkRequest(addFriendLinkParam) {
   const xhr = new XMLHttpRequest()
-  xhr.open('PUT', `/api/friend/link`, true)
+  xhr.open('POST', `/api/friend/link`, true)
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send(JSON.stringify(addFriendLinkParam))
@@ -586,7 +589,7 @@ function clearAddFriendLinkInfo() {
 
 function refreshFriendLinkAction() {
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', `/api/friend/link/refresh/cache`, true)
+  xhr.open('PUT', `/api/friend/link/refresh/cache`, true)
   xhr.setRequestHeader('token', getTokenFromLocal())
   xhr.send()
   xhr.onreadystatechange = () => {

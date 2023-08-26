@@ -1,8 +1,10 @@
 package com.hsuyeung.blog.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hsuyeung.blog.model.dto.permission.CreatePermissionRequestDTO;
-import com.hsuyeung.blog.model.dto.permission.UpdatePermissionRequestDTO;
+import com.hsuyeung.blog.model.dto.PageSearchDTO;
+import com.hsuyeung.blog.model.dto.permission.CreatePermissionDTO;
+import com.hsuyeung.blog.model.dto.permission.PermissionSearchDTO;
+import com.hsuyeung.blog.model.dto.permission.UpdatePermissionDTO;
 import com.hsuyeung.blog.model.entity.PermissionEntity;
 import com.hsuyeung.blog.model.vo.PageVO;
 import com.hsuyeung.blog.model.vo.permission.EnabledPermissionVO;
@@ -11,6 +13,8 @@ import com.hsuyeung.blog.model.vo.permission.PermissionVO;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -30,44 +34,44 @@ public interface IPermissionService extends IService<PermissionEntity> {
      * @param onlyQueryEnabled 是否只查询开启状态的数据
      * @return 权限集合
      */
-    Set<PermissionVO> getPermissions(Collection<Long> pids, boolean onlyQueryEnabled);
+    Set<PermissionVO> getPermissions(@NotEmpty(message = "pids 不能为 空") Collection<Long> pids, boolean onlyQueryEnabled);
 
     /**
      * 创建一个权限
      *
-     * @param createPermissionRequestDTO 创建权限请求参数
+     * @param createPermission 创建权限请求参数
      * @return 创建成功返回 true，否则返回 false
      */
-    boolean createPermission(@Valid CreatePermissionRequestDTO createPermissionRequestDTO);
+    boolean createPermission(@NotNull(message = "createPermission 不能为 null") @Valid CreatePermissionDTO createPermission);
 
     /**
      * 删除一个权限
      *
      * @param pid 权限 id
      */
-    void deletePermission(Long pid);
+    void deletePermission(@NotNull(message = "pid 不能为 null") Long pid);
 
     /**
      * 更新权限
      *
-     * @param updatePermissionRequestDTO 更新权限请求参数
+     * @param updatePermission 更新权限请求参数
      * @return 更新成功返回 true，否则返回 false
      */
-    boolean updatePermission(@Valid UpdatePermissionRequestDTO updatePermissionRequestDTO);
+    boolean updatePermission(@NotNull(message = "updatePermission 不能为 null") @Valid UpdatePermissionDTO updatePermission);
 
     /**
      * 锁定一个权限
      *
      * @param pid 权限 id
      */
-    void lockPermission(Long pid);
+    void lockPermission(@NotNull(message = "pid 不能为 null") Long pid);
 
     /**
      * 解锁一个权限
      *
      * @param pid 权限 id
      */
-    void unlockPermission(Long pid);
+    void unlockPermission(@NotNull(message = "pid 不能为 null") Long pid);
 
     /**
      * 获取所有可用状态的权限信息
@@ -83,19 +87,14 @@ public interface IPermissionService extends IService<PermissionEntity> {
      * @param onlyQueryEnabled 是否只查询启用状态的
      * @return 指定权限 id 的详细信息
      */
-    List<EnabledPermissionVO> getPermissionInfo(Collection<Long> pids, boolean onlyQueryEnabled);
+    List<EnabledPermissionVO> getPermissionInfo(@NotEmpty(message = "pids 不能为空") Collection<Long> pids, boolean onlyQueryEnabled);
 
     /**
      * 分页查询权限列表
      *
-     * @param path           权限路径，右模糊
-     * @param method         请求方法类型，全匹配
-     * @param permissionDesc 权限描述，全模糊
-     * @param enabled        是否可用，全匹配
-     * @param pageNum        页码
-     * @param pageSize       每页数量
+     * @param pageSearchParam 权限分页搜索条件
      * @return 权限分页列表
      */
-    PageVO<PermissionInfoVO> getPermissionPage(String path, String method, String permissionDesc, Boolean enabled,
-                                               Integer pageNum, Integer pageSize);
+    PageVO<PermissionInfoVO> getPermissionPage(@NotNull(message = "pageSearchParam 不能为 null") @Valid
+                                               PageSearchDTO<PermissionSearchDTO> pageSearchParam);
 }
