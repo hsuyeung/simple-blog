@@ -10,7 +10,7 @@
   </parent>
   <groupId>com.hsuyeung</groupId>
   <artifactId>simple-blog</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>v1.4.0</version>
   <name>simple-blog</name>
   <description>simple blog</description>
   <properties>
