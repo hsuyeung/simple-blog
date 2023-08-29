@@ -129,7 +129,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, FileEntity> impleme
                 fileData = LFU_CACHE.get(filePath);
             } catch (Exception e) {
                 log.info("从服务器读取文件：{}", filePath);
-                throw new SystemInternalException("从服务器读取文件：" + e.getMessage(), e);
+                throw new SystemInternalException("从服务器读取文件失败：" + e.getMessage(), e);
             }
         } else {
             log.info("从缓存读取文件：{}", filePath);
