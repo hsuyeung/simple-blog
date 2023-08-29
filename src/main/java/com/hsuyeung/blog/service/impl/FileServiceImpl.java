@@ -113,9 +113,9 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, FileEntity> impleme
         this.setContentType(response, FileUtil.getSuffixLowercase(filePath));
         byte[] fileData = LFU_CACHE.get(filePath);
         if (fileData.length == 0) {
-            // 无缓存，则从服务器读取文件然后放入缓存
+            // 无缓存，则从本地读取文件然后放入缓存
             try (FileInputStream fis = new FileInputStream(filePath)) {
-                log.info("从服务器读取文件：{}", filePath);
+                log.info("从本地读取文件：{}", filePath);
                 int available = fis.available();
                 fileData = new byte[available];
                 int offset = 0;
@@ -128,8 +128,8 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, FileEntity> impleme
                 // 再从缓存中取一次
                 fileData = LFU_CACHE.get(filePath);
             } catch (Exception e) {
-                log.info("从服务器读取文件：{}", filePath);
-                throw new SystemInternalException("从服务器读取文件失败：" + e.getMessage(), e);
+                log.info("从本地读取文件：{}", filePath);
+                throw new SystemInternalException("从本地读取文件失败：" + e.getMessage(), e);
             }
         } else {
             log.info("从缓存读取文件：{}", filePath);
