@@ -46,7 +46,6 @@ public class SendMailDTO {
      * 内容
      */
     @NotBlank(message = "邮件内容不能为空")
-    @Size(max = 255, message = "邮件内容不能超过 255 个字符")
     private String text;
 
     /**
