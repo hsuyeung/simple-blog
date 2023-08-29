@@ -115,7 +115,7 @@ public interface IArticleService extends IService<ArticleEntity> {
      * @return 文章内容
      */
     String getArticleContent(@NotNull(message = "aid 不能为 null") Long aid,
-                             @NotBlank(message = "contentType 不能为 null") ContentTypeEnum contentType);
+                             @NotNull(message = "contentType 不能为 null") ContentTypeEnum contentType);
 
     /**
      * 更新文章
