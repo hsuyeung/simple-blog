@@ -29,7 +29,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,7 +38,6 @@ import java.util.stream.Collectors;
 
 import static com.hsuyeung.blog.constant.CommonConstants.ONE_KB;
 import static com.hsuyeung.blog.constant.DateFormatConstants.FORMAT_YEAR_TO_SECOND;
-import static org.apache.commons.codec.CharEncoding.UTF_8;
 
 /**
  * 文件服务实现类
@@ -91,9 +89,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, FileEntity> impleme
         }
         String fileName = file.getOriginalFilename();
         BizAssertUtil.hasLength(fileName, "文件名不能为空");
-        if (fileName.contains(PERCENT_SIGN)) {
-            fileName = URLDecoder.decode(fileName, UTF_8);
-        }
+        fileName = fileName.replaceAll("\\s", "+");
         BizAssertUtil.hasLength(FileUtil.getSuffix(fileName), "文件名后缀不能为空");
         File saveFile = new File(folder, fileName);
         BizAssertUtil.isTrue(!saveFile.exists(), String.format("文件名重复：%s", fileName));
@@ -114,17 +110,11 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, FileEntity> impleme
                 fileUploadPath,
                 fileUploadPath.endsWith("/") ? "" : "/",
                 year, month, day, fileName);
-        if (filePath.contains(PERCENT_SIGN)) {
-            filePath = URLDecoder.decode(filePath, UTF_8);
-        }
         this.setContentType(response, FileUtil.getSuffixLowercase(filePath));
         byte[] fileData = LFU_CACHE.get(filePath);
-        try (
-                FileInputStream fis = new FileInputStream(filePath);
-                ServletOutputStream sos = response.getOutputStream()
-        ) {
-            if (fileData.length == 0) {
-                // 无缓存，则从服务器读取文件
+        if (fileData.length == 0) {
+            // 无缓存，则从服务器读取文件然后放入缓存
+            try (FileInputStream fis = new FileInputStream(filePath)) {
                 log.info("从服务器读取文件：{}", filePath);
                 int available = fis.available();
                 fileData = new byte[available];
@@ -135,10 +125,16 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, FileEntity> impleme
                 }
                 // 放入缓存
                 LFU_CACHE.put(filePath, fileData);
-            } else {
-                // 有缓存，则直接返回缓存数据
-                log.info("从缓存获取文件：{}", filePath);
+                // 再从缓存中取一次
+                fileData = LFU_CACHE.get(filePath);
+            } catch (Exception e) {
+                log.info("从服务器读取文件：{}", filePath);
+                throw new SystemInternalException("从服务器读取文件：" + e.getMessage(), e);
             }
+        } else {
+            log.info("从缓存读取文件：{}", filePath);
+        }
+        try (ServletOutputStream sos = response.getOutputStream()) {
             sos.write(fileData);
             sos.flush();
             log.info("获取文件成功：{}", filePath);
