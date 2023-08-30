@@ -50,7 +50,6 @@ import static org.apache.commons.codec.CharEncoding.UTF_8;
 @Slf4j
 @Service("fileService")
 public class FileServiceImpl extends ServiceImpl<FileMapper, FileEntity> implements IFileService {
-    private static final String PERCENT_SIGN = "%";
     /**
      * 合法的图片后缀名
      */
