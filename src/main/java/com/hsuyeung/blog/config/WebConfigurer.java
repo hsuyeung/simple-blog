@@ -6,6 +6,7 @@ import com.hsuyeung.blog.interceptor.UserPermissionCheckInterceptor;
 import com.hsuyeung.blog.interceptor.UserTokenCheckInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.AbstractHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -55,7 +57,19 @@ public class WebConfigurer implements WebMvcConfigurer {
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         MappingJackson2HttpMessageConverter jackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+        jackson2HttpMessageConverter.setDefaultCharset(StandardCharsets.UTF_8);
         jackson2HttpMessageConverter.setObjectMapper(objectMapper);
         converters.add(jackson2HttpMessageConverter);
+    }
+
+    @Override
+    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+        converters.stream()
+                // 过滤出 AbstractHttpMessageConverter 类型实例
+                .filter(it -> it instanceof AbstractHttpMessageConverter)
+                .map(c -> (AbstractHttpMessageConverter<?>) c)
+                // 这里将转换器的默认编码设置为 utf-8
+                .forEach(c -> c.setDefaultCharset(StandardCharsets.UTF_8));
+        WebMvcConfigurer.super.extendMessageConverters(converters);
     }
 }
