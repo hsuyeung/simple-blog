@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -38,6 +39,7 @@ import java.util.stream.Collectors;
 
 import static com.hsuyeung.blog.constant.CommonConstants.ONE_KB;
 import static com.hsuyeung.blog.constant.DateFormatConstants.FORMAT_YEAR_TO_SECOND;
+import static org.apache.commons.codec.CharEncoding.UTF_8;
 
 /**
  * 文件服务实现类
@@ -81,7 +83,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, FileEntity> impleme
     @Transactional(rollbackFor = Exception.class)
     @Override
     public String upload(MultipartFile file) throws IOException {
-        log.info("开始上传文件：{}", file);
+        log.info("开始上传文件，文件大小：{}，原文件名：{}", file.getSize(), file.getOriginalFilename());
         String dir = DateUtil.formatLocalDateTime(LocalDateTime.now(), fileDirFmt);
         File folder = new File(String.format("%s%s%s", fileUploadPath, fileUploadPath.endsWith("/") ? "" : "/", dir));
         if (!folder.isDirectory()) {
@@ -89,7 +91,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, FileEntity> impleme
         }
         String fileName = file.getOriginalFilename();
         BizAssertUtil.hasLength(fileName, "文件名不能为空");
-        fileName = fileName.replaceAll("\\s", "+");
+        fileName = URLDecoder.decode(fileName, UTF_8).replaceAll("\\s", "+");
         BizAssertUtil.hasLength(FileUtil.getSuffix(fileName), "文件名后缀不能为空");
         File saveFile = new File(folder, fileName);
         BizAssertUtil.isTrue(!saveFile.exists(), String.format("文件名重复：%s", fileName));
