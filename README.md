@@ -15,7 +15,10 @@
 ### 博客前台已实现的功能/页面：
 
 1. 首页（最新 N 篇文章）、归档（按照月份归档）页、友链页、关于页、文章详情页
-2. 评论功能，不需要登录，支持根据邮箱自动获取 QQ 头像（优先）和 Gravatar 头像，支持 Markdown 语法以及预览，Markdown
+2. 评论功能，不需要登录，支持根据邮箱自动获取 ~~QQ 头像（优先）和~~
+   （失效原因见：[v1.4.0 发布说明](https://github.com/hsuyeung/simple-blog/releases/tag/v1.4.0)） Gravatar 头像，支持
+   Markdown
+   语法以及预览，Markdown
    渲染使用的 [marked](https://github.com/markedjs/marked)
 3. 文章图片懒加载，参考文章 [图片懒加载](https://juejin.cn/post/6844904066418491406#heading-3) 实现
 4. XSS 净化：[DOMPurify](https://github.com/cure53/DOMPurify)
