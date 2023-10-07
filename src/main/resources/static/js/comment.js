@@ -233,7 +233,8 @@ function getUserInfoFromLocalStorage(commentId) {
   if (website) {
     document.getElementById('website-' + commentId).value = website
   }
-  if (isNotification === true || isNotification === 'true') {
+  // === null 表示是用户还没有选择过，默认勾选上
+  if (isNotification === null || isNotification === 'true') {
     document.getElementById('notification-' + commentId).checked = true
   }
 }
