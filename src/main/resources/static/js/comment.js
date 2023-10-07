@@ -312,7 +312,7 @@ function toggleCommentBox(parentCommentId, replyCommentId) {
           </section>
           <section class='notification-section'>
             <input id='${"notification-" + replyCommentId}' type='checkbox' name='notification'>
-            <label for='${"notification-" + replyCommentId}'>有新回复时发送邮件通知</label>
+            <label for='${"notification-" + replyCommentId}'>使用邮件接收回复通知</label>
           </section>
         </div>
       </div>
