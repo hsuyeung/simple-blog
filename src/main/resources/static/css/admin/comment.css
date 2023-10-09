@@ -11,5 +11,5 @@ select#search-comment-article {
 }
 
 #comment-data-table-body .comment-avatar {
-  max-width: 64px;
+  width: 6.4rem;
 }
