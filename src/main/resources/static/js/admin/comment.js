@@ -210,6 +210,19 @@ function loadArticleTitleList() {
 }
 
 function generateCommentArticleOption(articles) {
+  const searchCommentArticleSpan = document.getElementById('search-comment-article-span');
+  if (searchCommentArticleSpan.hasChildNodes()) {
+    return
+  }
+  // <label for='search-comment-article'>文章：</label>
+  const articleSelectLabelNode = document.createElement('label')
+  articleSelectLabelNode.setAttribute('for', 'search-comment-article')
+  articleSelectLabelNode.textContent = `文章：`
+  searchCommentArticleSpan.appendChild(articleSelectLabelNode)
+
+  const articleSelectNode = document.createElement('select')
+  articleSelectNode.setAttribute('id', 'search-comment-article')
+  articleSelectNode.setAttribute('name', 'search-comment-article')
   let articleOptionText = `
     <option value='' selected>全部</option>
     <option value='0'>留言板</option>
@@ -219,11 +232,8 @@ function generateCommentArticleOption(articles) {
       <option value='${article.id}'>${article.title}</option>
     `
   })
-  const articleSelectNode = document.createElement('select');
-  articleSelectNode.setAttribute('id', 'search-comment-article')
-  articleSelectNode.setAttribute('name', 'search-comment-article')
   articleSelectNode.innerHTML = articleOptionText
-  document.getElementById('search-comment-article-span').appendChild(articleSelectNode)
+  searchCommentArticleSpan.appendChild(articleSelectNode)
 }
 
 function deleteCommentAction(commentId) {

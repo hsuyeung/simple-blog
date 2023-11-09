@@ -39,6 +39,8 @@ function openAdminPanelAction() {
   closeLoginPanel()
   // 打开管理面板
   openAdminPanel()
+  // 加载文章选项列表
+  loadArticleTitleList()
 }
 
 function openLoginPanelAction() {
@@ -74,7 +76,6 @@ function loadAllData() {
   loadSystemConfigTableData()
   loadMailTableData()
   loadCommentTableData()
-  loadArticleTitleList()
   loadFileTableData()
   loadArticleTableData()
 }
