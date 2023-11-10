@@ -1,15 +1,22 @@
 <footer th:fragment='footer'>
-  <div class='copyright'>
+  <div>
     <span th:text='${ commonCustomConf.footerCopyright }'></span>
     <span class='divider'>·</span>
-    <a href='/'>Hsu Yeung</a>
+    <a href="https://github.com/hsuyeung/simple-blog" target='_blank' rel='noopener noreferrer nofollow'>simple-blog</a>
   </div>
   <div>
+    <a href='/'>Hsu Yeung</a>
+    <span class='divider'>·</span>
     <a href='/about' th:text='${ commonCustomConf.footerAboutText }'></a>
     <span class='divider'>·</span>
     <a href='/friend/link'>友情链接</a>
+  </div>
+  <div>
+    <a href='/feed' target='_blank' rel='noopener noreferrer nofollow'>RSS 订阅</a>
     <span class='divider'>·</span>
-    <a href='/about#feed'>RSS 订阅</a>
+    <a href='/robots.txt' target='_blank' rel='noopener noreferrer nofollow'>Robots Rule</a>
+    <span class='divider'>·</span>
+    <a href='/sitemap.xml' target='_blank' rel='noopener noreferrer nofollow'>站点地图</a>
   </div>
   <div>
     <a href='https://beian.miit.gov.cn/' target='_blank' rel='noopener noreferrer nofollow'

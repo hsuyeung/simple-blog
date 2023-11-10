@@ -7,11 +7,6 @@ footer {
   padding-bottom: 2.5rem
 }
 
-footer .copyright {
-  display: inline;
-  margin-right: 2rem;
-}
-
 footer a:link,
 footer a:visited {
   color: #8c704f

@@ -9,6 +9,8 @@ package com.hsuyeung.blog.constant;
 public final class StringConstants {
     public static final String SYSTEM = "system";
     public static final String RSS_FILE_PATH = "./rss.xml";
+    public static final String ROBOTS_FILE_PATH = "./robots.txt";
+    public static final String SITEMAP_FILE_PATH = "./sitemap.xml";
 
     private StringConstants() {
     }

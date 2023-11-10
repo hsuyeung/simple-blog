@@ -23,6 +23,9 @@ import com.hsuyeung.blog.rss.Item;
 import com.hsuyeung.blog.rss.RSS;
 import com.hsuyeung.blog.rss.Writer;
 import com.hsuyeung.blog.service.*;
+import com.hsuyeung.blog.sitemap.ChangeFreqEnum;
+import com.hsuyeung.blog.sitemap.SitemapGenerator;
+import com.hsuyeung.blog.sitemap.URLNode;
 import com.hsuyeung.blog.util.AssertUtil;
 import com.hsuyeung.blog.util.BizAssertUtil;
 import com.hsuyeung.blog.util.ConvertUtil;
@@ -240,8 +243,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
         this.refreshHomeArticleListCache();
         this.refreshArchiveCache();
         articleCache.deleteCache(systemConfigService.getConfigValue(REDIS_ARTICLE_DETAIL_KEY, String.class), article.getRoute());
-        // 刷新 RSS
-        this.refreshRSS();
+        // 刷新 RSS 以及站点地图
+        this.refreshRSSAndSitemap();
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -263,8 +266,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
         // 刷新缓存
         this.refreshHomeArticleListCache();
         this.refreshArchiveCache();
-        // 刷新 RSS
-        this.refreshRSS();
+        // 刷新 RSS 以及站点地图
+        this.refreshRSSAndSitemap();
     }
 
     @Override
@@ -298,8 +301,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
         this.refreshArchiveCache();
         // 刷新文章详情缓存
         this.refreshArticleDetailCache(articleEntity.getRoute(), updateArticle.getRoute());
-        // 刷新 RSS
-        this.refreshRSS();
+        // 刷新 RSS 以及站点地图
+        this.refreshRSSAndSitemap();
     }
 
     // --------------------------------------------- PRIVATE METHOD ---------------------------------------------
@@ -354,17 +357,22 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
         return new ArchiveVO(allArticleList.size(), archiveNodeList);
     }
 
+    private void refreshRSSAndSitemap() {
+        List<ArticleEntity> articleList = lambdaQuery()
+                .orderByDesc(ArticleEntity::getCreateTime)
+                .list();
+        this.refreshRSS(articleList);
+        this.refreshSitemap(articleList);
+    }
+
     /**
      * 刷新 RSS 文件
      */
-    private void refreshRSS() {
+    private void refreshRSS(List<ArticleEntity> articleList) {
+        if (CollectionUtils.isEmpty(articleList)) {
+            return;
+        }
         try {
-            List<ArticleEntity> articleList = lambdaQuery()
-                    .orderByDesc(ArticleEntity::getCreateTime)
-                    .list();
-            if (CollectionUtils.isEmpty(articleList)) {
-                return;
-            }
             String blogHomeUrl = systemConfigService.getConfigValue(SYSTEM_BLOG_HOME_URL, String.class);
             List<Item> itemList = articleList.stream()
                     .map(article -> {
@@ -401,6 +409,62 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
             new Writer(rss, StringConstants.RSS_FILE_PATH).write();
         } catch (Exception e) {
             throw new SystemInternalException("创建 RSS 文件失败", e);
+        }
+    }
+
+    /**
+     * 刷新 sitemap 文件
+     */
+    private void refreshSitemap(List<ArticleEntity> articleList) {
+        if (CollectionUtils.isEmpty(articleList)) {
+            return;
+        }
+        try {
+            String blogHomeUrl = systemConfigService.getConfigValue(SYSTEM_BLOG_HOME_URL, String.class);
+            int articleSize = articleList.size();
+            List<URLNode> urlNodes = new ArrayList<>(articleSize + 4);
+            // 首页
+            LocalDateTime now = LocalDateTime.now();
+            urlNodes.add(URLNode.builder()
+                    .loc(blogHomeUrl)
+                    .lastMod(now)
+                    .changeFreq(ChangeFreqEnum.DAILY)
+                    // 首页优先级最高
+                    .priority(1)
+                    .build());
+            // 关于页面
+            urlNodes.add(URLNode.builder()
+                    .loc(String.format("%s/about", blogHomeUrl))
+                    .lastMod(now)
+                    .changeFreq(ChangeFreqEnum.WEEKLY)
+                    .priority(0.8)
+                    .build());
+            // 归档页
+            urlNodes.add(URLNode.builder()
+                    .loc(String.format("%s/archive", blogHomeUrl))
+                    .lastMod(now)
+                    .changeFreq(ChangeFreqEnum.DAILY)
+                    .priority(0.5)
+                    .build());
+            // 友链页
+            urlNodes.add(URLNode.builder()
+                    .loc(String.format("%s/friend/link", blogHomeUrl))
+                    .lastMod(now)
+                    .changeFreq(ChangeFreqEnum.WEEKLY)
+                    .priority(0.5)
+                    .build());
+            urlNodes.addAll(articleList.stream()
+                    .map(article -> URLNode.builder()
+                            .loc(String.format("%s/article/%s", blogHomeUrl, article.getRoute()))
+                            .lastMod(article.getUpdateTime())
+                            .changeFreq(ChangeFreqEnum.DAILY)
+                            // 置顶的文章优先级高一点
+                            .priority(PIN.equals(article.getPin()) ? 0.6 : 0.4)
+                            .build())
+                    .collect(Collectors.toList()));
+            SitemapGenerator.generate(urlNodes, StringConstants.SITEMAP_FILE_PATH);
+        } catch (Exception e) {
+            throw new SystemInternalException("创建 sitemap.xml 文件失败", e);
         }
     }
 }

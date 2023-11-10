@@ -110,4 +110,44 @@ public class BlogPageController {
             throw new SystemInternalException("读取文件失败", e);
         }
     }
+
+    @ResponseBody
+    @RequestMapping("/robots.txt")
+    public void robotsTxt(HttpServletResponse response) {
+        try (
+                FileInputStream fis = new FileInputStream(StringConstants.ROBOTS_FILE_PATH);
+                ServletOutputStream sos = response.getOutputStream()
+        ) {
+            response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+            response.setContentType(MediaType.TEXT_PLAIN_VALUE);
+            int len;
+            byte[] buffer = new byte[1024 * 10];
+            while ((len = fis.read(buffer)) != -1) {
+                sos.write(buffer, 0, len);
+            }
+            sos.flush();
+        } catch (Exception e) {
+            throw new SystemInternalException("读取文件失败", e);
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping("/sitemap.xml")
+    public void sitemapXml(HttpServletResponse response) {
+        try (
+                FileInputStream fis = new FileInputStream(StringConstants.SITEMAP_FILE_PATH);
+                ServletOutputStream sos = response.getOutputStream()
+        ) {
+            response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+            response.setContentType(MediaType.APPLICATION_XML_VALUE);
+            int len;
+            byte[] buffer = new byte[1024 * 10];
+            while ((len = fis.read(buffer)) != -1) {
+                sos.write(buffer, 0, len);
+            }
+            sos.flush();
+        } catch (Exception e) {
+            throw new SystemInternalException("读取文件失败", e);
+        }
+    }
 }
