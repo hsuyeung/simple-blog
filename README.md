@@ -139,6 +139,7 @@ scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="tru
 │  │              ├─schedule              # 定时任务
 │  │              ├─service               # Service 接口
 │  │              │  └─impl               # Service 接口实现
+│  │              ├─sitemap               # 生成站点地图相关实现
 │  │              ├─util                  # 一些自定义的工具类
 │  │              └─web                   # web 相关
 │  │                  ├─api               # API 接口
@@ -150,7 +151,7 @@ scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="tru
 │      ├─static
 │      │  ├─css                           # 项目需要使用到的样式文件
 │      │  │  └─admin                      # 后台页面相关的样式文件
-│      │  ├─fonts                         # iconmoon 字体以及图标相关文件
+│      │  ├─fonts                         # 字体以及字体图标等文件
 │      │  ├─img                           # 图片资源
 │      │  ├─js                            # js 文件
 │      │  │  └─admin                      # 管理后台的 js 文件
