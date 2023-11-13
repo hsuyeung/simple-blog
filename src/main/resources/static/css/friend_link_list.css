@@ -53,11 +53,12 @@
 .link-item-name {
   padding: 1.6rem 1rem 0 0;
   height: 4rem;
+  font-weight: bold;
 }
 
 .link-item-desc {
   height: 5rem;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
 }
 
 .link-item-name,
