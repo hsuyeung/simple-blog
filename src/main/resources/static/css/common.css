@@ -244,8 +244,7 @@ figcaption {
 }
 
 pre ::selection {
-  background: #444;
-  color: #fff;
+  background: #e6e6d5
 }
 
 code {
