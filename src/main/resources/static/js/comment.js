@@ -27,6 +27,7 @@ function previewAction(replyCommentId) {
     ignoreUnescapedHTML: true
   })
   hljs.highlightAll()
+  mediumZoom('img.zoom-img', {background: '#faf5e3'})
   lazyLoad({
     lazyAttr: 'data-src',
     loadType: 'src',
