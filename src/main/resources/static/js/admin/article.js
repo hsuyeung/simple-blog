@@ -415,7 +415,7 @@ function confirmEditArticleAction() {
     return
   }
   editArticleParam.mdContent = editArticleContent
-  editArticleParam.htmlContent = DOMPurify.sanitize(marked.parse(document.getElementById('edit-article-content').value))
+  editArticleParam.htmlContent = DOMPurify.sanitize(marked.parse(document.getElementById('edit-article-content').value, {breaks: true}))
   editArticleRequest(editArticleParam)
 }
 
@@ -738,7 +738,7 @@ function confirmAddArticleAction() {
     return
   }
   addArticleParam.mdContent = addArticleContent
-  addArticleParam.htmlContent = DOMPurify.sanitize(marked.parse(document.getElementById('add-article-content').value))
+  addArticleParam.htmlContent = DOMPurify.sanitize(marked.parse(document.getElementById('add-article-content').value, {breaks: true}))
   addArticleRequest(addArticleParam)
 }
 
@@ -770,7 +770,7 @@ function openPreviewArticlePanel() {
 function previewAddArticleAction() {
   closeAddArticlePanel()
   openPreviewArticlePanel()
-  document.getElementById('preview-article-text').innerHTML = DOMPurify.sanitize(marked.parse(document.getElementById('add-article-content').value))
+  document.getElementById('preview-article-text').innerHTML = DOMPurify.sanitize(marked.parse(document.getElementById('add-article-content').value, {breaks: true}))
   mediumZoom('img.zoom-img', {background: '#faf5e3'})
   hljs.configure({
     ignoreUnescapedHTML: true
@@ -787,7 +787,7 @@ function previewAddArticleAction() {
 function previewEditArticleAction() {
   closeEditArticlePanel()
   openPreviewArticlePanel()
-  document.getElementById('preview-article-text').innerHTML = DOMPurify.sanitize(marked.parse(document.getElementById('edit-article-content').value))
+  document.getElementById('preview-article-text').innerHTML = DOMPurify.sanitize(marked.parse(document.getElementById('edit-article-content').value, {breaks: true}))
   hljs.configure({
     ignoreUnescapedHTML: true
   })

@@ -16,7 +16,7 @@ function getCurrentTextAreaHeight(commentId) {
 }
 
 function previewAction(replyCommentId) {
-  document.getElementById('preview-text-' + replyCommentId).innerHTML = DOMPurify.sanitize(marked.parse(document.getElementById('comment-textarea-' + replyCommentId).value))
+  document.getElementById('preview-text-' + replyCommentId).innerHTML = DOMPurify.sanitize(marked.parse(document.getElementById('comment-textarea-' + replyCommentId).value, {breaks: true}))
   document.querySelector('#preview-textarea-' + replyCommentId).setAttribute('style', 'display: block;')
   document.querySelector('#comment-box-' + replyCommentId + ' > .form-wrapper input[name="edit"]').setAttribute('style', 'display:inline;')
   document.querySelector('#comment-box-' + replyCommentId + ' > .form-wrapper input[name="preview"]').setAttribute('style', 'display: none;')
@@ -113,7 +113,7 @@ function commentContentCheck(replyCommentId) {
     return [false, '']
   }
   const commentMarkdownContent = commentTextAreaNode.value
-  const commentHTMLContent = DOMPurify.sanitize(marked.parse(commentMarkdownContent))
+  const commentHTMLContent = DOMPurify.sanitize(marked.parse(commentMarkdownContent, {breaks: true}))
   if (!commentHTMLContent || commentHTMLContent.trim().length <= 0) {
     commentTextAreaNode.focus()
     new Message().show({
