@@ -136,7 +136,7 @@ textarea {
 .comment-item > div.text-wrapper > .comment-item-header a.permalink,
 .comment-item > div.text-wrapper > .comment-item-header .note,
 .comment-item > div.text-wrapper > .comment-item-header a.parent {
-  color: gray !important;
+  color: rgb(128, 128, 128) !important;
   font-weight: normal;
   text-shadow: none !important;
 }

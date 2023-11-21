@@ -39,7 +39,7 @@
   margin-right: .2rem
 }
 
-@media (max-device-width: 700px) {
+@media (max-device-width: 700px),(max-width: 700px) {
   .about {
     display: none
   }

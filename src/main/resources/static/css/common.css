@@ -290,7 +290,7 @@ pre > code {
 }
 
 .gray {
-  color: gray;
+  color: rgb(128, 128, 128);
 }
 
 .divider-line-bottom {
@@ -306,6 +306,12 @@ pre > code {
 
   header {
     margin-bottom: 3rem
+  }
+}
+
+@media (max-width: 887px) {
+  .container {
+    margin-top: 0;
   }
 }
 
@@ -343,8 +349,8 @@ input[id$='-page-jump-to'] {
 
 /* 定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸 */
 ::-webkit-scrollbar {
-  width: .9rem;
-  height: .9rem
+  width: .6rem;
+  height: .6rem
 }
 
 /* 定义滚动条轨道 */
