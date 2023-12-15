@@ -372,8 +372,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentEntity
                                 commentEntityContent.length() > 50 ? " ..." : ""))
                         .replace("{{emailFooterImg}}", systemConfigService.getConfigValue(MAIL_FOOTER_IMG, String.class))
                         .replace("{{commentUrl}}", isAboutPageComment
-                                ? String.format("%s/about#comment-%d", blogHomeUrl, replyCommentId)
-                                : String.format("%s/article/%s#comment-%d", blogHomeUrl, articleRouteAndTitle.getRoute(), replyCommentId)))
+                                ? String.format("%s/about#comment-%d", blogHomeUrl, commentId)
+                                : String.format("%s/article/%s#comment-%d", blogHomeUrl, articleRouteAndTitle.getRoute(), commentId)))
                 .type(COMMENT_BE_REPLIED)
                 .sendTime(LocalDateTime.now())
                 .build();
