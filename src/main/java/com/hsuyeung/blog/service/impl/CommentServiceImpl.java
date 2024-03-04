@@ -348,7 +348,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentEntity
         if (!isAboutPageComment) {
             articleRouteAndTitle = articleService.getArticleRouteAndTitle(replyComment.getArticleId());
         }
-        String replyCommentContent = replyComment.getContent();
+        String replyCommentContent = CommonUtil.removeTag(replyComment.getContent());
         String commentEntityContent = CommonUtil.removeTag(commentEntity.getContent());
         SendMailDTO sendMail = SendMailDTO.builder()
                 .mFrom(from)
@@ -363,9 +363,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentEntity
                                         ? "about"
                                         : String.format("article/%s", articleRouteAndTitle.getRoute())))
                         .replace("{{articleTitle}}", isAboutPageComment ? "留言板" : articleRouteAndTitle.getTitle())
-                        .replace("{{replyCommentContent}}", CommonUtil.removeTag(String.format("%s%s",
+                        .replace("{{replyCommentContent}}", String.format("%s%s",
                                 replyCommentContent.substring(0, Math.min(50, replyCommentContent.length())),
-                                replyCommentContent.length() > 50 ? " ..." : "")))
+                                replyCommentContent.length() > 50 ? " ..." : ""))
                         .replace("{{commentAuthor}}", commentEntity.getNickname())
                         .replace("{{commentContent}}", String.format("%s%s",
                                 commentEntityContent.substring(0, Math.min(50, commentEntityContent.length())),
