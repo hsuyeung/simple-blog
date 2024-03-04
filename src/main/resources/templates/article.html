@@ -52,6 +52,7 @@
 <div th:replace='component/footer :: footer'></div>
 <script>
   cleanAllCommentTextAreaHeightRecord()
+  // 第一次进入页面时直接对所有的图片做渲染
   mediumZoom('img.zoom-img', {background: '#faf5e3'})
   hljs.configure({
     ignoreUnescapedHTML: true
