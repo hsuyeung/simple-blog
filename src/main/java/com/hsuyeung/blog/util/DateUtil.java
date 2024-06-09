@@ -249,37 +249,50 @@ public final class DateUtil {
      * 美化时间
      *
      * @param time {@link LocalDateTime}
-     * @return 返回给定的时间距离当前时间过去了 xx 年/月/周/天/小时/分钟/秒
+     * @return 返回给定的时间距离当前时间过去了 xx 小时/分钟/秒，跨天就显示正常的时间
      */
     public static String beautifyTime(LocalDateTime time) {
         LocalDateTime now = LocalDateTime.now();
-        AssertUtil.isTrue(now.isAfter(time), "不能大于当前时间");
+        if (now.isBefore(time)) {
+            return "来自未来～";
+        }
 
         long years = getDiff(time, now, ChronoUnit.YEARS);
-        long months = getDiff(time, now, ChronoUnit.MONTHS);
-        long weeks = getDiff(time, now, ChronoUnit.WEEKS);
-        long days = getDiff(time, now, ChronoUnit.DAYS);
-        long hours = getDiff(time, now, ChronoUnit.HOURS);
-        long minutes = getDiff(time, now, ChronoUnit.MINUTES);
-        long seconds = getDiff(time, now, ChronoUnit.SECONDS);
-
         if (years > 0) {
-            return years == 1 ? "去年" : String.format("%d 年前", years);
-        } else if (months > 0) {
-            return months == 1 ? "上个月" : String.format("%d 个月前", months);
-        } else if (weeks > 0) {
-            return weeks == 1 ? "上周" : String.format("%d 周前", weeks);
-        } else if (days > 0) {
-            return days == 1 ? "昨天" : days == 2 ? "前天" : String.format("%d 天前", days);
-        } else if (hours > 0) {
-            return String.format("%d 小时前", hours);
-        } else if (minutes > 0) {
-            return String.format("%d 分钟前", minutes);
-        } else if (seconds > 0) {
-            return String.format("%d 秒前", seconds);
-        } else {
-            return "刚刚";
+            return formatLocalDateTime(time, DateFormatConstants.FORMAT_YMD_HM);
         }
+
+        long months = getDiff(time, now, ChronoUnit.MONTHS);
+        if (months > 0) {
+            return formatLocalDateTime(time, DateFormatConstants.FORMAT_YMD_HM);
+        }
+
+        long weeks = getDiff(time, now, ChronoUnit.WEEKS);
+        if (weeks > 0) {
+            return formatLocalDateTime(time, DateFormatConstants.FORMAT_YMD_HM);
+        }
+
+        long days = getDiff(time, now, ChronoUnit.DAYS);
+        if (days > 0) {
+            return formatLocalDateTime(time, DateFormatConstants.FORMAT_YMD_HM);
+        }
+
+        long hours = getDiff(time, now, ChronoUnit.HOURS);
+        if (hours > 0) {
+            return String.format("%d 小时前", hours);
+        }
+
+        long minutes = getDiff(time, now, ChronoUnit.MINUTES);
+        if (minutes > 0) {
+            return String.format("%d 分钟前", minutes);
+        }
+
+        long seconds = getDiff(time, now, ChronoUnit.SECONDS);
+        if (seconds > 0) {
+            return String.format("%d 秒前", seconds);
+        }
+
+        return "刚刚";
     }
 
     /**

@@ -13,6 +13,7 @@ public final class DateFormatConstants {
     public static final String FORMAT_YEAR_TO_DAY_SPLIT_BY_FORWARD_SLASH = "yyyy/MM/dd";
     public static final String FORMAT_RFC_822 = "EEE, dd MMM yyyy HH:mm:ss z";
     public static final String ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    public static final String FORMAT_YMD_HM = "yyyy-M-d HH:mm";
 
     private DateFormatConstants() {
     }
