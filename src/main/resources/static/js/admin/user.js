@@ -181,8 +181,8 @@ function generateUserDataTable(total, pageNum, pageSize, users) {
         <td id=${'user-update-by-' + user.id}>${user.updateBy}</td>
         <td>
           <button id=${'delete-user-' + user.id} onclick='deleteUserAction(${user.id})'>删除</button>
-          <button id=${'update-user-' + user.id} onclick='editUserAction(${user.id}, "${user.username}", "${user.nickname}", ${user.enabled})'>编辑</button>
-          <button id=${'assign-user-role-' + user.id} onclick='assignRoleAction(${user.id}, "${user.username}", "${user.nickname}", ${user.enabled})'>分配角色</button>
+          <button id=${'update-user-' + user.id} onclick='editUserAction(${user.id}, "${encode(user.username)}", "${encode(user.nickname)}", ${user.enabled})'>编辑</button>
+          <button id=${'assign-user-role-' + user.id} onclick='assignRoleAction(${user.id}, "${encode(user.username)}", "${encode(user.nickname)}", ${user.enabled})'>分配角色</button>
         </td>
       </tr>
     `
@@ -229,8 +229,8 @@ function loadNextPageUserData() {
   loadUserTableData(false, true)
 }
 
-function editUserAction(uid, username, nickname, enabled) {
-  openEditUserPanel(uid, username, nickname, enabled)
+function editUserAction(uid, encodeUsername, encodeNickname, enabled) {
+  openEditUserPanel(uid, decode(encodeUsername), decode(encodeNickname), enabled)
 }
 
 function openUserDataTable() {
@@ -629,10 +629,10 @@ function loadUserRole(uid) {
   }
 }
 
-function assignRoleAction(uid, username, nickname, enabled) {
+function assignRoleAction(uid, encodeUsername, encodeNickname, enabled) {
   document.getElementById('assign-role-user-id').textContent = uid
-  document.getElementById('assign-role-username').textContent = username
-  document.getElementById('assign-role-nickname').textContent = nickname
+  document.getElementById('assign-role-username').textContent = decode(encodeUsername)
+  document.getElementById('assign-role-nickname').textContent = decode(encodeNickname)
   document.getElementById('assign-role-user-enabled').textContent = enabled ? '可用' : '不可用'
   // 加载所有的角色列表
   loadAllRole(uid)

@@ -179,8 +179,8 @@ function generateRoleDataTable(total, pageNum, pageSize, roles) {
         <td id=${'role-update-by-' + role.id}>${role.updateBy}</td>
         <td>
           <button id=${'delete-role-' + role.id} onclick='deleteRoleAction(${role.id})'>删除</button>
-          <button id=${'update-role-' + role.id} onclick='editRoleAction(${role.id}, "${role.roleCode}", "${role.roleDesc}", ${role.enabled})'>编辑</button>
-          <button id=${'assign-role-permission-' + role.id} onclick='assignPermissionAction(${role.id}, "${role.roleCode}", "${role.roleDesc}", ${role.enabled})'>分配权限</button>
+          <button id=${'update-role-' + role.id} onclick='editRoleAction(${role.id}, "${encode(role.roleCode)}", "${encode(role.roleDesc)}", ${role.enabled})'>编辑</button>
+          <button id=${'assign-role-permission-' + role.id} onclick='assignPermissionAction(${role.id}, "${encode(role.roleCode)}", "${encode(role.roleDesc)}", ${role.enabled})'>分配权限</button>
         </td>
       </tr>
     `
@@ -227,8 +227,8 @@ function loadNextPageRoleData() {
   loadRoleTableData(false, true)
 }
 
-function editRoleAction(uid, roleCode, roleDesc, enabled) {
-  openEditRolePanel(uid, roleCode, roleDesc, enabled)
+function editRoleAction(uid, encodeRoleCode, encodeRoleDesc, enabled) {
+  openEditRolePanel(uid, decode(encodeRoleCode), decode(encodeRoleDesc), enabled)
 }
 
 function openRoleDataTable() {
@@ -461,10 +461,10 @@ function loadRolePermission(rid) {
   }
 }
 
-function assignPermissionAction(rid, roleCode, roleDesc, enabled) {
+function assignPermissionAction(rid, encodeRoleCode, encodeRoleDesc, enabled) {
   document.getElementById('assign-permission-role-id').textContent = rid
-  document.getElementById('assign-permission-role-code').textContent = roleCode
-  document.getElementById('assign-permission-role-desc').textContent = roleDesc
+  document.getElementById('assign-permission-role-code').textContent = decode(encodeRoleCode)
+  document.getElementById('assign-permission-role-desc').textContent = decode(encodeRoleDesc)
   document.getElementById('assign-permission-role-enabled').textContent = enabled ? '可用' : '不可用'
   // 加载所有的权限列表
   loadAllPermission(rid)

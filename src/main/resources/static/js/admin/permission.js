@@ -185,7 +185,7 @@ function generatePermissionDataTable(total, pageNum, pageSize, permissions) {
         <td id=${'permission-update-by-' + permission.id}>${permission.updateBy}</td>
         <td>
           <button id=${'delete-permission-' + permission.id} onclick='deletePermissionAction(${permission.id})'>删除</button>
-          <button id=${'update-permission-' + permission.id} onclick='editPermissionAction(${permission.id}, "${permission.path}", "${permission.method}", "${permission.permissionDesc}", ${permission.enabled})'>编辑</button>
+          <button id=${'update-permission-' + permission.id} onclick='editPermissionAction(${permission.id}, "${encode(permission.path)}", "${encode(permission.method)}", "${encode(permission.permissionDesc)}", ${permission.enabled})'>编辑</button>
         </td>
       </tr>
     `
@@ -232,8 +232,8 @@ function loadNextPagePermissionData() {
   loadPermissionTableData(false, true)
 }
 
-function editPermissionAction(pid, permissionPath, permissionMethod, permissionDesc, enabled) {
-  openEditPermissionPanel(pid, permissionPath, permissionMethod, permissionDesc, enabled)
+function editPermissionAction(pid, encodePermissionPath, encodePermissionMethod, encodePermissionDesc, enabled) {
+  openEditPermissionPanel(pid, decode(encodePermissionPath), decode(encodePermissionMethod), decode(encodePermissionDesc), enabled)
 }
 
 function openPermissionDataTable() {

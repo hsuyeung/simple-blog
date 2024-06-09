@@ -112,7 +112,7 @@ function generateSystemConfigDataTable(total, pageNum, pageSize, systemConfigs) 
         <td id=${'system-config-update-time-' + systemConfig.id}>${systemConfig.updateTime}</td>
         <td id=${'system-config-update-by-' + systemConfig.id}>${systemConfig.updateBy}</td>
         <td>
-          <button id=${'update-system-config-' + systemConfig.id} onclick='editSystemConfigAction(${systemConfig.id}, "${systemConfig.confKey}", "${systemConfig.confValue}", "${systemConfig.confDefaultValue}", "${systemConfig.confGroup}", "${systemConfig.description}", ${systemConfig.enabled})'>编辑</button>
+          <button id=${'update-system-config-' + systemConfig.id} onclick='editSystemConfigAction(${systemConfig.id}, "${encode(systemConfig.confKey)}", "${encode(systemConfig.confValue)}", "${encode(systemConfig.confDefaultValue)}", "${encode(systemConfig.confGroup)}", "${encode(systemConfig.description)}", ${systemConfig.enabled})'>编辑</button>
           <button id=${'refresh-system-config-' + systemConfig.id} onclick='refreshOneSystemConfigAction(${systemConfig.id})'>刷新缓存</button>
         </td>
       </tr>
@@ -160,8 +160,8 @@ function loadNextPageSystemConfigData() {
   loadSystemConfigTableData(false, true)
 }
 
-function editSystemConfigAction(confId, confKey, confValue, confDefaultValue, confGroup, description, enabled) {
-  openEditSystemConfigPanel(confId, confKey, confValue, confDefaultValue, confGroup, description, enabled)
+function editSystemConfigAction(confId, encodeConfKey, encodeConfValue, encodeConfDefaultValue, encodeConfGroup, encodeDescription, enabled) {
+  openEditSystemConfigPanel(confId, decode(encodeConfKey), decode(encodeConfValue), decode(encodeConfDefaultValue), decode(encodeConfGroup), decode(encodeDescription), enabled)
 }
 
 function openSystemConfigDataTable() {

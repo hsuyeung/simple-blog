@@ -145,7 +145,7 @@ function generateFriendLinkDataTable(total, pageNum, pageSize, friendLinks) {
         <td id=${'friend-link-update-by-' + friendLink.id}>${friendLink.updateBy}</td>
         <td>
           <button id=${'delete-friend-link-' + friendLink.id} onclick='deleteFriendLinkAction(${friendLink.id})'>删除</button>
-          <button id=${'update-friend-link-' + friendLink.id} onclick='editFriendLinkAction(${friendLink.id}, "${friendLink.linkName}", "${friendLink.linkUrl}", "${friendLink.linkAvatar}", "${friendLink.linkDesc}", "${friendLink.linkGroup}")'>编辑</button>
+          <button id=${'update-friend-link-' + friendLink.id} onclick='editFriendLinkAction(${friendLink.id}, "${encode(friendLink.linkName)}", "${encode(friendLink.linkUrl)}", "${encode(friendLink.linkAvatar)}", "${encode(friendLink.linkDesc)}", "${encode(friendLink.linkGroup)}")'>编辑</button>
         </td>
       </tr>
     `
@@ -192,8 +192,8 @@ function loadNextPageFriendLinkData() {
   loadFriendLinkTableData(false, true)
 }
 
-function editFriendLinkAction(friendLinkId, linkName, linkUrl, linkAvatar, linkDesc, linkGroup) {
-  openEditFriendLinkPanel(friendLinkId, linkName, linkUrl, linkAvatar, linkDesc, linkGroup)
+function editFriendLinkAction(friendLinkId, encodeLinkName, encodeLinkUrl, encodeLinkAvatar, encodeLinkDesc, encodeLinkGroup) {
+  openEditFriendLinkPanel(friendLinkId, decode(encodeLinkName), decode(encodeLinkUrl), decode(encodeLinkAvatar), decode(encodeLinkDesc), decode(encodeLinkGroup))
 }
 
 function openFriendLinkDataTable() {
