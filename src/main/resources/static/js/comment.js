@@ -27,7 +27,8 @@ function previewAction(replyCommentId) {
     ignoreUnescapedHTML: true
   })
   hljs.highlightAll()
-  mediumZoom('img.zoom-img', {background: '#faf5e3'})
+  // 预览时只对当前预览框的图片做处理，避免影响到文章内容的图片以及评论区其他的图片
+  mediumZoom(`#preview-text-${replyCommentId} img.zoom-img`, {background: '#faf5e3'})
   lazyLoad({
     lazyAttr: 'data-src',
     loadType: 'src',
