@@ -209,7 +209,8 @@ summary:hover {
   display: block;
   background-color: #faf5e3;
   margin: 0 auto;
-  padding: 5rem 5.5rem
+  padding: 5rem 5.5rem;
+  position: relative
 }
 
 header h1 a:link,

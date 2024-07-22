@@ -5,6 +5,11 @@ const renderer = {
   },
   link(href, title, text) {
     return `<a href='${href}' target='_blank' rel='noopener noreferrer nofollow'>${text}</a>`
+  },
+  heading(text, level) {
+    // 生成 ID
+    const uuid = crypto.randomUUID();
+    return `<h${level} id="${uuid}">${text}</h${level}>`;
   }
 }
 

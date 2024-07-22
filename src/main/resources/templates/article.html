@@ -9,6 +9,7 @@
   <link rel='icon' href='/favicon.ico' type='image/x-icon'>
   <link rel='stylesheet' th:href='${ "/css/common.min.css?v=" + v }'/>
   <link rel='stylesheet' th:href='${ "/css/article.min.css?v=" + v }'/>
+  <link rel='stylesheet' th:href='${ "/css/toc.min.css?v=" + v }'/>
   <link rel='stylesheet' th:href='${ "/css/comment.min.css?v=" + v }'/>
   <link rel='stylesheet' th:href='${ "/css/about_footer.min.css?v=" + v }'/>
   <link rel='stylesheet' th:href='${ "/css/footer.min.css?v=" + v }'/>
@@ -19,7 +20,7 @@
   <script th:src='${ "/plugin/lazyload/lazyload.js?v=" + v }'></script>
   <script th:src='${ "/plugin/livephotoskit/livephotoskit.min.js?v=" + v }'></script>
   <script th:src='${ "/plugin/livephotoskit/livephotoskit.extension.js?v=" + v }'></script>
-  <script th:src='${ "/js/core.js?v=" + v }'></script>
+  <script th:src='${ "/js/toc.js?v=" + v }'></script>
 </head>
 <body>
 <div class='container'>
@@ -70,6 +71,7 @@
     updateCommentPreviewLivePhotoPlayer(true)
     updateCommentLivePhotoPlayer()
   }
+  setupToc()
 </script>
 </body>
 </html>
