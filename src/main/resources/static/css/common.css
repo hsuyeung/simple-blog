@@ -274,13 +274,13 @@ pre > code {
   height: 6.4rem;
 }
 
-@media (max-device-width: 700px) {
+@media (max-width: 700px) {
   body {
     font-size: 1.8rem
   }
 
   .container {
-    max-width: 100%;
+    width: 100%;
     padding: 1.5rem
   }
 
@@ -298,9 +298,9 @@ pre > code {
   border-bottom: .1rem solid rgba(0, 0, 0, 0.1);
 }
 
-@media (min-device-width: 1281px) {
+@media (min-width: 1281px) {
   .container {
-    max-width: 768px;
+    max-width: 74.8rem;
     box-shadow: 0 .5rem 1rem .4rem rgba(0, 0, 0, .13);
     margin: 2.2rem auto 0 auto
   }
@@ -310,13 +310,32 @@ pre > code {
   }
 }
 
-@media (max-width: 887px) {
+@media (min-width: 1921px) {
   .container {
-    margin-top: 0;
+    max-width: 102.4rem;
+    box-shadow: 0 .5rem 1rem .4rem rgba(0, 0, 0, .13);
+    margin: 2.2rem auto 0 auto
+  }
+
+  header {
+    margin-bottom: 3rem
+  }
+}
+
+@media (max-width: 1281px) {
+  .container {
+    width: 100%;
   }
 }
 
 @media print {
+  .container {
+    width: 100%;
+    box-shadow: none;
+    margin: 0;
+    background: #fef9e7
+  }
+
   #comment-container {
     display: none
   }

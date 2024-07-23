@@ -107,7 +107,13 @@
   margin-top: .4rem
 }
 
-@media (max-device-width: 1460px) or (max-width: 1460px) {
+@media (max-width: 1450px) {
+  .toc-inner ul {
+    padding-left: 0
+  }
+}
+
+@media (max-width: 1281px) {
   .toc-wrapper {
     display: none
   }
