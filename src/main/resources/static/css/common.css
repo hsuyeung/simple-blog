@@ -329,10 +329,23 @@ pre > code {
 }
 
 @media print {
+  code, pre {
+    white-space: pre-wrap; /* 自动换行 */
+    overflow: visible; /* 隐藏滚动条 */
+    word-wrap: break-word; /* 允许长单词换行 */
+  }
+
+  /* 确保文字自动换行且不溢出打印页面 */
+  * {
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
   .container {
     width: 100%;
     box-shadow: none;
-    margin: 0;
+    margin: 0 auto;
     background: #fef9e7
   }
 
