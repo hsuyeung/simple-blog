@@ -274,13 +274,13 @@ pre > code {
   height: 6.4rem;
 }
 
-@media (max-width: 700px) {
+@media (max-device-width: 700px) {
   body {
     font-size: 1.8rem
   }
 
   .container {
-    width: 100%;
+    max-width: 100%;
     padding: 1.5rem
   }
 
@@ -288,14 +288,6 @@ pre > code {
     width: 100%;
     max-width: 100%
   }
-}
-
-.gray {
-  color: rgb(128, 128, 128);
-}
-
-.divider-line-bottom {
-  border-bottom: .1rem solid rgba(0, 0, 0, 0.1);
 }
 
 @media (min-width: 1281px) {
@@ -322,10 +314,30 @@ pre > code {
   }
 }
 
-@media (max-width: 1281px) {
+@media only screen and (max-width: 1281px) and (min-device-width: 1281px) {
   .container {
-    width: 100%;
+    max-width: 668px
   }
+}
+
+@media only screen and (max-width: 1195px) and (min-device-width: 1281px) {
+  .container {
+    max-width: 560px
+  }
+}
+
+@media only screen and (max-width: 1100px) and (min-device-width: 1281px) {
+  .container {
+    max-width: 560px;
+  }
+}
+
+.gray {
+  color: rgb(128, 128, 128);
+}
+
+.divider-line-bottom {
+  border-bottom: .1rem solid rgba(0, 0, 0, 0.1);
 }
 
 @media print {
