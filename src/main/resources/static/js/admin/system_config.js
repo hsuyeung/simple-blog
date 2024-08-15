@@ -36,7 +36,7 @@ function loadSystemConfigTableData(loadPrev = false, loadNext = false, jumpTo = 
       'key': systemConfigKey,
       'group': systemConfigGroup,
       'desc': systemConfigDesc,
-      'enabled': enabled
+      'enabled': enabled === '' ? null : enabled === '1'
     }
   }))
   xhr.onreadystatechange = () => {
